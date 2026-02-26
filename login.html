@@ -334,7 +334,7 @@
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> &nbsp;...';
         btn.disabled = true;
 
-        fetch('http://127.0.0.1:5000/login', {
+        fetch('https://shetimitra-backend-production.up.railway.app/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ mobile, password })
