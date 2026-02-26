@@ -334,7 +334,7 @@
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> &nbsp;...';
         btn.disabled = true;
 
-        fetch('https://shetimitra-backend-production.up.railway.app/', {
+        fetch('https://shetimitra-backend-production.up.railway.app/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ mobile, password })
@@ -357,4 +357,5 @@
 </script>
 
 </body>
+
 </html>
