@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>AgriSet.AI - Complete Smart Farming Solution</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #10B981;
+            --dark-green: #047857;
+            --light-green: #A7F3D0;
+            --accent-blue: #3B82F6;
+            --accent-orange: #F97316;
+            --accent-purple: #8B5CF6;
+            --accent-yellow: #F59E0B;
+            --white: #FFFFFF;
+            --light-bg: #F0FDF4;
+            --card-bg: #FFFFFF;
+            --text-dark: #1F2937;
+            --text-light: #6B7280;
+            --gradient-primary: linear-gradient(135deg, #10B981 0%, #047857 100%);
+            --gradient-accent: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
+            --shadow-lg: 0 16px 40px rgba(0,0,0,0.13);
+            --shadow-green: 0 8px 30px rgba(16,185,129,0.22);
+            --border-radius: 16px;
+        }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ══════════════════════════════
+           NAVBAR — enhanced
+        ══════════════════════════════ */
+        .navbar {
+            background-color: rgba(255,255,255,0.97);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 1px 0 rgba(0,0,0,0.06), var(--shadow-sm);
+            padding: 14px 40px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.35s ease;
+        }
+        .navbar.scrolled {
+            padding: 10px 40px;
+            box-shadow: var(--shadow-md);
+        }
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        .logo-icon {
+            width: 46px;
+            height: 46px;
+            background: var(--gradient-primary);
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 14px rgba(16,185,129,0.35);
+            transition: transform 0.3s ease;
+        }
+        .logo-icon:hover { transform: rotate(-5deg) scale(1.05); }
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            background: rgba(255,255,255,0.25);
+            border-radius: 50%;
+            top: -6px;
+            right: -6px;
+        }
+        .logo-icon i { color: white; font-size: 22px; z-index: 1; }
+        .logo-text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 26px;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+        .logo-ai { font-weight: 800; }
+        .logo-tagline {
+            font-size: 11px;
+            color: var(--text-light);
+            font-weight: 600;
+            margin-top: -3px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .language-toggle {
+            display: flex;
+            gap: 4px;
+            background: #F3F4F6;
+            padding: 5px;
+            border-radius: 12px;
+            border: 1.5px solid #E5E7EB;
+        }
+        .lang-btn {
+            padding: 9px 18px;
+            border: none;
+            background: transparent;
+            border-radius: 9px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            font-size: 13px;
+            color: var(--text-light);
+            font-family: 'Inter', sans-serif;
+        }
+        .lang-btn:hover {
+            background: rgba(16,185,129,0.12);
+            color: var(--primary-green);
+        }
+        .lang-btn.active {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 3px 10px rgba(16,185,129,0.3);
+        }
+        .auth-btn {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-size: 14px;
+            box-shadow: var(--shadow-green);
+            font-family: 'Poppins', sans-serif;
+        }
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(16,185,129,0.38);
+        }
+
+        /* ══════════════════════════════
+           HERO — VIDEO PRESERVED EXACTLY
+        ══════════════════════════════ */
+        .hero {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+        }
+        .hero-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            filter: brightness(0.9) contrast(1.05);
+        }
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(0,0,0,0.72));
+            z-index: 2;
+        }
+        /* Enhanced hero content */
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            max-width: 900px;
+            text-align: center;
+            padding: 20px;
+            animation: heroIn 1s ease both;
+        }
+        @keyframes heroIn {
+            from { opacity: 0; transform: translateY(28px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        /* Live badge */
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(16,185,129,0.22);
+            border: 1.5px solid rgba(16,185,129,0.55);
+            color: #6EE7B7;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 26px;
+            backdrop-filter: blur(8px);
+        }
+        .badge-dot {
+            width: 8px;
+            height: 8px;
+            background: #10B981;
+            border-radius: 50%;
+            animation: blink 1.8s infinite;
+        }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+        .hero-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(2.4rem, 5.5vw, 4rem);
+            font-weight: 800;
+            line-height: 1.12;
+            margin-bottom: 16px;
+            text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+        }
+        .hero-subtitle {
+            margin-top: 10px;
+            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+            font-weight: 500;
+            opacity: 0.92;
+            margin-bottom: 16px;
+        }
+        .hero-description {
+            margin-top: 16px;
+            font-size: 1.05rem;
+            line-height: 1.75;
+            opacity: 0.88;
+            max-width: 680px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 36px;
+        }
+        .highlight {
+            color: #34D399;
+            font-weight: 800;
+        }
+        /* Hero CTA buttons */
+        .hero-actions {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 32px;
+        }
+        .hero-btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: white;
+            padding: 16px 36px;
+            border-radius: 50px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 0 8px 28px rgba(16,185,129,0.4);
+            transition: all 0.3s ease;
+        }
+        .hero-btn-primary:hover { transform: translateY(-3px); box-shadow: 0 14px 36px rgba(16,185,129,0.5); }
+        .hero-btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.15);
+            color: white;
+            padding: 16px 32px;
+            border-radius: 50px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            border: 2px solid rgba(255,255,255,0.4);
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+        }
+        .hero-btn-secondary:hover { background: rgba(255,255,255,0.25); transform: translateY(-2px); }
+
+        /* Hero trust pills */
+        .hero-trust {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 28px;
+        }
+        .trust-pill {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.25);
+            color: rgba(255,255,255,0.92);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            backdrop-filter: blur(6px);
+        }
+        .trust-pill i { color: #F59E0B; }
+
+        /* Scroll cue */
+        .scroll-cue {
+            position: absolute;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            opacity: 0.65;
+            animation: scrollBounce 2.2s ease-in-out infinite;
+        }
+        .scroll-cue span { font-size: 11px; color: white; letter-spacing: 1px; text-transform: uppercase; }
+        @keyframes scrollBounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(8px)} }
+
+        @media (max-width: 768px) {
+            .hero { height: 90vh; }
+            .hero-description { font-size: 1rem; }
+            .hero-actions { flex-direction: column; align-items: center; }
+        }
+
+        /* ══════════════════════════════
+           MARQUEE STRIP — new
+        ══════════════════════════════ */
+        .marquee-strip {
+            background: #0F1F0F;
+            padding: 13px 0;
+            overflow: hidden;
+        }
+        .marquee-track {
+            display: flex;
+            width: max-content;
+            animation: mscroll 28s linear infinite;
+        }
+        @keyframes mscroll { to { transform: translateX(-50%); } }
+        .marquee-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 36px;
+            color: rgba(255,255,255,0.45);
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+        .marquee-item i { color: var(--primary-green); font-size: 14px; }
+
+        /* ══════════════════════════════
+           FEATURES SECTION — enhanced
+        ══════════════════════════════ */
+        .features-section {
+            padding: 110px 40px;
+            background: var(--white);
+            position: relative;
+        }
+        .features-section::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(16,185,129,0.05) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .section-label {
+            display: block;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--primary-green);
+            background: rgba(16,185,129,0.1);
+            border: 1px solid rgba(16,185,129,0.25);
+            padding: 7px 20px;
+            border-radius: 50px;
+            display: inline-block;
+            margin: 0 auto 18px;
+            left: 50%;
+            position: relative;
+            transform: translateX(-50%);
+        }
+        .section-title {
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+        .section-title span { color: var(--primary-green); }
+        .section-subtitle {
+            text-align: center;
+            font-size: 17px;
+            color: var(--text-light);
+            max-width: 580px;
+            margin: 0 auto 64px;
+            font-weight: 500;
+            line-height: 1.7;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+            gap: 28px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .feature-card {
+            background: var(--card-bg);
+            padding: 36px 32px 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+            text-align: center;
+            border: 1.5px solid #F3F4F6;
+            position: relative;
+            overflow: hidden;
+        }
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg,rgba(16,185,129,0.03),transparent);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 4px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(16,185,129,0.3);
+        }
+        .feature-card:hover::before { transform: scaleX(1); }
+        .feature-card:hover::after { opacity: 1; }
+        .feature-icon {
+            font-size: 36px;
+            width: 86px;
+            height: 86px;
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            color: white;
+            background: var(--gradient-primary);
+            box-shadow: 0 8px 24px rgba(16,185,129,0.25);
+            transition: all 0.35s ease;
+            position: relative;
+            z-index: 1;
+        }
+        .feature-card:hover .feature-icon { transform: scale(1.1) rotate(6deg); }
+        .icon-soil  { background: linear-gradient(135deg,#10B981,#047857); box-shadow: 0 8px 24px rgba(16,185,129,0.25); }
+        .icon-wallet{ background: linear-gradient(135deg,#F59E0B,#D97706); box-shadow: 0 8px 24px rgba(245,158,11,0.25); }
+        .icon-pest  { background: linear-gradient(135deg,#EF4444,#DC2626); box-shadow: 0 8px 24px rgba(239,68,68,0.25); }
+        .icon-weather{ background: linear-gradient(135deg,#3B82F6,#1D4ED8); box-shadow: 0 8px 24px rgba(59,130,246,0.25); }
+        .icon-tracker{ background: linear-gradient(135deg,#8B5CF6,#7C3AED); box-shadow: 0 8px 24px rgba(139,92,246,0.25); }
+        .icon-rental{ background: linear-gradient(135deg,#F97316,#EA580C); box-shadow: 0 8px 24px rgba(249,115,22,0.25); }
+        .icon-dashboard{ background: linear-gradient(135deg,#06B6D4,#0891B2); box-shadow: 0 8px 24px rgba(6,182,212,0.25); }
+        .icon-income{ background: linear-gradient(135deg,#10B981,#059669); box-shadow: 0 8px 24px rgba(16,185,129,0.25); }
+        .feature-card h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 20px;
+            color: var(--text-dark);
+            margin-bottom: 14px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+        .feature-card p {
+            color: var(--text-light);
+            margin-bottom: 26px;
+            font-size: 14.5px;
+            line-height: 1.7;
+            position: relative;
+            z-index: 1;
+        }
+        .feature-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: transparent;
+            color: var(--primary-green);
+            padding: 11px 24px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            border: 2px solid var(--primary-green);
+            font-size: 14px;
+            position: relative;
+            z-index: 1;
+        }
+        .feature-link:hover {
+            background: var(--gradient-primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-green);
+        }
+        .feature-link i { transition: transform 0.3s; }
+        .feature-link:hover i { transform: translateX(4px); }
+
+        /* ══════════════════════════════
+           STATS SECTION — enhanced
+        ══════════════════════════════ */
+        .stats-section {
+            padding: 90px 40px;
+            background: var(--gradient-primary);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        .stats-section::before {
+            content: '';
+            position: absolute;
+            width: 500px; height: 500px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 50%;
+            top: -220px; right: -120px;
+        }
+        .stats-section::after {
+            content: '';
+            position: absolute;
+            width: 300px; height: 300px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 50%;
+            bottom: -120px; left: -80px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 36px;
+            max-width: 1100px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        .stat-item {
+            background: rgba(255,255,255,0.1);
+            border: 1.5px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            padding: 36px 24px;
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+        }
+        .stat-item:hover { background: rgba(255,255,255,0.18); transform: translateY(-5px); }
+        .stat-icon { font-size: 38px; display: block; margin-bottom: 12px; }
+        .stat-item h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 46px;
+            margin-bottom: 8px;
+            color: #FEF08A;
+            font-weight: 800;
+        }
+        .stat-item p { font-size: 16px; opacity: 0.9; font-weight: 600; }
+
+        /* ══════════════════════════════
+           HOW IT WORKS — enhanced
+        ══════════════════════════════ */
+        .how-it-works {
+            padding: 110px 40px;
+            background: linear-gradient(135deg, #F0FDF4 0%, #EFF6FF 100%);
+            position: relative;
+        }
+        .steps {
+            display: flex;
+            justify-content: center;
+            gap: 28px;
+            flex-wrap: wrap;
+            max-width: 1300px;
+            margin: 0 auto;
+            position: relative;
+        }
+        /* connector line */
+        .steps::before {
+            content: '';
+            position: absolute;
+            top: 55px;
+            left: calc(10% + 40px);
+            right: calc(10% + 40px);
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-green), #60A5FA, var(--primary-green));
+            border-radius: 4px;
+            opacity: 0.25;
+        }
+        .step {
+            flex: 1;
+            min-width: 240px;
+            max-width: 280px;
+            background: var(--white);
+            padding: 40px 26px 34px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-md);
+            text-align: center;
+            transition: all 0.35s ease;
+            border: 1.5px solid #E5E7EB;
+            position: relative;
+        }
+        .step:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(16,185,129,0.3);
+        }
+        .step-number {
+            width: 72px;
+            height: 72px;
+            background: var(--gradient-primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            font-weight: 800;
+            margin: 0 auto 18px;
+            box-shadow: 0 8px 24px rgba(16,185,129,0.3);
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+        .step:hover .step-number { transform: scale(1.1); box-shadow: 0 12px 32px rgba(16,185,129,0.4); }
+        .step-emoji { font-size: 32px; display: block; margin-bottom: 14px; }
+        .step h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+        .step p { font-size: 14px; color: var(--text-light); line-height: 1.65; font-weight: 500; }
+
+        /* ══════════════════════════════
+           TESTIMONIALS — new section
+        ══════════════════════════════ */
+        .testimonials {
+            padding: 110px 40px;
+            background: var(--white);
+        }
+        .testi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .testi-card {
+            background: #F9FAFB;
+            border-radius: 18px;
+            border: 1.5px solid #E5E7EB;
+            padding: 30px 26px;
+            transition: all 0.35s ease;
+        }
+        .testi-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: rgba(16,185,129,0.3); }
+        .testi-stars { color: #F59E0B; font-size: 16px; letter-spacing: 2px; margin-bottom: 14px; display: block; }
+        .testi-text { font-size: 14.5px; color: var(--text-dark); line-height: 1.75; margin-bottom: 22px; font-style: italic; }
+        .testi-farmer { display: flex; align-items: center; gap: 13px; }
+        .testi-avatar {
+            width: 50px; height: 50px; border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px; flex-shrink: 0;
+            border: 3px solid var(--light-green);
+        }
+        .testi-name { font-family: 'Poppins', sans-serif; font-size: 15px; font-weight: 700; color: var(--text-dark); }
+        .testi-loc { font-size: 12px; color: var(--text-light); font-weight: 500; }
+        .testi-crop {
+            display: inline-block; margin-top: 4px;
+            background: rgba(16,185,129,0.1);
+            color: var(--dark-green);
+            border-radius: 50px; padding: 2px 10px;
+            font-size: 11px; font-weight: 700;
+        }
+
+        /* ══════════════════════════════
+           CTA BANNER — new
+        ══════════════════════════════ */
+        .cta-banner {
+            padding: 90px 40px;
+            background: linear-gradient(135deg, #064E3B 0%, #047857 50%, #10B981 100%);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .cta-banner::before {
+            content: '';
+            position: absolute;
+            width: 600px; height: 600px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 50%;
+            top: -280px; right: -150px;
+        }
+        .cta-banner::after {
+            content: '';
+            position: absolute;
+            width: 350px; height: 350px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 50%;
+            bottom: -150px; left: -80px;
+        }
+        .cta-inner { position: relative; z-index: 1; }
+        .cta-emoji { font-size: 58px; display: block; margin-bottom: 18px; }
+        .cta-h {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800; color: white;
+            margin-bottom: 14px; line-height: 1.2;
+        }
+        .cta-h span { color: #FEF08A; }
+        .cta-p { font-size: 17px; color: rgba(255,255,255,0.82); font-weight: 500; margin-bottom: 36px; }
+        .cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+        /* ══════════════════════════════
+           FOOTER — enhanced
+        ══════════════════════════════ */
+        .footer {
+            background: #0F1F0F;
+            color: white;
+            padding: 70px 40px 32px;
+        }
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 60px;
+            margin-bottom: 48px;
+        }
+        .footer-logo {
+            font-family: 'Poppins', sans-serif;
+            font-size: 26px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .footer-logo i { color: var(--primary-green); }
+        .footer-logo span { color: var(--primary-green); }
+        .footer-tagline { color: rgba(255,255,255,0.5); margin-bottom: 28px; font-size: 14px; line-height: 1.75; font-weight: 400; }
+        .footer-social { display: flex; gap: 10px; margin-top: 20px; }
+        .soc-btn {
+            width: 38px; height: 38px; border-radius: 50%;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.12);
+            display: flex; align-items: center; justify-content: center;
+            color: rgba(255,255,255,0.5); font-size: 15px;
+            text-decoration: none;
+            transition: all 0.25s ease;
+        }
+        .soc-btn:hover { background: var(--primary-green); color: white; border-color: var(--primary-green); }
+        .footer-links-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        .footer-column h4 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            margin-bottom: 18px;
+            color: rgba(255,255,255,0.4);
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+        }
+        .footer-column a {
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 12px;
+            transition: color 0.25s;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .footer-column a:hover { color: var(--primary-green); }
+        .copyright {
+            text-align: center;
+            padding-top: 28px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.3);
+            font-size: 13px;
+        }
+
+        /* ══════════════════════════════
+           SCROLL REVEAL
+        ══════════════════════════════ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.65s ease, transform 0.65s ease;
+        }
+        .reveal.visible { opacity: 1; transform: none; }
+
+        /* ══════════════════════════════
+           ANIMATIONS
+        ══════════════════════════════ */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .animate-card { animation: fadeInUp 0.6s ease forwards; opacity: 0; }
+        .feature-card:nth-child(1){animation-delay:.1s}
+        .feature-card:nth-child(2){animation-delay:.2s}
+        .feature-card:nth-child(3){animation-delay:.3s}
+        .feature-card:nth-child(4){animation-delay:.4s}
+        .feature-card:nth-child(5){animation-delay:.5s}
+        .feature-card:nth-child(6){animation-delay:.6s}
+        .feature-card:nth-child(7){animation-delay:.7s}
+        .feature-card:nth-child(8){animation-delay:.8s}
+
+        /* ══════════════════════════════
+           LANGUAGE CONTENT
+        ══════════════════════════════ */
+        .lang-content { display: none; }
+        .lang-content.en { display: block; }
+        .lang-content.inline { display: inline; }
+        .lang-content.en.inline { display: inline; }
+
+        /* ══════════════════════════════
+           RESPONSIVE
+        ══════════════════════════════ */
+        @media (max-width: 1024px) {
+            .footer-content { grid-template-columns: 1fr; gap: 40px; }
+            .steps::before { display: none; }
+        }
+        @media (max-width: 768px) {
+            .navbar { padding: 12px 20px; }
+            .nav-container { flex-direction: column; gap: 12px; }
+            .nav-right { width: 100%; justify-content: center; flex-wrap: wrap; }
+            .section-title { font-size: 2rem; }
+            .features-section, .how-it-works, .testimonials { padding: 70px 20px; }
+            .steps { flex-direction: column; gap: 18px; align-items: center; }
+            .footer-links-grid { grid-template-columns: 1fr; gap: 28px; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .cta-banner { padding: 70px 24px; }
+        }
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .testi-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ══ NAVBAR ══ -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-leaf"></i>
+                </div>
+                <div>
+                    <div class="logo-text">AgriSet<span class="logo-ai">.AI</span></div>
+                    <div class="logo-tagline">Smart Farming Toolkit</div>
+                </div>
+            </a>
+            <div class="nav-right">
+                <div class="language-toggle">
+                    <button class="lang-btn active" id="btn-en">EN</button>
+                    <button class="lang-btn" id="btn-hi">हिं</button>
+                    <button class="lang-btn" id="btn-mr">मरा</button>
+                </div>
+                <a href="login.html" class="auth-btn">
+                    <i class="fas fa-seedling"></i>
+                    <span class="lang-content en">Get Started</span>
+                    <span class="lang-content hi">शुरू करें</span>
+                    <span class="lang-content mr">सुरू करा</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ══ HERO — VIDEO PRESERVED ══ -->
+    <section class="hero">
+        <video class="hero-video" autoplay muted loop playsinline>
+            <source src="hero-farm.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="hero-overlay"></div>
+
+        <div class="hero-content">
+            <!-- Live badge -->
+            <div class="hero-badge">
+                <span class="badge-dot"></span>
+                <span class="lang-content en">🏆 India's #1 Smart Farming Platform</span>
+                <span class="lang-content hi">🏆 भारत का #1 स्मार्ट फार्मिंग प्लेटफॉर्म</span>
+                <span class="lang-content mr">🏆 भारताचे #1 स्मार्ट शेती प्लॅटफॉर्म</span>
+            </div>
+
+            <h1 class="hero-title">
+                <span class="lang-content en">Your Complete <span class="highlight">Agri-Tech</span> Toolkit</span>
+                <span class="lang-content hi">आपका संपूर्ण <span class="highlight">एग्री-टेक</span> टूलकिट</span>
+                <span class="lang-content mr">तुमचे संपूर्ण <span class="highlight">एग्री-टेक</span> टूलकिट</span>
+            </h1>
+
+            <h2 class="hero-subtitle">
+                <span class="lang-content en">AI-Powered Solutions for Modern Agriculture</span>
+                <span class="lang-content hi">आधुनिक कृषि के लिए AI-संचालित समाधान</span>
+                <span class="lang-content mr">आधुनिक शेतीसाठी AI-चालित उपाय</span>
+            </h2>
+
+            <p class="hero-description">
+                <span class="lang-content en">Everything farmers need in one platform: Soil intelligence, pest detection, smart weather, crop tracking, equipment marketplace, and digital finance tools.</span>
+                <span class="lang-content hi">किसानों की हर जरूरत एक प्लेटफॉर्म में: मृदा बुद्धिमत्ता, कीट पहचान, स्मार्ट मौसम, फसल ट्रैकिंग, उपकरण मार्केटप्लेस और डिजिटल वित्त उपकरण।</span>
+                <span class="lang-content mr">शेतकऱ्यांची प्रत्येक गरज एका प्लॅटफॉर्ममध्ये: मृदा बुद्धिमत्ता, किडे ओळख, स्मार्ट हवामान, पीक ट्रॅकिंग, उपकरण मार्केटप्लेस आणि डिजिटल वित्त साधने.</span>
+            </p>
+
+            <!-- CTA Buttons -->
+            <div class="hero-actions">
+                <a href="login.html" class="hero-btn-primary">
+                    <i class="fas fa-rocket"></i>
+                    <span class="lang-content en">Start for Free</span>
+                    <span class="lang-content hi">मुफ्त शुरू करें</span>
+                    <span class="lang-content mr">मोफत सुरू करा</span>
+                </a>
+                <a href="#features" class="hero-btn-secondary">
+                    <i class="fas fa-play-circle"></i>
+                    <span class="lang-content en">Explore Features</span>
+                    <span class="lang-content hi">फीचर देखें</span>
+                    <span class="lang-content mr">वैशिष्ट्ये पहा</span>
+                </a>
+            </div>
+
+           
+        </div>
+
+        <!-- Scroll cue -->
+        <div class="scroll-cue">
+            <i class="fas fa-chevron-down" style="color:white;font-size:18px"></i>
+            <span>Scroll</span>
+        </div>
+    </section>
+
+    <!-- ══ MARQUEE ══ -->
+    <div class="marquee-strip">
+        <div class="marquee-track">
+            <span class="marquee-item"><i class="fas fa-microscope"></i>Soil AI</span>
+            <span class="marquee-item"><i class="fas fa-bug"></i>Pest Detection</span>
+            <span class="marquee-item"><i class="fas fa-cloud-sun-rain"></i>Weather Alerts</span>
+            <span class="marquee-item"><i class="fas fa-seedling"></i>Crop Tracker</span>
+            <span class="marquee-item"><i class="fas fa-tractor"></i>Equipment Rental</span>
+            <span class="marquee-item"><i class="fas fa-wallet"></i>Farm Wallet</span>
+            <span class="marquee-item"><i class="fas fa-chart-line"></i>Revenue Analytics</span>
+            <span class="marquee-item"><i class="fas fa-leaf"></i>Free for Farmers</span>
+            <span class="marquee-item"><i class="fas fa-microscope"></i>Soil AI</span>
+            <span class="marquee-item"><i class="fas fa-bug"></i>Pest Detection</span>
+            <span class="marquee-item"><i class="fas fa-cloud-sun-rain"></i>Weather Alerts</span>
+            <span class="marquee-item"><i class="fas fa-seedling"></i>Crop Tracker</span>
+            <span class="marquee-item"><i class="fas fa-tractor"></i>Equipment Rental</span>
+            <span class="marquee-item"><i class="fas fa-wallet"></i>Farm Wallet</span>
+            <span class="marquee-item"><i class="fas fa-chart-line"></i>Revenue Analytics</span>
+            <span class="marquee-item"><i class="fas fa-leaf"></i>Free for Farmers</span>
+        </div>
+    </div>
+
+    <!-- ══ FEATURES ══ -->
+    <section class="features-section" id="features">
+        <span class="section-label">
+            <span class="lang-content en">🌱 Platform Features</span>
+            <span class="lang-content hi">🌱 प्लेटफॉर्म फीचर्स</span>
+            <span class="lang-content mr">🌱 प्लॅटफॉर्म वैशिष्ट्ये</span>
+        </span>
+        <h2 class="section-title">
+            <span class="lang-content en">Complete <span>Agricultural Toolkit</span></span>
+            <span class="lang-content hi">संपूर्ण <span>कृषि टूलकिट</span></span>
+            <span class="lang-content mr">संपूर्ण <span>शेती टूलकिट</span></span>
+        </h2>
+        <p class="section-subtitle">
+            <span class="lang-content en">Everything you need for modern farming success — in your own language</span>
+            <span class="lang-content hi">आधुनिक खेती की सफलता के लिए सब कुछ — आपकी अपनी भाषा में</span>
+            <span class="lang-content mr">आधुनिक शेतीच्या यशासाठी सर्व काही — तुमच्या स्वतःच्या भाषेत</span>
+        </p>
+
+        <div class="features-grid">
+            <div class="feature-card animate-card">
+                <div class="feature-icon icon-soil"><i class="fas fa-microscope"></i></div>
+                <h3><span class="lang-content en">Soil Intelligence AI</span><span class="lang-content hi">मृदा बुद्धिमत्ता AI</span><span class="lang-content mr">मृदा बुद्धिमत्ता AI</span></h3>
+                <p><span class="lang-content en">Advanced AI analysis of soil samples for precise nutrient, pH, and fertilizer recommendations</span><span class="lang-content hi">मिट्टी के नमूनों का उन्नत AI विश्लेषण सटीक पोषक तत्व, pH और उर्वरक सिफारिशों के लिए</span><span class="lang-content mr">मृदा नमुन्यांचे प्रगत AI विश्लेषण अचूक पोषकतत्त्वे, pH आणि खत शिफारसीसाठी</span></p>
+                <a href="#" class="feature-link"><span class="lang-content en">Analyze Soil</span><span class="lang-content hi">मिट्टी विश्लेषण</span><span class="lang-content mr">मृदा विश्लेषण</span> <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="feature-card animate-card">
+                <div class="feature-icon icon-wallet"><i class="fas fa-wallet"></i></div>
+                <h3><span class="lang-content en">Digital Farm Wallet</span><span class="lang-content hi">डिजिटल फार्म वॉलेट</span><span class="lang-content mr">डिजिटल फार्म वॉलेट</span></h3>
+                <p><span class="lang-content en">Secure digital wallet for subsidies, payments, and complete farm financial management</span><span class="lang-content hi">सब्सिडी, भुगतान और संपूर्ण फार्म वित्तीय प्रबंधन के लिए सुरक्षित डिजिटल वॉलेट</span><span class="lang-content mr">सब्सिडी, देयके आणि संपूर्ण शेती वित्तीय व्यवस्थापनासाठी सुरक्षित डिजिटल वॉलेट</span></p>
+                <a href="#" class="feature-link"><span class="lang-content en">Open Wallet</span><span class="lang-content hi">वॉलेट खोलें</span><span class="lang-content mr">वॉलेट उघडा</span> <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="feature-card animate-card">
+                <div class="feature-icon icon-pest"><i class="fas fa-bug"></i></div>
+                <h3><span class="lang-content en">Smart Pest Detection</span><span class="lang-content hi">स्मार्ट कीट पहचान</span><span class="lang-content mr">स्मार्ट किडे ओळख</span></h3>
+                <p><span class="lang-content en">AI-powered identification of pests and diseases with organic treatment recommendations</span><span class="lang-content hi">कीटों और रोगों की AI-संचालित पहचान जैविक उपचार सिफारिशों के साथ</span><span class="lang-content mr">किडे आणि रोगांची AI-चालित ओळख जैविक उपचार शिफारसींसह</span></p>
+                <a href="#" class="feature-link"><span class="lang-content en">Scan for Pests</span><span class="lang-content hi">कीट स्कैन करें</span><span class="lang-content mr">किडे स्कॅन करा</span> <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="feature-card animate-card">
+                <div class="feature-icon icon-weather"><i class="fas fa-cloud-sun-rain"></i></div>
+                <h3><span class="lang-content en">Hyper-Local Weather</span><span class="lang-content hi">हाइपर-लोकल मौसम</span><span class="lang-content mr">हायपर-लोकल हवामान</span></h3>
+                <p><span class="lang-content en">Precision weather forecasting with farming-specific alerts and irrigation recommendations</span><span class="lang-content hi">कृषि-विशिष्ट अलर्ट और सिंचाई सिफारिशों के साथ सटीक मौसम पूर्वानुमान</span><span class="lang-content mr">शेती-विशिष्ट सूचना आणि सिंचन शिफारसींसह अचूक हवामान अंदाज</span></p>
+                <a href="#" class="feature-link"><span class="lang-content en">View Forecast</span><span class="lang-content hi">पूर्वानुमान देखें</span><span class="lang-content mr">अंदाज पहा</span> <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="feature-card animate-card">
+                <div class="feature-icon icon-tracker"><i class="fas fa-seedling"></i></div>
+                <h3><span class="lang-content en">Smart Crop Tracker</span><span class="lang-content hi">स्मार्ट फसल ट्रैकर</span><span class="lang-content mr">स्मार्ट पीक ट्रॅकर</span></h3>
+                <p><span class="lang-content en">Monitor growth stages, irrigation schedules, and harvest predictions in real-time</span><span class="lang-content hi">वृद्धि चरण, सिंचाई अनुसूची और कटाई पूर्वानुमान रीयल-टाइम में मॉनिटर करें</span><span class="lang-content mr">वाढ टप्पे, सिंचन वेळापत्रक आणि कापणी अंदाज रीयल-टाइममध्ये मॉनिटर करा</span></p>
+                <a href="#" class="feature-link"><span class="lang-content en">Track Growth</span><span class="lang-content hi">वृद्धि ट्रैक करें</span><span class="lang-content mr">वाढ ट्रॅक करा</span> <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="feature-card animate-card">
+                <div class="feature-icon icon-rental"><i class="fas fa-tractor"></i></div>
+                <h3><span class="lang-content en">Equipment Marketplace</span><span class="lang-content hi">उपकरण मार्केटप्लेस</span><span class="lang-content mr">उपकरण मार्केटप्लेस</span></h3>
+                <p><span class="lang-content en">Rent or purchase farm equipment. List your equipment to earn rental income</span><span class="lang-content hi">कृषि उपकरण किराए पर लें या खरीदें। किराया आय अर्जित करने के लिए अपने उपकरण सूचीबद्ध करें</span><span class="lang-content mr">शेती उपकरणे भाड्याने घ्या किंवा खरेदी करा. भाडे उत्पन्न मिळवण्यासाठी तुमची उपकरणे सूचीबद्ध करा</span></p>
+                <a href="#" class="feature-link"><span class="lang-content en">Browse Equipment</span><span class="lang-content hi">उपकरण देखें</span><span class="lang-content mr">उपकरणे ब्राउझ करा</span> <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="feature-card animate-card">
+                <div class="feature-icon icon-dashboard"><i class="fas fa-tachometer-alt"></i></div>
+                <h3><span class="lang-content en">Owner Dashboard</span><span class="lang-content hi">मालिक डैशबोर्ड</span><span class="lang-content mr">मालक डॅशबोर्ड</span></h3>
+                <p><span class="lang-content en">Complete management portal for equipment owners: rentals, pricing, and maintenance</span><span class="lang-content hi">उपकरण मालिकों के लिए संपूर्ण प्रबंधन पोर्टल: किराया, मूल्य निर्धारण और रखरखाव</span><span class="lang-content mr">उपकरण मालकांसाठी संपूर्ण व्यवस्थापन पोर्टल: भाडे, किंमत निश्चिती आणि देखभाल</span></p>
+                <a href="#" class="feature-link"><span class="lang-content en">Manage Assets</span><span class="lang-content hi">संपत्ति प्रबंधित करें</span><span class="lang-content mr">मालमत्ता व्यवस्थापित करा</span> <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="feature-card animate-card">
+                <div class="feature-icon icon-income"><i class="fas fa-chart-line"></i></div>
+                <h3><span class="lang-content en">Revenue Analytics</span><span class="lang-content hi">रेवेन्यू एनालिटिक्स</span><span class="lang-content mr">महसूल विश्लेषण</span></h3>
+                <p><span class="lang-content en">Track earnings, analyze performance, generate reports, and optimize equipment ROI</span><span class="lang-content hi">कमाई ट्रैक करें, प्रदर्शन विश्लेषण करें, रिपोर्ट जनरेट करें और उपकरण ROI अनुकूलित करें</span><span class="lang-content mr">कमाई ट्रॅक करा, कार्यप्रदर्शन विश्लेषण करा, अहवाल तयार करा आणि उपकरण ROI अनुकूलित करा</span></p>
+                <a href="#" class="feature-link"><span class="lang-content en">View Analytics</span><span class="lang-content hi">एनालिटिक्स देखें</span><span class="lang-content mr">विश्लेषण पहा</span> <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══ STATS ══ -->
+    <section class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-item reveal">
+                <span class="stat-icon">👨‍🌾</span>
+                <h3>75,000+</h3>
+                <p><span class="lang-content en">Farmers Empowered</span><span class="lang-content hi">किसान सशक्त</span><span class="lang-content mr">शेतकरी सक्षम</span></p>
+            </div>
+            <div class="stat-item reveal">
+                <span class="stat-icon">🚜</span>
+                <h3>15,000+</h3>
+                <p><span class="lang-content en">Active Listings</span><span class="lang-content hi">सक्रिय सूचियां</span><span class="lang-content mr">सक्रिय याद्या</span></p>
+            </div>
+            <div class="stat-item reveal">
+                <span class="stat-icon">💰</span>
+                <h3>₹8Cr+</h3>
+                <p><span class="lang-content en">Transactions Processed</span><span class="lang-content hi">लेनदेन संसाधित</span><span class="lang-content mr">व्यवहार प्रक्रिया केले</span></p>
+            </div>
+            <div class="stat-item reveal">
+                <span class="stat-icon">🎯</span>
+                <h3>99.7%</h3>
+                <p><span class="lang-content en">Accuracy Rate</span><span class="lang-content hi">सटीकता दर</span><span class="lang-content mr">अचूकता दर</span></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══ HOW IT WORKS ══ -->
+    <section class="how-it-works">
+        <h2 class="section-title">
+            <span class="lang-content en">How <span>AgriSet.AI</span> Works</span>
+            <span class="lang-content hi"><span>AgriSet.AI</span> कैसे काम करता है</span>
+            <span class="lang-content mr"><span>AgriSet.AI</span> कसे काम करते</span>
+        </h2>
+        <p class="section-subtitle">
+            <span class="lang-content en">Simple 4-step process to transform your farming</span>
+            <span class="lang-content hi">आपकी खेती को बदलने के लिए सरल 4-चरण प्रक्रिया</span>
+            <span class="lang-content mr">तुमची शेती बदलण्यासाठी सोपी 4-चरण प्रक्रिया</span>
+        </p>
+        <div class="steps">
+            <div class="step reveal">
+                <div class="step-number">1</div>
+                <span class="step-emoji">📱</span>
+                <h3><span class="lang-content en">Create Account</span><span class="lang-content hi">अकाउंट बनाएं</span><span class="lang-content mr">खाते तयार करा</span></h3>
+                <p><span class="lang-content en">Sign up in 2 minutes with your mobile number — no email needed</span><span class="lang-content hi">अपने मोबाइल नंबर से 2 मिनट में साइन अप करें — ईमेल नहीं चाहिए</span><span class="lang-content mr">मोबाइल नंबरसह 2 मिनिटांत साइन अप करा — ईमेल नको</span></p>
+            </div>
+            <div class="step reveal">
+                <div class="step-number">2</div>
+                <span class="step-emoji">🗺️</span>
+                <h3><span class="lang-content en">Select Tools</span><span class="lang-content hi">टूल्स चुनें</span><span class="lang-content mr">साधने निवडा</span></h3>
+                <p><span class="lang-content en">Choose from our complete toolkit based on your farming needs</span><span class="lang-content hi">अपनी खेती की जरूरतों के आधार पर हमारे टूलकिट में से चुनें</span><span class="lang-content mr">तुमच्या शेतीच्या गरजांवर आधारित आमच्या टूलकिटमधून निवडा</span></p>
+            </div>
+            <div class="step reveal">
+                <div class="step-number">3</div>
+                <span class="step-emoji">🤖</span>
+                <h3><span class="lang-content en">Get AI Insights</span><span class="lang-content hi">AI अंतर्दृष्टि प्राप्त करें</span><span class="lang-content mr">AI अंतर्दृष्टी मिळवा</span></h3>
+                <p><span class="lang-content en">Receive instant AI-powered analysis and actionable recommendations</span><span class="lang-content hi">त्वरित AI-संचालित विश्लेषण और सिफारिशें प्राप्त करें</span><span class="lang-content mr">त्वरित AI-चालित विश्लेषण आणि कृतीयोग्य शिफारसी मिळवा</span></p>
+            </div>
+            <div class="step reveal">
+                <div class="step-number">4</div>
+                <span class="step-emoji">🏆</span>
+                <h3><span class="lang-content en">Optimize & Grow</span><span class="lang-content hi">अनुकूलित करें और बढ़ें</span><span class="lang-content mr">अनुकूलित करा आणि वाढवा</span></h3>
+                <p><span class="lang-content en">Increase yields, reduce costs, and grow your agricultural business</span><span class="lang-content hi">उपज बढ़ाएं, लागत कम करें और कृषि व्यवसाय को बढ़ाएं</span><span class="lang-content mr">उत्पन्न वाढवा, खर्च कम करा आणि कृषी व्यवसाय वाढवा</span></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══ TESTIMONIALS ══ -->
+    <section class="testimonials">
+        <h2 class="section-title">
+            <span class="lang-content en">Real Farmers, <span>Real Results</span></span>
+            <span class="lang-content hi">असली किसान, <span>असली नतीजे</span></span>
+            <span class="lang-content mr">खरे शेतकरी, <span>खरे परिणाम</span></span>
+        </h2>
+        <p class="section-subtitle">
+            <span class="lang-content en">Hear from farmers who transformed their agriculture with AgriSet.AI</span>
+            <span class="lang-content hi">उन किसानों से सुनें जिन्होंने AgriSet.AI से अपनी खेती बदली</span>
+            <span class="lang-content mr">त्या शेतकऱ्यांकडून ऐका ज्यांनी AgriSet.AI ने शेती बदलली</span>
+        </p>
+        <div class="testi-grid">
+            <div class="testi-card reveal">
+                <span class="testi-stars">⭐⭐⭐⭐⭐</span>
+                <p class="testi-text"><span class="lang-content en">"AgriSet.AI's soil test saved my wheat crop! I was using wrong fertilizer for 3 years. Now my yield increased by 40% this season."</span><span class="lang-content hi">"AgriSet.AI की मृदा जांच ने मेरी गेहूं की फसल बचाई! 3 साल से गलत खाद डाल रहा था। इस सीजन 40% उपज बढ़ी।"</span><span class="lang-content mr">"AgriSet.AI च्या माती तपासणीने माझी गव्हाची पीक वाचवली! 3 वर्षे चुकीचे खत टाकत होतो. या हंगामात 40% उत्पन्न वाढले."</span></p>
+                <div class="testi-farmer">
+                    <div class="testi-avatar">👨‍🌾</div>
+                    <div>
+                        <div class="testi-name">Rajesh Patil</div>
+                        <div class="testi-loc">📍 Nashik, Maharashtra</div>
+                        <span class="testi-crop">🌾 Wheat Farmer</span>
+                    </div>
+                </div>
+            </div>
+            <div class="testi-card reveal">
+                <span class="testi-stars">⭐⭐⭐⭐⭐</span>
+                <p class="testi-text"><span class="lang-content en">"I rented my tractor through AgriSet.AI and earned ₹18,000 extra last month! Even my father who can't read uses the app easily."</span><span class="lang-content hi">"AgriSet.AI से ट्रैक्टर किराए पर देकर पिछले महीने ₹18,000 अतिरिक्त कमाया! मेरे अनपढ़ पिता भी ऐप आसानी से उपयोग करते हैं।"</span><span class="lang-content mr">"AgriSet.AI ने ट्रॅक्टर भाड्याने देऊन गेल्या महिन्यात ₹18,000 जास्त कमावले! माझे निरक्षर वडीलही ॲप सहज वापरतात."</span></p>
+                <div class="testi-farmer">
+                    <div class="testi-avatar">👩‍🌾</div>
+                    <div>
+                        <div class="testi-name">Sunita Devi</div>
+                        <div class="testi-loc">📍 Pune, Maharashtra</div>
+                        <span class="testi-crop">🚜 Equipment Owner</span>
+                    </div>
+                </div>
+            </div>
+            <div class="testi-card reveal">
+                <span class="testi-stars">⭐⭐⭐⭐⭐</span>
+                <p class="testi-text"><span class="lang-content en">"The pest detection camera is magical! I caught a fungal infection early and saved my tomato crop worth ₹2 lakhs. Best app for farmers!"</span><span class="lang-content hi">"कीट पहचान कैमरा जादुई है! समय पर फंगल संक्रमण पकड़ा और ₹2 लाख की टमाटर फसल बचाई।"</span><span class="lang-content mr">"किडे ओळख कॅमेरा जादुई आहे! वेळेत बुरशीजन्य संसर्ग ओळखला आणि ₹2 लाखांची टोमॅटो पीक वाचवली."</span></p>
+                <div class="testi-farmer">
+                    <div class="testi-avatar">🧑‍🌾</div>
+                    <div>
+                        <div class="testi-name">Mohan Reddy</div>
+                        <div class="testi-loc">📍 Solapur, Maharashtra</div>
+                        <span class="testi-crop">🍅 Tomato Farmer</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══ CTA BANNER ══ -->
+    <section class="cta-banner">
+        <div class="cta-inner">
+            <span class="cta-emoji">🌾</span>
+            <h2 class="cta-h">
+                <span class="lang-content en">Join <span>75,000+ Farmers</span><br>Growing Smarter Today!</span>
+                <span class="lang-content hi"><span>75,000+ किसानों</span> के साथ जुड़ें<br>आज ही स्मार्ट खेती शुरू करें!</span>
+                <span class="lang-content mr"><span>75,000+ शेतकऱ्यांसह</span> सामील व्हा<br>आजच स्मार्ट शेती सुरू करा!</span>
+            </h2>
+            <p class="cta-p">
+                <span class="lang-content en">100% Free · Hindi, Marathi & English · Works Offline</span>
+                <span class="lang-content hi">100% मुफ्त · हिंदी, मराठी और अंग्रेजी · ऑफलाइन काम</span>
+                <span class="lang-content mr">100% मोफत · हिंदी, मराठी आणि इंग्रजी · ऑफलाइन काम</span>
+            </p>
+            <div class="cta-actions">
+                <a href="login.html" class="hero-btn-primary" style="font-size:17px;padding:17px 40px">
+                    <i class="fas fa-rocket"></i>
+                    <span class="lang-content en">Start Free — No Credit Card</span>
+                    <span class="lang-content hi">मुफ्त शुरू करें — कोई कार्ड नहीं</span>
+                    <span class="lang-content mr">मोफत सुरू करा — कार्ड नको</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══ FOOTER ══ -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div>
+                <div class="footer-logo">
+                    <i class="fas fa-leaf"></i> AgriSet<span>.AI</span>
+                </div>
+                <p class="footer-tagline">
+                    <span class="lang-content en">Your complete toolkit for modern, intelligent agriculture. Powered by AI, designed for farmers.</span>
+                    <span class="lang-content hi">आधुनिक, बुद्धिमान कृषि के लिए आपका संपूर्ण टूलकिट। AI द्वारा संचालित।</span>
+                    <span class="lang-content mr">आधुनिक, बुद्धिमान शेतीसाठी तुमचे संपूर्ण टूलकिट. AI द्वारे चालित.</span>
+                </p>
+                <div class="footer-social">
+                    <a href="#" class="soc-btn"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="soc-btn"><i class="fab fa-whatsapp"></i></a>
+                    <a href="#" class="soc-btn"><i class="fab fa-youtube"></i></a>
+                    <a href="#" class="soc-btn"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-links-grid">
+                <div class="footer-column">
+                    <h4><span class="lang-content en">Platform</span><span class="lang-content hi">प्लेटफॉर्म</span><span class="lang-content mr">प्लॅटफॉर्म</span></h4>
+                    <a href="#"><span class="lang-content en">Home</span><span class="lang-content hi">होम</span><span class="lang-content mr">होम</span></a>
+                    <a href="pest.html"><span class="lang-content en">Pest Detection</span><span class="lang-content hi">कीट पहचान</span><span class="lang-content mr">किडे ओळख</span></a>
+                    <a href="soil.html"><span class="lang-content en">Soil Testing</span><span class="lang-content hi">मृदा परीक्षण</span><span class="lang-content mr">मृदा तपासणी</span></a>
+                </div>
+                <div class="footer-column">
+                    <h4><span class="lang-content en">Services</span><span class="lang-content hi">सेवाएं</span><span class="lang-content mr">सेवा</span></h4>
+                    <a href="equipment.html"><span class="lang-content en">Equipment</span><span class="lang-content hi">उपकरण</span><span class="lang-content mr">उपकरणे</span></a>
+                    <a href="wallet.html"><span class="lang-content en">Farm Wallet</span><span class="lang-content hi">फार्म वॉलेट</span><span class="lang-content mr">फार्म वॉलेट</span></a>
+                    <a href="weather.html"><span class="lang-content en">Weather</span><span class="lang-content hi">मौसम</span><span class="lang-content mr">हवामान</span></a>
+                </div>
+                <div class="footer-column">
+                    <h4><span class="lang-content en">Company</span><span class="lang-content hi">कंपनी</span><span class="lang-content mr">कंपनी</span></h4>
+                    <a href="about.html"><span class="lang-content en">About Us</span><span class="lang-content hi">हमारे बारे में</span><span class="lang-content mr">आमच्याबद्दल</span></a>
+                    <a href="contact.html"><span class="lang-content en">Contact</span><span class="lang-content hi">संपर्क करें</span><span class="lang-content mr">संपर्क करा</span></a>
+                    <a href="privacy.html"><span class="lang-content en">Privacy Policy</span><span class="lang-content hi">गोपनीयता नीति</span><span class="lang-content mr">गोपनीयता धोरण</span></a>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <span class="lang-content en">© 2026 AgriSet.AI. All rights reserved. · Made with ❤️ for Indian Farmers</span>
+            <span class="lang-content hi">© 2026 AgriSet.AI. सर्व अधिकार सुरक्षित। · भारतीय किसानों के लिए ❤️ से बनाया</span>
+            <span class="lang-content mr">© 2026 AgriSet.AI. सर्व हक्क राखीव. · भारतीय शेतकऱ्यांसाठी ❤️ ने बनवले</span>
+        </div>
+    </footer>
+
+    <script>
+        // ── LANGUAGE SWITCH ──
+        function switchLanguage(lang) {
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            const btn = document.getElementById('btn-' + lang);
+            if (btn) btn.classList.add('active');
+            document.querySelectorAll('.lang-content').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.lang-content.' + lang).forEach(el => {
+                el.style.display = el.classList.contains('inline') ? 'inline' : 'block';
+            });
+            const titles = {
+                en: "AgriSet.AI - Complete Smart Farming Solution",
+                hi: "AgriSet.AI - संपूर्ण स्मार्ट फार्मिंग समाधान",
+                mr: "AgriSet.AI - संपूर्ण स्मार्ट फार्मिंग उपाय"
+            };
+            document.title = titles[lang] || titles.en;
+            localStorage.setItem('language', lang);
+        }
+
+        // ── NAVBAR SCROLL ──
+        window.addEventListener('scroll', function () {
+            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // ── INIT ──
+        document.addEventListener('DOMContentLoaded', function () {
+            ['en','hi','mr'].forEach(lang => {
+                const btn = document.getElementById('btn-' + lang);
+                if (btn) btn.addEventListener('click', () => switchLanguage(lang));
+            });
+
+            // Mark spans as inline
+            document.querySelectorAll('.lang-content').forEach(el => {
+                if (el.tagName === 'SPAN') el.classList.add('inline');
+            });
+
+            // Load saved language
+            switchLanguage(localStorage.getItem('language') || 'en');
+
+            // ── SCROLL REVEAL ──
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach((entry, i) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+                        revealObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+            document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+            // ── FEATURE CARD ANIMATION ──
+            const cardObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationPlayState = 'running';
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+            document.querySelectorAll('.animate-card').forEach(card => {
+                card.style.animationPlayState = 'paused';
+                cardObserver.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>
