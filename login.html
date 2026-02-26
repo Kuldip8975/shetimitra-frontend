@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AgriSet.AI - Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #F0FDF4;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            background: #ffffff;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            padding: 14px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo {
+            display: flex; align-items: center; gap: 10px;
+            text-decoration: none;
+        }
+        .logo-icon {
+            width: 42px; height: 42px;
+            background: linear-gradient(135deg, #10B981, #047857);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .logo-icon i { color: #fff; font-size: 20px; }
+        .logo-name {
+            font-family: 'Poppins', sans-serif;
+            font-size: 22px; font-weight: 800;
+            background: linear-gradient(135deg, #10B981, #047857);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .logo-tag { font-size: 10px; color: #6B7280; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-top: -3px; }
+
+        /* Language Buttons */
+        .lang-group { display: flex; gap: 6px; }
+        .lang-btn {
+            padding: 8px 16px; border: 2px solid #E5E7EB;
+            background: #fff; border-radius: 8px;
+            font-size: 13px; font-weight: 700; cursor: pointer;
+            color: #6B7280; font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
+        }
+        .lang-btn:hover { border-color: #10B981; color: #10B981; }
+        .lang-btn.active { background: linear-gradient(135deg,#10B981,#047857); border-color: #10B981; color: #fff; }
+
+        /* ── MAIN ── */
+        .main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+            border: 1.5px solid rgba(16,185,129,0.15);
+            width: 100%; max-width: 440px;
+            padding: 40px 36px;
+        }
+
+        /* Card top */
+        .card-header { text-align: center; margin-bottom: 32px; }
+        .card-header .emoji { font-size: 44px; display: block; margin-bottom: 10px; }
+        .card-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 26px; font-weight: 800;
+            color: #1F2937; margin-bottom: 6px;
+        }
+        .card-sub { font-size: 14px; color: #6B7280; font-weight: 500; }
+
+        /* Fields */
+        .field { margin-bottom: 20px; }
+        .field label {
+            display: block; font-size: 14px; font-weight: 700;
+            color: #1F2937; margin-bottom: 8px;
+        }
+        .field .row {
+            display: flex; align-items: center;
+            border: 2px solid #E5E7EB; border-radius: 12px;
+            background: #F9FAFB; overflow: hidden;
+            transition: border-color 0.2s;
+        }
+        .field .row:focus-within { border-color: #10B981; background: #fff; }
+        .field .icon {
+            width: 48px; display: flex; align-items: center; justify-content: center;
+            color: #10B981; font-size: 17px; flex-shrink: 0;
+        }
+        .field input {
+            flex: 1; padding: 14px 14px 14px 0;
+            border: none; background: transparent;
+            font-size: 16px; color: #1F2937;
+            font-family: 'Inter', sans-serif; outline: none;
+        }
+        .field input::placeholder { color: #B0B7C3; font-size: 14px; }
+        .field .hint { font-size: 12px; color: #9CA3AF; margin-top: 5px; font-weight: 500; }
+
+        /* Button */
+        .btn-login {
+            width: 100%; padding: 16px;
+            background: linear-gradient(135deg, #10B981, #047857);
+            color: #fff; border: none; border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 17px; font-weight: 700;
+            cursor: pointer; margin-top: 8px;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            box-shadow: 0 6px 20px rgba(16,185,129,0.35);
+            transition: all 0.25s;
+        }
+        .btn-login:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(16,185,129,0.4); }
+        .btn-login:active { transform: translateY(0); }
+        .btn-login:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+        /* Divider */
+        .divider { text-align: center; margin: 22px 0 16px; font-size: 13px; color: #9CA3AF; font-weight: 500; }
+
+        /* Signup */
+        .signup { text-align: center; font-size: 14px; color: #6B7280; margin-top: 8px; }
+        .signup a { color: #10B981; font-weight: 700; text-decoration: none; }
+        .signup a:hover { text-decoration: underline; }
+
+        /* Trust bar */
+        .trust {
+            margin-top: 24px;
+            background: #F0FDF4;
+            border: 1.5px solid rgba(16,185,129,0.2);
+            border-radius: 10px; padding: 12px 16px;
+            display: flex; align-items: center; gap: 10px;
+            font-size: 13px; color: #047857; font-weight: 600;
+        }
+        .trust i { color: #10B981; font-size: 18px; flex-shrink: 0; }
+
+        /* Features below on mobile */
+        .features {
+            max-width: 440px; width: 100%;
+            margin: 0 auto 20px;
+            display: flex; flex-wrap: wrap; gap: 10px;
+            justify-content: center;
+            padding: 0 20px;
+        }
+        .feat-chip {
+            display: flex; align-items: center; gap: 6px;
+            background: #fff; border: 1.5px solid rgba(16,185,129,0.2);
+            border-radius: 50px; padding: 7px 14px;
+            font-size: 13px; font-weight: 600; color: #047857;
+        }
+        .feat-chip i { color: #10B981; font-size: 13px; }
+
+        /* Lang content */
+        .lc { display: none; }
+        .lc.en { display: inline; }
+        .lc.blk.en { display: block; }
+        .lc.blk { display: none; }
+
+        @media (max-width: 480px) {
+            .navbar { padding: 12px 16px; }
+            .card { padding: 28px 20px; }
+            .lang-btn { padding: 7px 11px; font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <a href="index.html" class="logo">
+            <div class="logo-icon"><i class="fas fa-leaf"></i></div>
+            <div>
+                <div class="logo-name">AgriSet<span>.AI</span></div>
+                <div class="logo-tag">Smart Farming Toolkit</div>
+            </div>
+        </a>
+        <div class="lang-group">
+            <button class="lang-btn active" id="btn-en">English</button>
+            <button class="lang-btn" id="btn-hi">हिंदी</button>
+            <button class="lang-btn" id="btn-mr">मराठी</button>
+        </div>
+    </nav>
+
+    <!-- MAIN -->
+    <div class="main">
+        <div style="width:100%;max-width:440px">
+
+            <!-- Feature chips -->
+            <!-- <div class="features">
+                <div class="feat-chip"><i class="fas fa-microscope"></i><span class="lc en">Soil AI</span><span class="lc hi">मृदा AI</span><span class="lc mr">माती AI</span></div>
+                <div class="feat-chip"><i class="fas fa-bug"></i><span class="lc en">Pest Detection</span><span class="lc hi">कीट पहचान</span><span class="lc mr">किडे ओळख</span></div>
+                <div class="feat-chip"><i class="fas fa-wallet"></i><span class="lc en">Farm Wallet</span><span class="lc hi">फार्म वॉलेट</span><span class="lc mr">फार्म वॉलेट</span></div>
+                <div class="feat-chip"><i class="fas fa-tractor"></i><span class="lc en">Equipment</span><span class="lc hi">उपकरण</span><span class="lc mr">उपकरणे</span></div>
+                <div class="feat-chip"><i class="fas fa-chart-line"></i><span class="lc en">Analytics</span><span class="lc hi">एनालिटिक्स</span><span class="lc mr">विश्लेषण</span></div>
+            </div> -->
+
+            <!-- Login Card -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="emoji">🙏</span>
+                    <div class="card-title">
+                        <span class="lc en">Welcome Back, Farmer!</span>
+                        <span class="lc hi">वापस स्वागत, किसान!</span>
+                        <span class="lc mr">परत स्वागत, शेतकरी!</span>
+                    </div>
+                    <div class="card-sub">
+                        <span class="lc en">Sign in to your AgriSet.AI account</span>
+                        <span class="lc hi">अपने AgriSet.AI खाते में साइन इन करें</span>
+                        <span class="lc mr">तुमच्या AgriSet.AI खात्यात साइन इन करा</span>
+                    </div>
+                </div>
+
+                <!-- Mobile -->
+                <div class="field">
+                    <label>
+                        <span class="lc en">📱 Mobile Number</span>
+                        <span class="lc hi">📱 मोबाइल नंबर</span>
+                        <span class="lc mr">📱 मोबाइल नंबर</span>
+                    </label>
+                    <div class="row">
+                        <div class="icon"><i class="fas fa-phone"></i></div>
+                        <input type="tel" id="mobile" maxlength="10"
+                               placeholder="10-digit number"
+                               oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+                    </div>
+                    <div class="hint">
+                        <span class="lc en">Enter the number used during registration</span>
+                        <span class="lc hi">पंजीकरण वाला नंबर दर्ज करें</span>
+                        <span class="lc mr">नोंदणीतील नंबर प्रविष्ट करा</span>
+                    </div>
+                </div>
+
+                <!-- Password -->
+                <div class="field">
+                    <label>
+                        <span class="lc en">🔒 Password</span>
+                        <span class="lc hi">🔒 पासवर्ड</span>
+                        <span class="lc mr">🔒 पासवर्ड</span>
+                    </label>
+                    <div class="row">
+                        <div class="icon"><i class="fas fa-lock"></i></div>
+                        <input type="password" id="password" placeholder="Enter your password">
+                    </div>
+                </div>
+
+                <button class="btn-login" onclick="login()">
+                    <i class="fas fa-seedling"></i>
+                    <span class="lc en">Login to Dashboard</span>
+                    <span class="lc hi">डैशबोर्ड में लॉगिन करें</span>
+                    <span class="lc mr">डॅशबोर्डमध्ये लॉगिन करा</span>
+                </button>
+
+                <div class="divider">
+                    <span class="lc en">— New to AgriSet.AI? —</span>
+                    <span class="lc hi">— AgriSet.AI पर नए हैं? —</span>
+                    <span class="lc mr">— AgriSet.AI वर नवीन? —</span>
+                </div>
+
+                <div class="signup">
+                    <a href="signup.html">
+                        <span class="lc en">➕ Create Free Account</span>
+                        <span class="lc hi">➕ मुफ्त खाता बनाएं</span>
+                        <span class="lc mr">➕ मोफत खाते तयार करा</span>
+                    </a>
+                </div>
+
+                <div class="trust">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>
+                        <span class="lc en">Your data is 100% secure & private</span>
+                        <span class="lc hi">आपका डेटा 100% सुरक्षित और निजी है</span>
+                        <span class="lc mr">तुमचा डेटा 100% सुरक्षित आणि खाजगी आहे</span>
+                    </span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+<script>
+    let lang = localStorage.getItem('language') || 'en';
+
+    function switchLanguage(l) {
+        lang = l;
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('btn-' + l).classList.add('active');
+        document.querySelectorAll('.lc').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.lc.' + l).forEach(el => {
+            el.style.display = el.classList.contains('blk') ? 'block' : 'inline';
+        });
+        const ph = {
+            en: ['10-digit number', 'Enter your password'],
+            hi: ['10 अंकों का नंबर', 'पासवर्ड दर्ज करें'],
+            mr: ['10 अंकी नंबर', 'पासवर्ड प्रविष्ट करा']
+        };
+        document.getElementById('mobile').placeholder   = ph[l][0];
+        document.getElementById('password').placeholder = ph[l][1];
+        localStorage.setItem('language', l);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        ['en','hi','mr'].forEach(l =>
+            document.getElementById('btn-'+l).addEventListener('click', () => switchLanguage(l))
+        );
+        switchLanguage(lang);
+    });
+
+    function login() {
+        const mobile   = document.getElementById('mobile').value.trim();
+        const password = document.getElementById('password').value.trim();
+        const msg = {
+            en: { m:'Please enter a valid 10-digit mobile number', p:'Please enter your password', ok:'Login successful! 🌱', err:'Invalid credentials. Please try again.', net:'Network error. Please try again.' },
+            hi: { m:'10 अंकों का मान्य मोबाइल नंबर दर्ज करें', p:'पासवर्ड दर्ज करें', ok:'लॉगिन सफल! 🌱', err:'अमान्य जानकारी। फिर से प्रयास करें।', net:'नेटवर्क त्रुटि।' },
+            mr: { m:'10 अंकांचा मान्य मोबाइल नंबर प्रविष्ट करा', p:'पासवर्ड प्रविष्ट करा', ok:'लॉगिन यशस्वी! 🌱', err:'अवैध माहिती. पुन्हा प्रयत्न करा.', net:'नेटवर्क त्रुटी.' }
+        };
+        const t = msg[lang] || msg.en;
+        if (!mobile || mobile.length !== 10) { alert(t.m); return; }
+        if (!password) { alert(t.p); return; }
+
+        const btn = document.querySelector('.btn-login');
+        const orig = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> &nbsp;...';
+        btn.disabled = true;
+
+        fetch('http://127.0.0.1:5000/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ mobile, password })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.user) {
+                localStorage.setItem('user', JSON.stringify(data.user));
+                alert(t.ok);
+                location.href = 'dashboard.html';
+            } else {
+                alert(data.error || t.err);
+                btn.innerHTML = orig; btn.disabled = false;
+            }
+        })
+        .catch(() => { alert(t.net); btn.innerHTML = orig; btn.disabled = false; });
+    }
+
+    document.addEventListener('keypress', e => { if (e.key === 'Enter') login(); });
+</script>
+
+</body>
+</html>

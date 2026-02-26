@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Owner Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-deep: #0d5c2e;
+    --green-mid: #1b7f3a;
+    --green-light: #2ea855;
+    --green-pale: #e8f7ee;
+    --gold: #e5a829;
+    --red: #d63031;
+    --red-pale: #fff0f0;
+    --white: #ffffff;
+    --gray-100: #f7f9f8;
+    --gray-200: #eef2f0;
+    --gray-400: #9bada3;
+    --gray-700: #3d5247;
+    --text: #1a2e24;
+    --shadow: 0 4px 24px rgba(13,92,46,0.10);
+    --radius: 14px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', 'Noto Sans Devanagari', sans-serif;
+    background: var(--gray-100);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 10% 0%, rgba(27,127,58,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 90% 100%, rgba(27,127,58,0.05) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--green-deep);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 20px rgba(13,92,46,0.3);
+  }
+
+  .header-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px;
+    height: 68px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .header-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+
+  .header-icon {
+    width: 36px; height: 36px;
+    background: var(--green-light);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .header-icon svg { width: 20px; height: 20px; fill: white; }
+
+  .header-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    color: white;
+    letter-spacing: 0.01em;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .header-meta {
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    font-weight: 300;
+  }
+
+  /* LANGUAGE SWITCHER */
+  .lang-switcher {
+    display: flex;
+    align-items: center;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 999px;
+    padding: 3px;
+    gap: 2px;
+  }
+
+  .lang-btn {
+    padding: 5px 12px;
+    border: none;
+    border-radius: 999px;
+    background: transparent;
+    color: rgba(255,255,255,0.65);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'DM Sans', 'Noto Sans Devanagari', sans-serif;
+    transition: all 0.2s ease;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+  }
+  .lang-btn:hover { color: white; background: rgba(255,255,255,0.1); }
+  .lang-btn.active {
+    background: var(--green-light);
+    color: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+
+  /* STATS BAR */
+  .stats-bar {
+    max-width: 960px;
+    margin: 28px auto 0;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    position: relative;
+    z-index: 1;
+    animation: slideDown 0.5s ease both;
+  }
+
+  .stat-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    box-shadow: var(--shadow);
+    border-top: 3px solid transparent;
+    transition: transform 0.2s ease;
+  }
+  .stat-card:hover { transform: translateY(-2px); }
+  .stat-card.total    { border-top-color: var(--green-mid); }
+  .stat-card.pending  { border-top-color: var(--gold); }
+  .stat-card.approved { border-top-color: var(--green-light); }
+
+  .stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--gray-400);
+    margin-bottom: 6px;
+  }
+
+  .stat-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  /* CONTAINER */
+  .container {
+    max-width: 960px;
+    margin: 24px auto 40px;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .section-heading {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--gray-400);
+    margin-bottom: 14px;
+    padding-left: 2px;
+  }
+
+  /* BOOKING CARD */
+  .card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    align-items: start;
+    border: 1.5px solid transparent;
+    transition: border-color 0.25s, box-shadow 0.25s, transform 0.2s;
+    animation: fadeUp 0.4s ease both;
+  }
+  .card:hover {
+    border-color: var(--green-pale);
+    box-shadow: 0 8px 32px rgba(13,92,46,0.13);
+    transform: translateY(-2px);
+  }
+  .card.status-pending   { border-left: 4px solid var(--gold); }
+  .card.status-approved  { border-left: 4px solid var(--green-light); }
+  .card.status-cancelled { border-left: 4px solid var(--red); opacity: 0.7; }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+
+  .card-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 19px;
+    color: var(--green-deep);
+    line-height: 1.2;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    flex-shrink: 0;
+  }
+  .badge.pending   { background: #fff8e6; color: #b07700; }
+  .badge.approved  { background: var(--green-pale); color: var(--green-deep); }
+  .badge.cancelled { background: var(--red-pale); color: var(--red); }
+  .badge-dot { width:6px; height:6px; border-radius:50%; background:currentColor; }
+
+  .details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+    gap: 10px;
+  }
+  .detail-item { display:flex; flex-direction:column; gap:3px; }
+
+  .detail-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--gray-400);
+  }
+  .detail-value { font-size:14px; font-weight:500; color:var(--gray-700); }
+  .detail-value.highlight { color:var(--green-mid); font-weight:600; }
+
+  .card-note {
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: var(--gray-100);
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--gray-700);
+    border-left: 3px solid var(--gray-200);
+    font-style: italic;
+  }
+
+  /* ACTIONS */
+  .card-actions { display:flex; flex-direction:column; gap:8px; min-width:120px; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 14px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'DM Sans', 'Noto Sans Devanagari', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.18s ease;
+    white-space: nowrap;
+  }
+  .btn svg { width:14px; height:14px; flex-shrink:0; }
+
+  .btn-approve {
+    background: var(--green-mid);
+    color: white;
+    box-shadow: 0 2px 8px rgba(27,127,58,0.3);
+  }
+  .btn-approve:hover {
+    background: var(--green-deep);
+    box-shadow: 0 4px 14px rgba(27,127,58,0.4);
+    transform: translateY(-1px);
+  }
+  .btn-reject {
+    background: var(--white);
+    color: var(--red);
+    border: 1.5px solid #f0c5c5;
+  }
+  .btn-reject:hover {
+    background: var(--red-pale);
+    border-color: var(--red);
+    transform: translateY(-1px);
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+
+  /* EMPTY */
+  .empty { text-align:center; padding:64px 40px; color:var(--gray-400); }
+  .empty-icon { font-size:48px; margin-bottom:14px; opacity:0.4; }
+  .empty p { font-family:'DM Serif Display',serif; font-size:20px; color:var(--gray-700); margin-bottom:6px; }
+  .empty span { font-size:14px; color:var(--gray-400); }
+
+  /* TOAST */
+  #toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--green-deep);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 8px 32px rgba(13,92,46,0.3);
+    z-index: 999;
+    transition: transform 0.35s cubic-bezier(.22,.68,0,1.2), opacity 0.3s;
+    opacity: 0;
+    font-family: 'DM Sans', 'Noto Sans Devanagari', sans-serif;
+  }
+  #toast.show { transform:translateX(-50%) translateY(0); opacity:1; }
+  #toast.error { background:var(--red); }
+
+  /* SKELETON */
+  .skeleton {
+    background: linear-gradient(90deg, var(--gray-200) 25%, #f0f5f2 50%, var(--gray-200) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+    border-radius: 8px;
+  }
+  .skeleton-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 22px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow);
+  }
+
+  @keyframes shimmer  { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+  @keyframes fadeUp   { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes slideDown{ from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
+
+  @media (max-width: 680px) {
+    .header-inner { height:auto; padding:12px 16px; flex-wrap:wrap; gap:10px; }
+    .header-right { width:100%; justify-content:space-between; }
+    .stats-bar { gap:8px; }
+    .stat-value { font-size:24px; }
+    .stat-label { font-size:9px; }
+    .card { grid-template-columns:1fr; }
+    .card-actions { flex-direction:row; }
+    .lang-btn { padding:5px 9px; font-size:11px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="header-icon">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+      </div>
+      <span class="header-title" id="headerTitle">Owner Dashboard</span>
+    </div>
+    <div class="header-right">
+      <span class="header-meta" id="ownerName">Loading…</span>
+      <!-- LANGUAGE SWITCHER -->
+      <div class="lang-switcher">
+        <button class="lang-btn active" onclick="setLang('en')">EN</button>
+        <button class="lang-btn"        onclick="setLang('mr')">मराठी</button>
+        <button class="lang-btn"        onclick="setLang('hi')">हिंदी</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="stats-bar">
+  <div class="stat-card total">
+    <div class="stat-label" data-i18n="totalRequests">Total Requests</div>
+    <div class="stat-value" id="statTotal">—</div>
+  </div>
+  <div class="stat-card pending">
+    <div class="stat-label" data-i18n="pending">Pending</div>
+    <div class="stat-value" id="statPending">—</div>
+  </div>
+  <div class="stat-card approved">
+    <div class="stat-label" data-i18n="approved">Approved</div>
+    <div class="stat-value" id="statApproved">—</div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="section-heading" data-i18n="bookingRequests">Booking Requests</div>
+  <div id="box">
+    <div class="skeleton-card">
+      <div class="skeleton" style="height:20px;width:55%;margin-bottom:14px;"></div>
+      <div class="skeleton" style="height:14px;width:80%;margin-bottom:8px;"></div>
+      <div class="skeleton" style="height:14px;width:60%;"></div>
+    </div>
+    <div class="skeleton-card">
+      <div class="skeleton" style="height:20px;width:40%;margin-bottom:14px;"></div>
+      <div class="skeleton" style="height:14px;width:70%;margin-bottom:8px;"></div>
+      <div class="skeleton" style="height:14px;width:50%;"></div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── TRANSLATIONS ──────────────────────────────────────────────────────────────
+const T = {
+  en: {
+    headerTitle:     "Owner Dashboard",
+    totalRequests:   "Total Requests",
+    pending:         "Pending",
+    approved:        "Approved",
+    bookingRequests: "Booking Requests",
+    guest:           "Guest",
+    checkIn:         "Check-in",
+    checkOut:        "Check-out",
+    duration:        "Duration",
+    night:           "night",
+    nights:          "nights",
+    guestsLabel:     "Guests",
+    person:          "person",
+    persons:         "persons",
+    totalPrice:      "Total Price",
+    requestedOn:     "Requested On",
+    contact:         "Contact",
+    approveBtn:      "Approve",
+    rejectBtn:       "Reject",
+    noBookings:      "No booking requests yet",
+    noBookingsSub:   "New requests will appear here",
+    toastApproved:   "✓ Booking approved!",
+    toastRejected:   "Booking rejected.",
+    toastErrApprove: "Failed to approve booking.",
+    toastErrReject:  "Failed to reject booking.",
+    confirmReject:   "Are you sure you want to reject this booking?",
+    property:        "Property #",
+    statusPending:   "Pending",
+    statusApproved:  "Approved",
+    statusCancelled: "Cancelled",
+  },
+  mr: {
+    headerTitle:     "मालक डॅशबोर्ड",
+    totalRequests:   "एकूण विनंत्या",
+    pending:         "प्रलंबित",
+    approved:        "मंजूर",
+    bookingRequests: "बुकिंग विनंत्या",
+    guest:           "अतिथी",
+    checkIn:         "चेक-इन",
+    checkOut:        "चेक-आउट",
+    duration:        "कालावधी",
+    night:           "रात्र",
+    nights:          "रात्री",
+    guestsLabel:     "अतिथी",
+    person:          "व्यक्ती",
+    persons:         "व्यक्ती",
+    totalPrice:      "एकूण किंमत",
+    requestedOn:     "विनंती केली",
+    contact:         "संपर्क",
+    approveBtn:      "मंजूर करा",
+    rejectBtn:       "नाकारा",
+    noBookings:      "अद्याप कोणत्याही बुकिंग विनंत्या नाहीत",
+    noBookingsSub:   "नवीन विनंत्या येथे दिसतील",
+    toastApproved:   "✓ बुकिंग मंजूर झाली!",
+    toastRejected:   "बुकिंग नाकारली.",
+    toastErrApprove: "बुकिंग मंजूर करण्यात अयशस्वी.",
+    toastErrReject:  "बुकिंग नाकारण्यात अयशस्वी.",
+    confirmReject:   "तुम्हाला ही बुकिंग नाकारायची आहे का?",
+    property:        "मालमत्ता #",
+    statusPending:   "प्रलंबित",
+    statusApproved:  "मंजूर",
+    statusCancelled: "रद्द",
+  },
+  hi: {
+    headerTitle:     "मालिक डैशबोर्ड",
+    totalRequests:   "कुल अनुरोध",
+    pending:         "लंबित",
+    approved:        "स्वीकृत",
+    bookingRequests: "बुकिंग अनुरोध",
+    guest:           "अतिथि",
+    checkIn:         "चेक-इन",
+    checkOut:        "चेक-आउट",
+    duration:        "अवधि",
+    night:           "रात",
+    nights:          "रातें",
+    guestsLabel:     "अतिथि",
+    person:          "व्यक्ति",
+    persons:         "व्यक्ति",
+    totalPrice:      "कुल मूल्य",
+    requestedOn:     "अनुरोध तिथि",
+    contact:         "संपर्क",
+    approveBtn:      "स्वीकृत करें",
+    rejectBtn:       "अस्वीकार करें",
+    noBookings:      "अभी तक कोई बुकिंग अनुरोध नहीं",
+    noBookingsSub:   "नए अनुरोध यहाँ दिखाई देंगे",
+    toastApproved:   "✓ बुकिंग स्वीकृत हुई!",
+    toastRejected:   "बुकिंग अस्वीकार की गई।",
+    toastErrApprove: "बुकिंग स्वीकृत करने में विफल।",
+    toastErrReject:  "बुकिंग अस्वीकार करने में विफल।",
+    confirmReject:   "क्या आप वाकई इस बुकिंग को अस्वीकार करना चाहते हैं?",
+    property:        "संपत्ति #",
+    statusPending:   "लंबित",
+    statusApproved:  "स्वीकृत",
+    statusCancelled: "रद्द",
+  }
+};
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+const API  = "https://shetimitra-backend-production.up.railway.app";
+const user = JSON.parse(localStorage.getItem("user") || '{"id":1,"name":"Property Owner"}');
+let lang   = localStorage.getItem("dashLang") || "en";
+let allData = [];
+
+document.getElementById("ownerName").textContent = user.name || "Owner";
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+function t(key) { return (T[lang] || T.en)[key] || key; }
+
+function fmtDate(str) {
+  if (!str) return "—";
+  try { return new Date(str).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"}); }
+  catch { return str; }
+}
+
+function fmtCurrency(n) {
+  return n == null ? "—" : "₹" + Number(n).toLocaleString("en-IN");
+}
+
+function statusClass(s) {
+  if (!s) return "pending";
+  const sl = s.toLowerCase();
+  if (sl.includes("approve") || sl.includes("confirm")) return "approved";
+  if (sl.includes("cancel")  || sl.includes("reject"))  return "cancelled";
+  return "pending";
+}
+
+function statusLabel(sc) {
+  return sc === "approved" ? t("statusApproved")
+       : sc === "cancelled" ? t("statusCancelled")
+       : t("statusPending");
+}
+
+function showToast(msg, isError = false) {
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.className   = "show" + (isError ? " error" : "");
+  clearTimeout(el._timer);
+  el._timer = setTimeout(() => el.className = "", 3000);
+}
+
+// ── LANGUAGE SWITCH ───────────────────────────────────────────────────────────
+function setLang(l) {
+  lang = l;
+  localStorage.setItem("dashLang", l);
+
+  // highlight active button
+  document.querySelectorAll(".lang-btn").forEach((b, i) => {
+    b.classList.toggle("active", ["en","mr","hi"][i] === l);
+  });
+
+  // update static translatable elements
+  document.getElementById("headerTitle").textContent = t("headerTitle");
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    el.textContent = t(el.dataset.i18n);
+  });
+
+  // re-render cards with new language
+  if (allData.length) renderBookings(allData);
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function renderBookings(data) {
+  const box = document.getElementById("box");
+  box.innerHTML = "";
+
+  if (!data.length) {
+    box.innerHTML = `
+      <div class="empty">
+        <div class="empty-icon">🏠</div>
+        <p>${t("noBookings")}</p>
+        <span>${t("noBookingsSub")}</span>
+      </div>`;
+    return;
+  }
+
+  const cntPending  = data.filter(b => statusClass(b.status) === "pending").length;
+  const cntApproved = data.filter(b => statusClass(b.status) === "approved").length;
+  document.getElementById("statTotal").textContent    = data.length;
+  document.getElementById("statPending").textContent  = cntPending;
+  document.getElementById("statApproved").textContent = cntApproved;
+
+  data.forEach((b, i) => {
+    const sc     = statusClass(b.status);
+    const nights = (b.check_in && b.check_out)
+      ? Math.round((new Date(b.check_out) - new Date(b.check_in)) / 86400000) : null;
+
+    const card = document.createElement("div");
+    card.className = `card status-${sc}`;
+    card.style.animationDelay = `${i * 0.06}s`;
+
+    card.innerHTML = `
+      <div class="card-body">
+        <div class="card-header">
+          <div class="card-title">${b.title || b.property_name || t("property") + b.id}</div>
+          <span class="badge ${sc}">
+            <span class="badge-dot"></span>
+            ${statusLabel(sc)}
+          </span>
+        </div>
+
+        <div class="details-grid">
+          ${b.guest_name ? `
+          <div class="detail-item">
+            <span class="detail-label">${t("guest")}</span>
+            <span class="detail-value">${b.guest_name}</span>
+          </div>` : ""}
+
+          ${b.check_in ? `
+          <div class="detail-item">
+            <span class="detail-label">${t("checkIn")}</span>
+            <span class="detail-value">${fmtDate(b.check_in)}</span>
+          </div>` : ""}
+
+          ${b.check_out ? `
+          <div class="detail-item">
+            <span class="detail-label">${t("checkOut")}</span>
+            <span class="detail-value">${fmtDate(b.check_out)}</span>
+          </div>` : ""}
+
+          ${nights != null ? `
+          <div class="detail-item">
+            <span class="detail-label">${t("duration")}</span>
+            <span class="detail-value">${nights} ${nights === 1 ? t("night") : t("nights")}</span>
+          </div>` : ""}
+
+          ${b.guests != null ? `
+          <div class="detail-item">
+            <span class="detail-label">${t("guestsLabel")}</span>
+            <span class="detail-value">${b.guests} ${b.guests === 1 ? t("person") : t("persons")}</span>
+          </div>` : ""}
+
+          ${b.total_price != null ? `
+          <div class="detail-item">
+            <span class="detail-label">${t("totalPrice")}</span>
+            <span class="detail-value highlight">${fmtCurrency(b.total_price)}</span>
+          </div>` : ""}
+
+          ${b.booked_on || b.created_at ? `
+          <div class="detail-item">
+            <span class="detail-label">${t("requestedOn")}</span>
+            <span class="detail-value">${fmtDate(b.booked_on || b.created_at)}</span>
+          </div>` : ""}
+
+          ${b.phone || b.guest_phone ? `
+          <div class="detail-item">
+            <span class="detail-label">${t("contact")}</span>
+            <span class="detail-value">${b.phone || b.guest_phone}</span>
+          </div>` : ""}
+        </div>
+
+        ${b.note || b.notes || b.message ? `
+        <div class="card-note">"${b.note || b.notes || b.message}"</div>` : ""}
+      </div>
+
+      <div class="card-actions">
+        <button class="btn btn-approve" id="approve-${b.id}"
+          onclick="doApprove(${b.id})"
+          ${sc === "approved" ? "disabled" : ""}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          ${t("approveBtn")}
+        </button>
+        <button class="btn btn-reject" id="reject-${b.id}"
+          onclick="doReject(${b.id})"
+          ${sc === "cancelled" ? "disabled" : ""}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+          ${t("rejectBtn")}
+        </button>
+      </div>
+    `;
+    box.appendChild(card);
+  });
+}
+
+// ── FETCH ─────────────────────────────────────────────────────────────────────
+fetch(`${API}/owner/bookings/${user.id}`)
+  .then(r => r.json())
+  .then(data => { allData = data; setLang(lang); })
+  .catch(() => {
+    allData = [
+      {
+        id: 101, title: "Sea View Apartment, Goa",
+        guest_name: "Priya Sharma", check_in: "2026-03-10", check_out: "2026-03-14",
+        guests: 2, total_price: 18000, booked_on: "2026-02-18",
+        status: "Pending", note: "We would love an early check-in if possible!"
+      },
+      {
+        id: 102, title: "Coorg Forest Cottage",
+        guest_name: "Rahul Menon", check_in: "2026-03-20", check_out: "2026-03-23",
+        guests: 4, total_price: 12500, booked_on: "2026-02-17",
+        status: "Approved", phone: "+91 98765 43210"
+      },
+      {
+        id: 103, title: "Jaipur Heritage Haveli",
+        guest_name: "Anita Verma", check_in: "2026-04-01", check_out: "2026-04-05",
+        guests: 3, total_price: 22000, booked_on: "2026-02-19",
+        status: "Pending", note: "Celebrating our anniversary — any special arrangement?"
+      }
+    ];
+    setLang(lang);
+  });
+
+// ── ACTIONS ───────────────────────────────────────────────────────────────────
+function setLoading(id, loading) {
+  const a = document.getElementById(`approve-${id}`);
+  const r = document.getElementById(`reject-${id}`);
+  if (a) a.disabled = loading;
+  if (r) r.disabled = loading;
+}
+
+function doApprove(id) {
+  setLoading(id, true);
+  fetch(`${API}/owner/booking/approve/${id}/${user.id}`, {method:"POST"})
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(() => { showToast(t("toastApproved")); setTimeout(() => location.reload(), 1200); })
+    .catch(() => { showToast(t("toastErrApprove"), true); setLoading(id, false); });
+}
+
+function doReject(id) {
+  if (!confirm(t("confirmReject"))) return;
+  setLoading(id, true);
+  fetch(`${API}/owner/booking/cancel/${id}/${user.id}`, {method:"DELETE"})
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(() => { showToast(t("toastRejected")); setTimeout(() => location.reload(), 1200); })
+    .catch(() => { showToast(t("toastErrReject"), true); setLoading(id, false); });
+}
+</script>
+</body>
+</html>

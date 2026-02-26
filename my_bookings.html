@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Bookings | AgriSet.AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', 'Noto Sans Devanagari', sans-serif;
+            background: #F0FDF4;
+            min-height: 100vh;
+            color: #1F2937;
+        }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            background: #fff;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            padding: 12px 32px;
+            display: flex; align-items: center;
+            justify-content: space-between; flex-wrap: wrap; gap: 12px;
+            position: sticky; top: 0; z-index: 100;
+        }
+
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-icon {
+            width: 42px; height: 42px;
+            background: linear-gradient(135deg, #10B981, #047857);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .logo-icon i { color: #fff; font-size: 20px; }
+        .logo-name {
+            font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 800;
+            background: linear-gradient(135deg, #10B981, #047857);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .logo-tag { font-size: 10px; color: #6B7280; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-top: -3px; }
+
+        .nav-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+        .lang-group { display: flex; gap: 5px; }
+        .lang-btn {
+            padding: 7px 14px; border: 2px solid #E5E7EB;
+            background: #fff; border-radius: 8px;
+            font-size: 13px; font-weight: 700; cursor: pointer;
+            color: #6B7280; font-family: 'Inter', 'Noto Sans Devanagari', sans-serif;
+            transition: all 0.2s;
+        }
+        .lang-btn:hover { border-color: #10B981; color: #10B981; }
+        .lang-btn.active { background: linear-gradient(135deg,#10B981,#047857); border-color: #10B981; color: #fff; }
+
+        .back-btn {
+            display: flex; align-items: center; gap: 8px;
+            background: #fff; color: #10B981;
+            border: 2px solid #10B981; padding: 9px 20px;
+            border-radius: 10px; font-size: 14px; font-weight: 700;
+            cursor: pointer; text-decoration: none;
+            font-family: 'Poppins', sans-serif; transition: all 0.25s;
+        }
+        .back-btn:hover { background: #10B981; color: #fff; transform: translateX(-3px); }
+
+        /* ── PAGE BANNER ── */
+        .page-banner {
+            background: linear-gradient(135deg, #064E3B, #047857);
+            color: white; padding: 28px 32px;
+            display: flex; align-items: center; gap: 20px;
+            position: relative; overflow: hidden;
+        }
+        .page-banner::before {
+            content: '';
+            position: absolute; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        .page-banner::after {
+            content: '📋'; position: absolute; right: 28px; top: -8px;
+            font-size: 120px; opacity: 0.07; pointer-events: none; line-height: 1;
+        }
+        .banner-ico {
+            width: 68px; height: 68px; border-radius: 18px; flex-shrink: 0;
+            background: rgba(255,255,255,0.12);
+            border: 2px solid rgba(255,255,255,0.22);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 30px;
+        }
+        .banner-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(1.3rem, 3vw, 2rem); font-weight: 800; margin-bottom: 5px;
+        }
+        .banner-title .hl { color: #6EE7B7; }
+        .banner-sub { font-size: 14px; opacity: 0.78; font-weight: 400; line-height: 1.5; }
+
+        /* ── STATS STRIP ── */
+        .stats-strip {
+            background: #fff;
+            border-bottom: 1.5px solid rgba(16,185,129,0.1);
+            padding: 16px 32px;
+            display: flex; gap: 0; overflow-x: auto;
+        }
+        .stat-item {
+            display: flex; flex-direction: column; align-items: center;
+            padding: 0 28px;
+            border-right: 1px solid #E5E7EB;
+            min-width: 100px;
+        }
+        .stat-item:first-child { padding-left: 0; }
+        .stat-item:last-child { border-right: none; }
+        .stat-num {
+            font-family: 'Poppins', sans-serif;
+            font-size: 28px; font-weight: 800; line-height: 1;
+        }
+        .stat-num.s-total    { color: #047857; }
+        .stat-num.s-pending  { color: #D97706; }
+        .stat-num.s-confirm  { color: #10B981; }
+        .stat-num.s-done     { color: #1D4ED8; }
+        .stat-lbl {
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.07em; color: #9CA3AF; margin-top: 3px;
+        }
+
+        /* ── FILTER BAR ── */
+        .filter-bar {
+            max-width: 820px; margin: 24px auto 0;
+            padding: 0 20px;
+            display: flex; gap: 8px; flex-wrap: wrap;
+        }
+        .filter-tab {
+            padding: 7px 18px;
+            border: 2px solid #E5E7EB;
+            border-radius: 50px;
+            background: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px; font-weight: 700;
+            color: #6B7280; cursor: pointer; transition: all 0.2s;
+        }
+        .filter-tab:hover { border-color: #10B981; color: #047857; }
+        .filter-tab.active { background: linear-gradient(135deg,#10B981,#047857); color: #fff; border-color: #10B981; }
+
+        /* ── MAIN ── */
+        .main { max-width: 820px; margin: 0 auto; padding: 20px 20px 60px; }
+
+        /* ── BOOKING CARD ── */
+        .booking-card {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+            border: 1.5px solid rgba(16,185,129,0.14);
+            overflow: hidden;
+            margin-bottom: 18px;
+            animation: cardIn 0.45s ease both;
+            transition: transform 0.22s, box-shadow 0.22s;
+            position: relative;
+        }
+        .booking-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 28px rgba(16,185,129,0.15);
+        }
+
+        .card-strip { height: 4px; }
+        .card-strip.s-pending   { background: linear-gradient(135deg,#F59E0B,#D97706); }
+        .card-strip.s-confirmed { background: linear-gradient(135deg,#10B981,#047857); }
+        .card-strip.s-completed { background: linear-gradient(135deg,#3B82F6,#1D4ED8); }
+        .card-strip.s-cancelled { background: linear-gradient(135deg,#EF4444,#B91C1C); }
+
+        .card-body { padding: 22px 24px; }
+
+        /* Card top row */
+        .card-top {
+            display: flex; align-items: flex-start;
+            justify-content: space-between; gap: 12px;
+            margin-bottom: 14px;
+        }
+        .card-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px; font-weight: 800; color: #1F2937; line-height: 1.25;
+            flex: 1;
+        }
+
+        /* Status badge */
+        .status-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 5px 14px; border-radius: 50px;
+            font-size: 11.5px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 0.07em;
+            flex-shrink: 0;
+        }
+        .status-badge .dot { width:7px; height:7px; border-radius:50%; background:currentColor; }
+        .badge-pending   { background:#FEF3C7; color:#92400E; }
+        .badge-confirmed { background:#DCFCE7; color:#14532D; }
+        .badge-completed { background:#DBEAFE; color:#1E3A8A; }
+        .badge-cancelled { background:#FEE2E2; color:#7F1D1D; }
+
+        /* Details grid */
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            gap: 12px;
+            padding: 16px 0;
+            border-top: 1.5px solid #F0FDF4;
+            border-bottom: 1.5px solid #F0FDF4;
+            margin-bottom: 16px;
+        }
+        .detail-cell { display: flex; flex-direction: column; gap: 3px; }
+        .detail-cell .lbl {
+            font-size: 10px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.1em; color: #9CA3AF;
+        }
+        .detail-cell .val {
+            font-size: 14px; font-weight: 600; color: #374151;
+        }
+        .detail-cell .val.mono {
+            font-family: 'Courier New', monospace;
+            background: #ECFDF5; color: #065F46;
+            padding: 2px 8px; border-radius: 5px;
+            font-size: 13px; display: inline-block;
+        }
+        .detail-cell .val.price {
+            color: #047857; font-size: 16px; font-weight: 800;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Progress */
+        .progress-row {
+            display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+        }
+        .progress-track {
+            flex: 1; height: 6px; background: #F3F4F6;
+            border-radius: 999px; overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%; border-radius: 999px;
+            transition: width 1.2s cubic-bezier(.22,.68,0,1.1);
+        }
+        .pf-pending   { background: linear-gradient(90deg,#F59E0B,#D97706); width: 25%; }
+        .pf-confirmed { background: linear-gradient(90deg,#10B981,#047857); width: 60%; }
+        .pf-completed { background: linear-gradient(90deg,#3B82F6,#1D4ED8); width: 100%; }
+        .pf-cancelled { background: linear-gradient(90deg,#EF4444,#B91C1C); width: 100%; }
+
+        .progress-lbl { font-size: 11px; font-weight: 700; color: #9CA3AF; white-space: nowrap; }
+
+        /* Timeline */
+        .timeline {
+            display: flex; align-items: center; flex-wrap: wrap; gap: 4px;
+            font-size: 10.5px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.06em; color: #9CA3AF;
+        }
+        .tl-step { display: flex; align-items: center; gap: 5px; }
+        .tl-dot {
+            width: 18px; height: 18px; border-radius: 50%;
+            border: 2px solid #E5E7EB; background: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 8px; flex-shrink: 0;
+        }
+        .tl-dot.done       { background: #10B981; border-color: #10B981; color: #fff; }
+        .tl-dot.current    { background: #F59E0B; border-color: #F59E0B; color: #fff; }
+        .tl-dot.cancel-dot { background: #EF4444; border-color: #EF4444; color: #fff; }
+        .tl-line { height: 2px; width: 22px; background: #E5E7EB; flex-shrink: 0; }
+        .tl-line.done { background: #10B981; }
+
+        /* ── EMPTY / ERROR / LOADING ── */
+        .state-box {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+            border: 1.5px solid rgba(16,185,129,0.14);
+            overflow: hidden;
+            text-align: center;
+            padding: 60px 32px;
+            animation: cardIn 0.45s ease both;
+        }
+        .state-icon { font-size: 60px; margin-bottom: 16px; opacity: 0.4; }
+        .state-box h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 22px; font-weight: 800; color: #1F2937; margin-bottom: 8px;
+        }
+        .state-box p { font-size: 14px; color: #6B7280; margin-bottom: 24px; }
+
+        .cta-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: linear-gradient(135deg,#10B981,#047857);
+            color: #fff; border: none; border-radius: 50px;
+            padding: 12px 28px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px; font-weight: 700; cursor: pointer;
+            text-decoration: none; transition: all 0.25s;
+            box-shadow: 0 6px 20px rgba(16,185,129,0.35);
+        }
+        .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(16,185,129,0.45); }
+
+        .retry-btn {
+            background: #fff; color: #10B981;
+            border: 2px solid #10B981; padding: 10px 24px;
+            border-radius: 50px; font-size: 14px; font-weight: 700;
+            cursor: pointer; font-family: 'Poppins', sans-serif;
+            display: inline-flex; align-items: center; gap: 8px;
+            transition: all 0.25s;
+        }
+        .retry-btn:hover { background: #10B981; color: #fff; }
+
+        /* Skeleton */
+        .skel {
+            background: linear-gradient(90deg,#E5E7EB 25%,#F9FAFB 50%,#E5E7EB 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite;
+            border-radius: 10px;
+        }
+        @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+        .skel-card {
+            background: #fff; border-radius: 20px;
+            border: 1.5px solid rgba(16,185,129,0.10);
+            padding: 24px; margin-bottom: 18px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+
+        /* Lang spans */
+        .lc { display: none; }
+        .lc.en { display: inline; }
+
+        @keyframes cardIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:none} }
+
+        @media (max-width: 600px) {
+            .navbar { padding: 12px 16px; }
+            .page-banner { padding: 20px 16px; gap: 14px; }
+            .banner-ico { width: 52px; height: 52px; font-size: 22px; }
+            .stats-strip { padding: 14px 16px; }
+            .stat-item { padding: 0 16px; }
+            .filter-bar { padding: 0 14px; }
+            .main { padding: 16px 14px 50px; }
+            .card-body { padding: 18px 16px; }
+            .details-grid { grid-template-columns: 1fr 1fr; }
+            .card-top { flex-direction: column; gap: 8px; }
+            .timeline { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar">
+    <a href="dashboard.html" class="logo">
+        <div class="logo-icon"><i class="fas fa-leaf"></i></div>
+        <div>
+            <div class="logo-name">AgriSet<span>.AI</span></div>
+            <div class="logo-tag">Smart Farming Toolkit</div>
+        </div>
+    </a>
+    <div class="nav-right">
+        <div class="lang-group">
+            <button class="lang-btn active" id="btn-en">English</button>
+            <button class="lang-btn" id="btn-hi">हिंदी</button>
+            <button class="lang-btn" id="btn-mr">मराठी</button>
+        </div>
+        <a href="dashboard.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            <span class="lc en">Dashboard</span>
+            <span class="lc hi">डैशबोर्ड</span>
+            <span class="lc mr">डॅशबोर्ड</span>
+        </a>
+    </div>
+</nav>
+
+<!-- ── PAGE BANNER ── -->
+<div class="page-banner">
+    <div class="banner-ico">📋</div>
+    <div>
+        <div class="banner-title">
+            <span class="lc en">My <span class="hl">Bookings</span></span>
+            <span class="lc hi">मेरी <span class="hl">बुकिंग</span></span>
+            <span class="lc mr">माझ्या <span class="hl">बुकिंग</span></span>
+        </div>
+        <div class="banner-sub">
+            <span class="lc en">🚜 Track and manage all your equipment bookings in one place</span>
+            <span class="lc hi">🚜 आपकी सभी उपकरण बुकिंग को एक जगह ट्रैक करें</span>
+            <span class="lc mr">🚜 तुमच्या सर्व उपकरण बुकिंग एकाच ठिकाणी व्यवस्थापित करा</span>
+        </div>
+    </div>
+</div>
+
+<!-- ── STATS STRIP ── -->
+<div class="stats-strip" id="statsStrip" style="display:none;">
+    <div class="stat-item">
+        <div class="stat-num s-total" id="sTotal">0</div>
+        <div class="stat-lbl"><span class="lc en">Total</span><span class="lc hi">कुल</span><span class="lc mr">एकूण</span></div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-num s-pending" id="sPending">0</div>
+        <div class="stat-lbl"><span class="lc en">Pending</span><span class="lc hi">लंबित</span><span class="lc mr">प्रलंबित</span></div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-num s-confirm" id="sConfirmed">0</div>
+        <div class="stat-lbl"><span class="lc en">Confirmed</span><span class="lc hi">पुष्टि</span><span class="lc mr">मंजूर</span></div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-num s-done" id="sDone">0</div>
+        <div class="stat-lbl"><span class="lc en">Completed</span><span class="lc hi">पूर्ण</span><span class="lc mr">पूर्ण</span></div>
+    </div>
+</div>
+
+<!-- ── FILTER BAR ── -->
+<div class="filter-bar" id="filterBar" style="display:none;">
+    <button class="filter-tab active" data-filter="all">
+        <span class="lc en">All</span><span class="lc hi">सभी</span><span class="lc mr">सर्व</span>
+    </button>
+    <button class="filter-tab" data-filter="pending">
+        <span class="lc en">Pending</span><span class="lc hi">लंबित</span><span class="lc mr">प्रलंबित</span>
+    </button>
+    <button class="filter-tab" data-filter="confirmed">
+        <span class="lc en">Confirmed</span><span class="lc hi">पुष्टि</span><span class="lc mr">मंजूर</span>
+    </button>
+    <button class="filter-tab" data-filter="completed">
+        <span class="lc en">Completed</span><span class="lc hi">पूर्ण</span><span class="lc mr">पूर्ण</span>
+    </button>
+    <button class="filter-tab" data-filter="cancelled">
+        <span class="lc en">Cancelled</span><span class="lc hi">रद्द</span><span class="lc mr">रद्द</span>
+    </button>
+</div>
+
+<!-- ── MAIN ── -->
+<div class="main" id="output">
+    <!-- Skeleton loaders -->
+    <div class="skel-card">
+        <div class="skel" style="height:22px;width:50%;margin-bottom:12px;"></div>
+        <div class="skel" style="height:14px;width:75%;margin-bottom:8px;"></div>
+        <div class="skel" style="height:14px;width:55%;"></div>
+    </div>
+    <div class="skel-card">
+        <div class="skel" style="height:22px;width:40%;margin-bottom:12px;"></div>
+        <div class="skel" style="height:14px;width:65%;margin-bottom:8px;"></div>
+        <div class="skel" style="height:14px;width:45%;"></div>
+    </div>
+</div>
+
+<script>
+// ── LANGUAGE ──────────────────────────────────────────────────────────────────
+let lang = localStorage.getItem('language') || 'en';
+let allBookings = [];
+let activeFilter = 'all';
+
+function switchLanguage(l) {
+    lang = l;
+    localStorage.setItem('language', l);
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('btn-' + l).classList.add('active');
+    document.querySelectorAll('.lc').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.lc.' + l).forEach(el => {
+        el.style.display = 'inline';
+    });
+    // Re-render cards to translate dynamic content
+    if (allBookings.length) renderCards(allBookings);
+}
+
+['en','hi','mr'].forEach(l =>
+    document.getElementById('btn-' + l).addEventListener('click', () => switchLanguage(l))
+);
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+const user = JSON.parse(localStorage.getItem('user') || 'null');
+if (!user || !user.id) {
+    alert('Please login first');
+    window.location.href = 'login.html';
+}
+
+function g(en, hi, mr) {
+    return lang === 'mr' ? mr : lang === 'hi' ? hi : en;
+}
+
+function formatDate(str) {
+    if (!str) return g('Not specified', 'निर्दिष्ट नहीं', 'निर्दिष्ट नाही');
+    try {
+        const d = new Date(str);
+        if (isNaN(d)) return g('Not specified', 'निर्दिष्ट नहीं', 'निर्दिष्ट नाही');
+        return d.toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'});
+    } catch { return g('Not specified', 'निर्दिष्ट नहीं', 'निर्दिष्ट नाही'); }
+}
+
+function statusClass(raw) {
+    const s = (raw || '').toLowerCase();
+    if (s === 'confirmed') return 'confirmed';
+    if (s === 'completed') return 'completed';
+    if (s === 'cancelled') return 'cancelled';
+    return 'pending';
+}
+
+function statusLabel(sc) {
+    const labels = {
+        pending:   g('Pending',   'लंबित',  'प्रलंबित'),
+        confirmed: g('Confirmed', 'पुष्टि', 'मंजूर'),
+        completed: g('Completed', 'पूर्ण',  'पूर्ण'),
+        cancelled: g('Cancelled', 'रद्द',   'रद्द'),
+    };
+    return labels[sc] || labels.pending;
+}
+
+function timelineHtml(sc) {
+    const steps = [
+        g('Booked',    'बुक हुआ',   'बुक केले'),
+        g('Confirmed', 'पुष्टि',    'मंजूर'),
+        g('Completed', 'पूर्ण',     'पूर्ण'),
+    ];
+    if (sc === 'cancelled') {
+        return `<div class="timeline">
+            <div class="tl-step"><div class="tl-dot done">✓</div><span>${steps[0]}</span></div>
+            <div class="tl-line done"></div>
+            <div class="tl-step"><div class="tl-dot cancel-dot">✕</div><span>${g('Cancelled','रद्द','रद्द')}</span></div>
+        </div>`;
+    }
+    const doneMap = {pending:0, confirmed:1, completed:2};
+    const di = doneMap[sc] ?? 0;
+    let html = '<div class="timeline">';
+    steps.forEach((s, i) => {
+        const done    = i < di;
+        const current = i === di;
+        html += `<div class="tl-step">
+            <div class="tl-dot ${done?'done':current?'current':''}">${done?'✓':current?'●':''}</div>
+            <span>${s}</span>
+        </div>`;
+        if (i < steps.length - 1) html += `<div class="tl-line ${done?'done':''}"></div>`;
+    });
+    return html + '</div>';
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function renderCards(data) {
+    const output = document.getElementById('output');
+    const filtered = activeFilter === 'all'
+        ? data
+        : data.filter(b => statusClass(b.status) === activeFilter);
+
+    if (!filtered.length) {
+        output.innerHTML = `
+            <div class="state-box">
+                <div class="state-icon">📭</div>
+                <h3>${g('No Bookings Found','कोई बुकिंग नहीं मिली','कोणती बुकिंग नाही')}</h3>
+                <p>${activeFilter === 'all'
+                    ? g("You haven't made any bookings yet.", "आपने अभी तक कोई बुकिंग नहीं की।", "तुम्ही अद्याप कोणती बुकिंग केलेली नाही.")
+                    : g('No bookings match this filter.','इस फ़िल्टर से कोई बुकिंग नहीं मिली.','या फिल्टरसाठी कोणतीही बुकिंग नाही.')
+                }</p>
+                ${activeFilter === 'all'
+                    ? `<a href="equipment.html" class="cta-btn"><i class="fas fa-tractor"></i> ${g('Book Equipment Now','उपकरण बुक करें','उपकरण बुक करा')}</a>`
+                    : ''
+                }
+            </div>`;
+        return;
+    }
+
+    let html = '';
+    filtered.forEach((b, i) => {
+        const sc      = statusClass(b.status);
+        const id      = b.id || b.booking_id || 'N/A';
+        const date    = formatDate(b.date || b.created_at);
+        const from    = b.from_date  || b.start_date ? formatDate(b.from_date || b.start_date) : null;
+        const to      = b.to_date    || b.end_date   ? formatDate(b.to_date   || b.end_date)   : null;
+        const loc     = b.location   || b.address    || null;
+        const price   = b.total_price != null ? '₹' + Number(b.total_price).toLocaleString('en-IN') : null;
+        const contact = b.owner_contact || b.contact || null;
+        const equip   = b.equipment_name || b.equipment || null;
+        const nights  = (b.from_date && b.to_date)
+            ? Math.round((new Date(b.to_date) - new Date(b.from_date)) / 86400000) : null;
+
+        html += `
+        <div class="booking-card" style="animation-delay:${i * 0.07}s">
+            <div class="card-strip s-${sc}"></div>
+            <div class="card-body">
+                <div class="card-top">
+                    <div class="card-title">${b.title || equip || g('Equipment Booking','उपकरण बुकिंग','उपकरण बुकिंग')}</div>
+                    <span class="status-badge badge-${sc}">
+                        <span class="dot"></span>${statusLabel(sc)}
+                    </span>
+                </div>
+
+                <div class="details-grid">
+                    <div class="detail-cell">
+                        <span class="lbl">${g('Booking ID','बुकिंग ID','बुकिंग ID')}</span>
+                        <span class="val mono">#${id}</span>
+                    </div>
+                    <div class="detail-cell">
+                        <span class="lbl">${g('Request Date','अनुरोध तिथि','विनंती तारीख')}</span>
+                        <span class="val">${date}</span>
+                    </div>
+                    ${from ? `<div class="detail-cell">
+                        <span class="lbl">${g('From','से','पासून')}</span>
+                        <span class="val">${from}</span>
+                    </div>` : ''}
+                    ${to ? `<div class="detail-cell">
+                        <span class="lbl">${g('To','तक','पर्यंत')}</span>
+                        <span class="val">${to}</span>
+                    </div>` : ''}
+                    ${nights != null ? `<div class="detail-cell">
+                        <span class="lbl">${g('Duration','अवधि','कालावधी')}</span>
+                        <span class="val">${nights} ${g(nights===1?'day':'days',nights===1?'दिन':'दिन',nights===1?'दिवस':'दिवस')}</span>
+                    </div>` : ''}
+                    ${equip && b.title !== equip ? `<div class="detail-cell">
+                        <span class="lbl">${g('Equipment','उपकरण','उपकरण')}</span>
+                        <span class="val">${equip}</span>
+                    </div>` : ''}
+                    ${loc ? `<div class="detail-cell">
+                        <span class="lbl">${g('Location','स्थान','ठिकाण')}</span>
+                        <span class="val">${loc}</span>
+                    </div>` : ''}
+                    ${price ? `<div class="detail-cell">
+                        <span class="lbl">${g('Total Price','कुल मूल्य','एकूण किंमत')}</span>
+                        <span class="val price">${price}</span>
+                    </div>` : ''}
+                    ${contact ? `<div class="detail-cell">
+                        <span class="lbl">${g('Owner Contact','मालिक संपर्क','मालक संपर्क')}</span>
+                        <span class="val">${contact}</span>
+                    </div>` : ''}
+                </div>
+
+                <div class="progress-row">
+                    <div class="progress-track">
+                        <div class="progress-fill pf-${sc}"></div>
+                    </div>
+                    <span class="progress-lbl">${statusLabel(sc).toUpperCase()}</span>
+                </div>
+
+                ${timelineHtml(sc)}
+            </div>
+        </div>`;
+    });
+    output.innerHTML = html;
+}
+
+// ── STATS ─────────────────────────────────────────────────────────────────────
+function updateStats(data) {
+    document.getElementById('sTotal').textContent     = data.length;
+    document.getElementById('sPending').textContent   = data.filter(b => statusClass(b.status) === 'pending').length;
+    document.getElementById('sConfirmed').textContent = data.filter(b => statusClass(b.status) === 'confirmed').length;
+    document.getElementById('sDone').textContent      = data.filter(b => statusClass(b.status) === 'completed').length;
+    document.getElementById('statsStrip').style.display = 'flex';
+    document.getElementById('filterBar').style.display  = 'flex';
+}
+
+// ── FILTER TABS ───────────────────────────────────────────────────────────────
+document.getElementById('filterBar').addEventListener('click', e => {
+    const tab = e.target.closest('.filter-tab');
+    if (!tab) return;
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    activeFilter = tab.dataset.filter;
+    renderCards(allBookings);
+});
+
+// ── FETCH ─────────────────────────────────────────────────────────────────────
+fetch('http://127.0.0.1:5000/user/bookings/' + user.id)
+    .then(r => { if (!r.ok) throw new Error('Server error'); return r.json(); })
+    .then(data => {
+        if (!Array.isArray(data)) throw new Error('Invalid format');
+        allBookings = data;
+        updateStats(data);
+        switchLanguage(lang);
+    })
+    .catch(() => {
+        // Demo fallback
+        allBookings = [
+            {
+                id: 'BK2024001', title: 'Mahindra 575 DI Tractor',
+                equipment: 'Tractor', status: 'Confirmed',
+                date: '2026-02-10', from_date: '2026-03-01', to_date: '2026-03-05',
+                location: 'Nashik, Maharashtra', total_price: 8500,
+                owner_contact: '+91 98765 43210'
+            },
+            {
+                id: 'BK2024002', title: 'Rotavator Attachment',
+                equipment: 'Rotavator', status: 'Pending',
+                date: '2026-02-15', from_date: '2026-03-10', to_date: '2026-03-12',
+                location: 'Pune, Maharashtra', total_price: 3200
+            },
+            {
+                id: 'BK2024003', title: 'Paddy Thresher',
+                equipment: 'Thresher', status: 'Completed',
+                date: '2026-01-20', from_date: '2026-02-01', to_date: '2026-02-03',
+                location: 'Kolhapur, Maharashtra', total_price: 5600,
+                owner_contact: '+91 91234 56789'
+            },
+            {
+                id: 'BK2024004', title: 'Power Weeder',
+                equipment: 'Weeder', status: 'Cancelled',
+                date: '2026-02-01', location: 'Solapur, Maharashtra', total_price: 1800
+            }
+        ];
+        updateStats(allBookings);
+        switchLanguage(lang);
+    });
+</script>
+</body>
+</html>

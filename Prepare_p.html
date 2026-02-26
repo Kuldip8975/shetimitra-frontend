@@ -1,0 +1,1583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Prepare Plan | AgriSet.AI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --earth:   #3D2B1F;
+  --soil:    #6B4226;
+  --leaf:    #2D6A4F;
+  --sprout:  #52B788;
+  --lime:    #95D5B2;
+  --cream:   #FEFAE0;
+  --wheat:   #E9C46A;
+  --sun:     #F4A261;
+  --danger:  #E76F51;
+  --sky:     #457B9D;
+  --mist:    #F8F4EF;
+  --white:   #FFFFFF;
+  --text:    #1B1B1B;
+  --muted:   #6B6B5E;
+  --border:  #E2DDD8;
+  --shadow:  0 4px 24px rgba(61,43,31,0.10);
+  --radius:  16px;
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--mist);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ─── NAVBAR ─── */
+.navbar {
+  background: var(--earth);
+  padding: 0 32px;
+  height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 300;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.25);
+}
+.nav-logo { display:flex; align-items:center; gap:12px; text-decoration:none; }
+.nav-logo-box {
+  width: 38px; height: 38px;
+  background: var(--sprout);
+  border-radius: 10px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:18px;
+}
+.nav-brand {
+  font-family: 'DM Serif Display', serif;
+  font-size: 20px; color: var(--cream); letter-spacing: 0.3px;
+}
+.nav-brand span { color: var(--lime); }
+.nav-right { display:flex; align-items:center; gap:10px; }
+.lang-group { display:flex; gap:3px; background:rgba(255,255,255,0.08); padding:4px; border-radius:8px; }
+.lang-btn {
+  padding:6px 12px; border:none; background:transparent;
+  border-radius:6px; font-size:12px; font-weight:600; cursor:pointer;
+  color:rgba(255,255,255,0.55); font-family:'DM Sans',sans-serif; transition:all 0.2s;
+}
+.lang-btn:hover { color:#fff; background:rgba(255,255,255,0.1); }
+.lang-btn.active { background:var(--sprout); color:#fff; }
+.back-btn {
+  display:flex; align-items:center; gap:6px;
+  background:rgba(255,255,255,0.1); color:var(--lime); border:1px solid rgba(255,255,255,0.15);
+  padding:8px 16px; border-radius:8px; font-size:13px; font-weight:600;
+  cursor:pointer; text-decoration:none; font-family:'DM Sans',sans-serif; transition:all 0.2s;
+}
+.back-btn:hover { background:rgba(255,255,255,0.18); }
+
+/* ─── HERO ─── */
+.hero {
+  background: linear-gradient(135deg, #1B4332 0%, #2D6A4F 60%, #40916C 100%);
+  padding: 52px 32px 60px;
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Ccircle cx='40' cy='40' r='30'/%3E%3Ccircle cx='0' cy='0' r='20'/%3E%3Ccircle cx='80' cy='80' r='20'/%3E%3C/g%3E%3C/svg%3E");
+}
+.hero-inner { max-width: 860px; margin: 0 auto; position: relative; z-index: 1; }
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: rgba(149,213,178,0.18); border: 1px solid rgba(149,213,178,0.35);
+  color: var(--lime); padding: 6px 16px; border-radius: 50px;
+  font-size: 12px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;
+  margin-bottom: 18px;
+}
+.hero-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  color: var(--cream); line-height: 1.1; margin-bottom: 14px;
+}
+.hero-title em { color: var(--lime); font-style: italic; }
+.hero-sub {
+  font-size: 16px; color: rgba(255,255,255,0.72);
+  max-width: 560px; line-height: 1.7; margin-bottom: 28px; font-weight: 400;
+}
+.hero-facts { display:flex; gap:24px; flex-wrap:wrap; }
+.hf {
+  display:flex; align-items:center; gap:8px;
+  background: rgba(255,255,255,0.10); border:1px solid rgba(255,255,255,0.18);
+  border-radius: 50px; padding: 8px 18px;
+  font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.9);
+}
+.hf i { color: var(--wheat); font-size: 13px; }
+
+/* ─── FORM CARD ─── */
+.form-wrap { max-width: 860px; margin: -32px auto 0; padding: 0 20px; position: relative; z-index: 10; }
+.form-card {
+  background: var(--white);
+  border-radius: 24px;
+  box-shadow: 0 8px 48px rgba(61,43,31,0.14);
+  overflow: hidden;
+  animation: riseIn 0.6s cubic-bezier(.4,0,.2,1) both;
+}
+@keyframes riseIn { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:none} }
+.form-card-head {
+  background: linear-gradient(90deg, var(--earth), var(--soil));
+  padding: 20px 28px;
+  display: flex; align-items: center; gap: 14px;
+}
+.fch-ico { width:46px; height:46px; background:rgba(255,255,255,0.12); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px; }
+.fch-title { font-family:'DM Serif Display',serif; font-size:20px; color:var(--cream); }
+.fch-sub { font-size:13px; color:rgba(255,255,255,0.55); margin-top:2px; }
+.form-body { padding: 28px; }
+
+/* Crop selection grid */
+.crop-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 10px; margin-bottom: 24px;
+}
+.cc {
+  border: 2px solid var(--border); border-radius: 14px; padding: 14px 8px 12px;
+  cursor: pointer; text-align: center; background: #FAFAF8;
+  transition: all 0.25s; position: relative; overflow: hidden;
+}
+.cc::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,var(--leaf),var(--sprout)); opacity:0; transition:opacity 0.25s; }
+.cc:hover { border-color:var(--sprout); transform:translateY(-3px); box-shadow:0 6px 20px rgba(45,106,79,0.18); }
+.cc:hover::before { opacity:0.06; }
+.cc.sel { border-color:var(--leaf); background:linear-gradient(135deg,rgba(45,106,79,0.08),rgba(82,183,136,0.08)); }
+.cc.sel::before { opacity:0.1; }
+.cc-emoji { font-size:28px; display:block; margin-bottom:6px; position:relative; z-index:1; }
+.cc-name { font-size:12px; font-weight:700; color:var(--text); position:relative; z-index:1; line-height:1.3; }
+.cc-dur { font-size:10px; color:var(--muted); position:relative; z-index:1; margin-top:2px; }
+
+/* Form fields */
+.fields-row { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-bottom:20px; }
+.field { margin-bottom:20px; }
+.field:last-child { margin-bottom:0; }
+.field label {
+  display:block; font-size:13px; font-weight:700; color:var(--earth);
+  margin-bottom:8px; letter-spacing:0.3px;
+}
+.field-wrap {
+  display:flex; align-items:center;
+  border: 2px solid var(--border); border-radius:12px; background:#FAFAF8;
+  transition: all 0.2s; overflow:hidden;
+}
+.field-wrap:focus-within { border-color:var(--leaf); background:#fff; box-shadow:0 0 0 3px rgba(45,106,79,0.08); }
+.field-ico { width:46px; display:flex; align-items:center; justify-content:center; color:var(--sprout); font-size:16px; flex-shrink:0; }
+.field-wrap input, .field-wrap select {
+  flex:1; padding:13px 14px 13px 0; border:none; background:transparent;
+  font-size:15px; color:var(--text); font-family:'DM Sans',sans-serif; outline:none;
+}
+.field-wrap select { cursor:pointer; }
+
+/* Season pills */
+.season-row { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:22px; }
+.sp {
+  border:2px solid var(--border); border-radius:10px; padding:9px 20px;
+  cursor:pointer; font-size:13px; font-weight:700; color:var(--muted);
+  background:#FAFAF8; transition:all 0.2s; font-family:'DM Sans',sans-serif;
+}
+.sp:hover { border-color:var(--sprout); color:var(--leaf); }
+.sp.sel { background:var(--leaf); color:#fff; border-color:var(--leaf); }
+
+/* Generate button */
+.btn-gen {
+  width:100%; padding:18px;
+  background: linear-gradient(135deg, #1B4332, #2D6A4F, #40916C);
+  color:#fff; border:none; border-radius:50px;
+  font-family:'DM Serif Display',serif; font-size:19px;
+  cursor:pointer; display:flex; align-items:center; justify-content:center; gap:12px;
+  box-shadow: 0 8px 28px rgba(27,67,50,0.38);
+  transition: all 0.3s; letter-spacing:0.3px;
+}
+.btn-gen:hover:not(:disabled) { transform:translateY(-3px); box-shadow:0 14px 40px rgba(27,67,50,0.48); }
+.btn-gen:disabled { opacity:0.6; cursor:not-allowed; }
+
+/* ─── GENERATING SCREEN ─── */
+.gen-screen {
+  display:none; text-align:center; padding:56px 28px;
+  background:var(--white); border-radius:24px;
+  box-shadow:0 8px 48px rgba(61,43,31,0.14);
+  max-width:860px; margin:20px auto 0;
+}
+.gen-plant { font-size:72px; animation:sway 2.5s ease-in-out infinite; display:inline-block; }
+@keyframes sway { 0%,100%{transform:rotate(-5deg)} 50%{transform:rotate(5deg)} }
+.gen-bar-wrap { width:280px; height:8px; background:#E8E4DE; border-radius:4px; margin:24px auto 0; overflow:hidden; }
+.gen-bar { height:100%; background:linear-gradient(90deg,var(--leaf),var(--sprout)); border-radius:4px; animation:fillBar 2.2s ease forwards; }
+@keyframes fillBar { from{width:0} to{width:100%} }
+.gen-title { font-family:'DM Serif Display',serif; font-size:24px; color:var(--earth); margin-top:20px; }
+.gen-steps { display:flex; flex-direction:column; gap:8px; margin-top:16px; max-width:340px; margin-left:auto; margin-right:auto; }
+.gen-step { font-size:13px; color:var(--muted); font-weight:500; opacity:0; animation:stepIn 0.5s ease forwards; display:flex; align-items:center; gap:8px; }
+.gen-step i { color:var(--sprout); }
+.gs1{animation-delay:0.3s} .gs2{animation-delay:0.8s} .gs3{animation-delay:1.3s} .gs4{animation-delay:1.7s}
+@keyframes stepIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}
+
+/* ─── PLAN OUTPUT ─── */
+.plan-wrap { max-width:860px; margin:24px auto 0; padding:0 20px 60px; }
+
+/* Plan header */
+.plan-header {
+  background: linear-gradient(135deg, #1B4332, #2D6A4F);
+  border-radius: 22px; padding: 28px;
+  display: flex; align-items: flex-start; gap: 20px;
+  box-shadow: 0 10px 36px rgba(27,67,50,0.32);
+  margin-bottom: 20px; position: relative; overflow: hidden;
+}
+.ph-glow { position:absolute; right:-40px; bottom:-40px; width:200px; height:200px; background:radial-gradient(circle,rgba(82,183,136,0.2),transparent); border-radius:50%; }
+.ph-emoji { font-size:64px; flex-shrink:0; line-height:1; }
+.ph-right { flex:1; }
+.ph-tag { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--lime); opacity:0.8; margin-bottom:6px; }
+.ph-crop { font-family:'DM Serif Display',serif; font-size:34px; color:var(--cream); line-height:1.1; margin-bottom:10px; }
+.ph-pills { display:flex; gap:8px; flex-wrap:wrap; }
+.ph-pill { background:rgba(255,255,255,0.13); border:1px solid rgba(255,255,255,0.22); color:rgba(255,255,255,0.9); border-radius:50px; padding:5px 14px; font-size:12px; font-weight:700; display:flex; align-items:center; gap:5px; }
+.ph-pill i { color:var(--wheat); }
+/* stats row */
+.ph-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:18px; }
+.phs { background:rgba(255,255,255,0.10); border:1px solid rgba(255,255,255,0.18); border-radius:14px; padding:14px 12px; text-align:center; }
+.phs-val { font-family:'DM Serif Display',serif; font-size:24px; color:var(--wheat); }
+.phs-label { font-size:11px; color:rgba(255,255,255,0.6); margin-top:3px; font-weight:600; }
+
+/* Section */
+.section { background:var(--white); border-radius:20px; box-shadow:var(--shadow); margin-bottom:18px; overflow:hidden; animation:sectionIn 0.5s ease both; }
+@keyframes sectionIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.section:nth-child(2){animation-delay:.08s} .section:nth-child(3){animation-delay:.14s}
+.section:nth-child(4){animation-delay:.20s} .section:nth-child(5){animation-delay:.26s}
+.section:nth-child(6){animation-delay:.32s} .section:nth-child(7){animation-delay:.38s}
+.section-bar { height: 4px; }
+.sb-soil { background: linear-gradient(90deg,#6B4226,#A0522D); }
+.sb-leaf { background: linear-gradient(90deg,var(--leaf),var(--sprout)); }
+.sb-sun  { background: linear-gradient(90deg,var(--wheat),var(--sun)); }
+.sb-sky  { background: linear-gradient(90deg,var(--sky),#74B3CE); }
+.sb-red  { background: linear-gradient(90deg,var(--danger),#E63946); }
+.sb-lime { background: linear-gradient(90deg,var(--sprout),var(--lime)); }
+.section-head { padding:20px 24px 0; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+.sec-title { font-family:'DM Serif Display',serif; font-size:20px; color:var(--earth); display:flex; align-items:center; gap:10px; }
+.sec-title span { font-size:22px; }
+.section-body { padding:20px 24px 24px; }
+
+/* ─── TODAY BANNER ─── */
+.today-banner {
+  background: linear-gradient(135deg, #FFFBEB, #FEF3C7);
+  border: 2px solid rgba(233,196,106,0.5); border-left:5px solid var(--wheat);
+  border-radius: 16px; padding: 18px 20px; margin-bottom: 20px;
+  display:flex; align-items:flex-start; gap:14px;
+}
+.tb-ico { font-size:32px; flex-shrink:0; }
+.tb-title { font-family:'DM Serif Display',serif; font-size:17px; color:#78350F; margin-bottom:6px; }
+.tb-tasks { display:flex; flex-direction:column; gap:6px; }
+.tb-task { font-size:14px; color:#92400E; display:flex; align-items:center; gap:8px; font-weight:500; }
+.tb-task i { font-size:13px; flex-shrink:0; }
+
+/* ─── STAGE TIMELINE ─── */
+.timeline-row { display:flex; align-items:flex-start; position:relative; padding:10px 0; }
+.timeline-row::before { content:''; position:absolute; left:28px; top:50px; bottom:0; width:2px; background:linear-gradient(to bottom, var(--sprout), transparent); }
+.tl-node { width:56px; height:56px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:24px; border:3px solid #fff; box-shadow:0 4px 12px rgba(0,0,0,0.12); z-index:1; margin-right:18px; transition:all 0.3s; }
+.tl-node.done  { background:var(--leaf); box-shadow:0 0 0 5px rgba(45,106,79,0.18); }
+.tl-node.active{ background:var(--leaf); animation:glow 2s infinite; }
+.tl-node.future{ background:#E8E4DE; }
+@keyframes glow{0%,100%{box-shadow:0 0 0 5px rgba(45,106,79,0.2)}50%{box-shadow:0 0 0 12px rgba(45,106,79,0.08)}}
+.tl-content { flex:1; padding-top:8px; padding-bottom:24px; }
+.tl-stage-name { font-family:'DM Serif Display',serif; font-size:17px; color:var(--earth); margin-bottom:4px; }
+.tl-date-range { font-size:13px; color:var(--sprout); font-weight:700; margin-bottom:6px; }
+.tl-desc { font-size:14px; color:var(--muted); line-height:1.7; }
+.tl-tasks-inline { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+.tlt { border-radius:6px; padding:4px 10px; font-size:11px; font-weight:700; }
+.tlt-w { background:#EFF6FF; color:#1D4ED8; }
+.tlt-f { background:#F0FDF4; color:var(--leaf); }
+.tlt-p { background:#FEF2F2; color:#DC2626; }
+.tlt-g { background:#FFF7ED; color:#C2410C; }
+
+/* ─── PESTICIDE TABLE ─── */
+.pest-row {
+  display:grid; grid-template-columns:72px 1fr;
+  gap:0; margin-bottom:14px; background:#FAFAF8;
+  border-radius:16px; overflow:hidden;
+  border:1.5px solid var(--border); transition:all 0.2s;
+}
+.pest-row:hover { border-color:rgba(220,38,38,0.3); box-shadow:0 4px 16px rgba(220,38,38,0.08); }
+.pest-day-col { background:linear-gradient(135deg,#DC2626,#EF4444); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:14px 8px; }
+.pdc-day { font-family:'DM Serif Display',serif; font-size:22px; color:#fff; line-height:1; }
+.pdc-label { font-size:9px; color:rgba(255,255,255,0.75); font-weight:700; text-transform:uppercase; letter-spacing:0.5px; margin-top:2px; }
+.pdc-date { font-size:10px; color:rgba(255,255,255,0.65); margin-top:4px; font-weight:600; }
+.pest-info-col { padding:14px 16px; }
+.pi-name { font-family:'DM Serif Display',serif; font-size:16px; color:var(--earth); margin-bottom:3px; }
+.pi-brand { font-size:11px; color:var(--danger); font-weight:700; background:rgba(231,111,81,0.1); display:inline-block; padding:2px 8px; border-radius:5px; margin-bottom:8px; }
+.pi-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+.pi-item { font-size:12.5px; color:var(--muted); line-height:1.55; }
+.pi-item b { color:var(--text); font-weight:700; display:block; font-size:11px; text-transform:uppercase; letter-spacing:0.3px; }
+.pi-warning { margin-top:8px; font-size:12px; color:#92400E; background:#FEF3C7; border-radius:6px; padding:6px 10px; display:flex; align-items:center; gap:6px; font-weight:600; }
+
+/* ─── FERTILIZER ─── */
+.fert-card {
+  border-radius:14px; padding:18px; margin-bottom:12px;
+  border:1.5px solid var(--border); background:#FAFAF8;
+  display:grid; grid-template-columns:80px 1fr; gap:14px;
+  transition:all 0.2s;
+}
+.fert-card:hover { border-color:rgba(45,106,79,0.3); box-shadow:0 4px 16px rgba(45,106,79,0.08); }
+.fc-day-box { background:linear-gradient(135deg,var(--leaf),var(--sprout)); border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:10px 8px; text-align:center; }
+.fdb-day { font-family:'DM Serif Display',serif; font-size:20px; color:#fff; line-height:1; }
+.fdb-lab { font-size:9px; color:rgba(255,255,255,0.7); font-weight:700; text-transform:uppercase; letter-spacing:0.5px; margin-top:2px; }
+.fc-stage { font-size:11px; font-weight:700; color:var(--sprout); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px; }
+.fc-name { font-family:'DM Serif Display',serif; font-size:16px; color:var(--earth); margin-bottom:6px; }
+.fc-details { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+.fc-det { font-size:12px; color:var(--muted); }
+.fc-det b { color:var(--text); display:block; font-size:10px; text-transform:uppercase; letter-spacing:0.3px; margin-bottom:2px; }
+.fc-qty-badge { display:inline-block; background:rgba(45,106,79,0.1); color:var(--leaf); border-radius:6px; padding:2px 8px; font-weight:700; font-size:12px; }
+
+/* ─── WATERING SCHEDULE ─── */
+.water-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:10px; margin-bottom:16px; }
+.water-chip { background:#EFF6FF; border:1.5px solid rgba(59,130,246,0.2); border-radius:12px; padding:12px 14px; text-align:center; }
+.wc-day { font-family:'DM Serif Display',serif; font-size:18px; color:#1D4ED8; }
+.wc-date { font-size:11px; color:#3B82F6; font-weight:700; margin-top:2px; }
+.wc-vol { font-size:12px; color:var(--muted); margin-top:4px; font-weight:600; }
+.water-info-box { background:linear-gradient(135deg,#EFF6FF,#DBEAFE); border:1.5px solid rgba(59,130,246,0.2); border-radius:14px; padding:16px; display:flex; align-items:flex-start; gap:14px; }
+.wib-ico { font-size:32px; }
+.wib-title { font-family:'DM Serif Display',serif; font-size:15px; color:#1D4ED8; margin-bottom:4px; }
+.wib-text { font-size:13px; color:#3730A3; line-height:1.65; font-weight:500; }
+
+/* ─── WEEKLY PLAN TABLE ─── */
+.week-block { margin-bottom:24px; }
+.wb-title {
+  background: linear-gradient(135deg, var(--earth), var(--soil));
+  color:var(--cream); padding:12px 18px; border-radius:12px 12px 0 0;
+  font-family:'DM Serif Display',serif; font-size:16px;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.wb-stage-badge { font-size:11px; background:rgba(255,255,255,0.15); padding:3px 10px; border-radius:20px; font-family:'DM Sans',sans-serif; font-weight:700; }
+.wb-days { display:grid; grid-template-columns:repeat(7,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:0 0 12px 12px; overflow:hidden; }
+.wd { background:var(--white); padding:10px 7px; min-height:90px; transition:all 0.15s; cursor:pointer; }
+.wd:hover { background:#F0FDF4; }
+.wd.today { background:linear-gradient(135deg,rgba(45,106,79,0.06),rgba(82,183,136,0.06)); outline:2px solid var(--sprout); outline-offset:-2px; }
+.wd.past { background:#FAFAF8; opacity:0.65; }
+.wd-num { font-size:10px; font-weight:800; color:var(--muted); margin-bottom:5px; }
+.wd-num.today-n { color:var(--leaf); }
+.wd-tags { display:flex; flex-direction:column; gap:3px; }
+.wdt { font-size:9.5px; font-weight:700; border-radius:4px; padding:2px 5px; display:flex; align-items:center; gap:3px; line-height:1.3; }
+.wdt-water { background:#EFF6FF; color:#1D4ED8; }
+.wdt-fert  { background:#F0FDF4; color:var(--leaf); }
+.wdt-pest  { background:#FEF2F2; color:#DC2626; }
+.wdt-weed  { background:#F5F3FF; color:#7C3AED; }
+.wdt-harv  { background:#FEF3C7; color:#92400E; }
+.wdt-soil  { background:#FFF7ED; color:#C2410C; }
+.wdt-rest  { background:#F1F5F9; color:#64748B; font-style:italic; }
+.wd-more { font-size:9px; color:var(--muted); margin-top:2px; font-weight:600; }
+
+/* Modal */
+.modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:500; align-items:center; justify-content:center; padding:20px; }
+.modal-bg.open { display:flex; }
+.modal-box { background:var(--white); border-radius:22px; max-width:460px; width:100%; max-height:85vh; overflow-y:auto; box-shadow:0 24px 64px rgba(0,0,0,0.28); animation:popIn 0.3s ease; }
+@keyframes popIn{from{opacity:0;transform:scale(0.9)}to{opacity:1;transform:none}}
+.modal-hd { padding:20px 22px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; background:linear-gradient(90deg,var(--earth),var(--soil)); border-radius:22px 22px 0 0; }
+.modal-hd-title { font-family:'DM Serif Display',serif; font-size:18px; color:var(--cream); }
+.modal-close { width:32px; height:32px; border-radius:50%; border:none; background:rgba(255,255,255,0.15); cursor:pointer; color:#fff; font-size:15px; display:flex; align-items:center; justify-content:center; }
+.modal-close:hover { background:rgba(255,255,255,0.25); }
+.modal-bd { padding:20px 22px; }
+.m-task { padding:12px 0; border-bottom:1px solid #F3F4F6; display:flex; align-items:flex-start; gap:12px; }
+.m-task:last-child { border-bottom:none; }
+.m-task-ico { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:19px; flex-shrink:0; }
+.m-task-name { font-family:'DM Serif Display',serif; font-size:15px; color:var(--earth); margin-bottom:4px; }
+.m-task-desc { font-size:13px; color:var(--muted); line-height:1.65; }
+.rest-note { text-align:center; padding:28px; color:var(--muted); }
+.rest-note i { font-size:36px; display:block; margin-bottom:10px; color:var(--lime); opacity:0.5; }
+.rest-note p { font-size:14px; font-weight:600; }
+
+/* Key reminders */
+.rem-item { display:flex; align-items:flex-start; gap:14px; padding:16px; border-radius:14px; margin-bottom:10px; border:1.5px solid; transition:all 0.2s; }
+.rem-item:hover { transform:translateX(4px); }
+.ri-green { background:#F0FDF4; border-color:rgba(45,106,79,0.2); }
+.ri-amber { background:#FFFBEB; border-color:rgba(233,196,106,0.35); }
+.ri-red   { background:#FEF2F2; border-color:rgba(231,111,81,0.25); }
+.ri-sky   { background:#EFF6FF; border-color:rgba(69,123,157,0.2); }
+.rem-ico { font-size:28px; flex-shrink:0; }
+.rem-day-tag { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; opacity:0.6; margin-bottom:4px; }
+.rem-title { font-family:'DM Serif Display',serif; font-size:16px; color:var(--earth); margin-bottom:5px; }
+.rem-desc { font-size:13.5px; color:var(--muted); line-height:1.7; }
+
+/* Print/save */
+.action-row { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px; }
+.btn-secondary {
+  display:inline-flex; align-items:center; gap:8px;
+  background:var(--white); color:var(--leaf); border:2px solid var(--leaf);
+  padding:11px 24px; border-radius:50px; font-family:'DM Serif Display',serif; font-size:15px;
+  cursor:pointer; transition:all 0.25s;
+}
+.btn-secondary:hover { background:var(--leaf); color:#fff; }
+.btn-new {
+  display:inline-flex; align-items:center; gap:8px;
+  background:linear-gradient(135deg,var(--earth),var(--soil)); color:var(--cream);
+  border:none; padding:11px 24px; border-radius:50px; font-family:'DM Serif Display',serif; font-size:15px;
+  cursor:pointer; transition:all 0.25s; box-shadow:0 4px 16px rgba(61,43,31,0.25);
+}
+.btn-new:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(61,43,31,0.35); }
+
+/* History */
+.hist-list { display:flex; flex-direction:column; gap:8px; }
+.hist-card {
+  display:flex; align-items:center; gap:14px;
+  padding:14px 16px; background:#FAFAF8; border-radius:14px;
+  border:1.5px solid var(--border); cursor:pointer; transition:all 0.2s;
+}
+.hist-card:hover { border-color:var(--sprout); background:var(--white); transform:translateX(4px); }
+.hist-emoji { font-size:30px; flex-shrink:0; }
+.hist-info-name { font-family:'DM Serif Display',serif; font-size:15px; color:var(--earth); }
+.hist-info-meta { font-size:12px; color:var(--muted); margin-top:2px; }
+.hist-badge { margin-left:auto; padding:4px 12px; border-radius:50px; font-size:11px; font-weight:700; flex-shrink:0; }
+
+/* Empty */
+.empty { text-align:center; padding:36px; color:var(--muted); }
+.empty i { font-size:44px; display:block; margin-bottom:12px; color:var(--lime); opacity:0.4; }
+.empty p { font-size:14px; font-weight:600; }
+
+/* Spin */
+.spin { display:inline-block; width:18px; height:18px; border:3px solid rgba(255,255,255,0.35); border-top-color:#fff; border-radius:50%; animation:sp 0.8s linear infinite; }
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* Lang */
+.lc{display:none} .lc.en{display:inline} .lc.blk{display:none} .lc.blk.en{display:block}
+
+/* Progress ring */
+.progress-ring-wrap { display:flex; align-items:center; gap:24px; margin-bottom:20px; flex-wrap:wrap; }
+.ring-svg { transform:rotate(-90deg); }
+.ring-bg { fill:none; stroke:#E8E4DE; stroke-width:8; }
+.ring-fill { fill:none; stroke:var(--sprout); stroke-width:8; stroke-linecap:round; transition:stroke-dashoffset 1.5s ease; }
+.ring-center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.ring-pct { font-family:'DM Serif Display',serif; font-size:22px; color:var(--earth); }
+.ring-lab { font-size:11px; color:var(--muted); font-weight:700; }
+.ring-stats { display:flex; flex-direction:column; gap:10px; }
+.rs-item { display:flex; align-items:center; gap:10px; }
+.rs-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.rs-text { font-size:14px; color:var(--text); font-weight:600; }
+.rs-sub { font-size:12px; color:var(--muted); }
+
+@media(max-width:700px){
+  .navbar{padding:0 16px;}
+  .hero{padding:36px 18px 50px;}
+  .form-wrap,.plan-wrap{padding:0 12px 40px;}
+  .fields-row{grid-template-columns:1fr;}
+  .ph-stats{grid-template-columns:1fr 1fr;}
+  .crop-grid{grid-template-columns:repeat(3,1fr);}
+  .fc-details{grid-template-columns:1fr 1fr;}
+  .pi-grid{grid-template-columns:1fr;}
+  .wb-days{grid-template-columns:repeat(7,1fr);}
+  .wd{min-height:70px;padding:8px 4px;}
+  .wdt{font-size:8.5px;}
+  .water-grid{grid-template-columns:repeat(2,1fr);}
+  .plan-header{flex-direction:column;gap:14px;}
+}
+@media print{
+  .navbar,.form-wrap,.gen-screen,.back-btn,.btn-gen,.action-row,.hist-card,.lang-group{display:none!important;}
+  .plan-wrap{padding:0;}
+  .section{box-shadow:none;border:1px solid #ddd;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="dashboard.html" class="nav-logo">
+    <div class="nav-logo-box">🌿</div>
+    <div class="nav-brand">AgriSet<span>.AI</span></div>
+  </a>
+  <div class="nav-right">
+    <div class="lang-group">
+      <button class="lang-btn active" id="btn-en">EN</button>
+      <button class="lang-btn" id="btn-hi">हिं</button>
+      <button class="lang-btn" id="btn-mr">मरा</button>
+    </div>
+    <a href="dashboard.html" class="back-btn"><i class="fas fa-arrow-left"></i>
+      <span class="lc en">Back</span><span class="lc hi">वापस</span><span class="lc mr">मागे</span>
+    </a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">
+      <i class="fas fa-seedling"></i>
+      <span class="lc en">Real-World Crop Intelligence</span>
+      <span class="lc hi">वास्तविक फसल बुद्धिमत्ता</span>
+      <span class="lc mr">वास्तविक पीक बुद्धिमत्ता</span>
+    </div>
+    <h1 class="hero-title">
+      <span class="lc en">Prepare Your <em>Farm Plan</em></span>
+      <span class="lc hi">अपनी <em>खेती योजना</em> तैयार करें</span>
+      <span class="lc mr">तुमची <em>शेती योजना</em> तयार करा</span>
+    </h1>
+    <p class="hero-sub">
+      <span class="lc en">A complete, science-backed preparation plan with actual pesticide brands, real fertilizer doses, and expert watering schedules — the same advice agronomists give.</span>
+      <span class="lc hi">वास्तविक कीटनाशक ब्रांड, असली खाद की खुराक और विशेषज्ञ सिंचाई शेड्यूल के साथ एक पूर्ण, विज्ञान-आधारित योजना।</span>
+      <span class="lc mr">वास्तविक किटकनाशक ब्रँड, खरे खत डोस आणि तज्ज्ञ पाणी वेळापत्रकासह पूर्ण, विज्ञान-आधारित योजना.</span>
+    </p>
+    <div class="hero-facts">
+      <div class="hf"><i class="fas fa-flask"></i> <span class="lc en">Science-backed doses</span><span class="lc hi">विज्ञान-आधारित खुराक</span><span class="lc mr">विज्ञान-आधारित डोस</span></div>
+      <div class="hf"><i class="fas fa-tag"></i> <span class="lc en">Real Indian brand names</span><span class="lc hi">असली भारतीय ब्रांड</span><span class="lc mr">खरी भारतीय ब्रँड्स</span></div>
+      <div class="hf"><i class="fas fa-calendar-check"></i> <span class="lc en">Day-by-day schedule</span><span class="lc hi">दिन-दर-दिन शेड्यूल</span><span class="lc mr">दिवसागणिक वेळापत्रक</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- FORM -->
+<div class="form-wrap">
+  <div class="form-card" id="formCard">
+    <div class="form-card-head">
+      <div class="fch-ico">📋</div>
+      <div>
+        <div class="fch-title"><span class="lc en">Setup Your Crop Plan</span><span class="lc hi">फसल योजना सेटअप करें</span><span class="lc mr">पीक योजना सेटअप करा</span></div>
+        <div class="fch-sub"><span class="lc en">Select crop → enter sowing date → get complete plan</span><span class="lc hi">फसल चुनें → बुवाई तिथि दें → पूरी योजना पाएं</span><span class="lc mr">पीक निवडा → पेरणी तारीख द्या → संपूर्ण योजना मिळवा</span></div>
+      </div>
+    </div>
+    <div class="form-body">
+
+      <!-- Crop grid -->
+      <div style="font-size:13px;font-weight:700;color:var(--earth);margin-bottom:10px;letter-spacing:0.3px">
+        <i class="fas fa-leaf" style="color:var(--sprout)"></i>&nbsp;
+        <span class="lc en">Select Your Crop</span><span class="lc hi">अपनी फसल चुनें</span><span class="lc mr">तुमचे पीक निवडा</span>
+      </div>
+      <div class="crop-grid" id="cropGrid">
+        <div class="cc sel" data-k="wheat" data-dur="120" onclick="pickCrop(this)"><span class="cc-emoji">🌾</span><div class="cc-name"><span class="lc en">Wheat</span><span class="lc hi">गेहूं</span><span class="lc mr">गहू</span></div><div class="cc-dur">120 days</div></div>
+        <div class="cc" data-k="rice" data-dur="130" onclick="pickCrop(this)"><span class="cc-emoji">🍚</span><div class="cc-name"><span class="lc en">Rice</span><span class="lc hi">धान</span><span class="lc mr">भात</span></div><div class="cc-dur">130 days</div></div>
+        <div class="cc" data-k="cotton" data-dur="180" onclick="pickCrop(this)"><span class="cc-emoji">🧶</span><div class="cc-name"><span class="lc en">Cotton</span><span class="lc hi">कपास</span><span class="lc mr">कापूस</span></div><div class="cc-dur">180 days</div></div>
+        <div class="cc" data-k="maize" data-dur="100" onclick="pickCrop(this)"><span class="cc-emoji">🌽</span><div class="cc-name"><span class="lc en">Maize</span><span class="lc hi">मक्का</span><span class="lc mr">मका</span></div><div class="cc-dur">100 days</div></div>
+        <div class="cc" data-k="soybean" data-dur="110" onclick="pickCrop(this)"><span class="cc-emoji">🫘</span><div class="cc-name"><span class="lc en">Soybean</span><span class="lc hi">सोयाबीन</span><span class="lc mr">सोयाबीन</span></div><div class="cc-dur">110 days</div></div>
+        <div class="cc" data-k="tomato" data-dur="90" onclick="pickCrop(this)"><span class="cc-emoji">🍅</span><div class="cc-name"><span class="lc en">Tomato</span><span class="lc hi">टमाटर</span><span class="lc mr">टोमॅटो</span></div><div class="cc-dur">90 days</div></div>
+        <div class="cc" data-k="onion" data-dur="120" onclick="pickCrop(this)"><span class="cc-emoji">🧅</span><div class="cc-name"><span class="lc en">Onion</span><span class="lc hi">प्याज</span><span class="lc mr">कांदा</span></div><div class="cc-dur">120 days</div></div>
+        <div class="cc" data-k="chickpea" data-dur="100" onclick="pickCrop(this)"><span class="cc-emoji">🫛</span><div class="cc-name"><span class="lc en">Chickpea</span><span class="lc hi">चना</span><span class="lc mr">हरभरा</span></div><div class="cc-dur">100 days</div></div>
+        <div class="cc" data-k="sugarcane" data-dur="365" onclick="pickCrop(this)"><span class="cc-emoji">🌿</span><div class="cc-name"><span class="lc en">Sugarcane</span><span class="lc hi">गन्ना</span><span class="lc mr">ऊस</span></div><div class="cc-dur">365 days</div></div>
+        <div class="cc" data-k="moong" data-dur="70" onclick="pickCrop(this)"><span class="cc-emoji">🟢</span><div class="cc-name"><span class="lc en">Moong Dal</span><span class="lc hi">मूंग</span><span class="lc mr">मूग</span></div><div class="cc-dur">70 days</div></div>
+      </div>
+
+      <div class="fields-row">
+        <div class="field">
+          <label><i class="fas fa-calendar-plus" style="color:var(--sprout)"></i>&nbsp; <span class="lc en">Sowing Date</span><span class="lc hi">बुवाई तिथि</span><span class="lc mr">पेरणी तारीख</span></label>
+          <div class="field-wrap">
+            <div class="field-ico"><i class="fas fa-calendar-alt"></i></div>
+            <input type="date" id="sowDate" onchange="recalcHarvest()">
+          </div>
+        </div>
+        <div class="field">
+          <label><i class="fas fa-ruler-combined" style="color:var(--sprout)"></i>&nbsp; <span class="lc en">Field Area (acres)</span><span class="lc hi">खेत का क्षेत्र (एकड़)</span><span class="lc mr">शेत क्षेत्र (एकर)</span></label>
+          <div class="field-wrap">
+            <div class="field-ico"><i class="fas fa-expand-arrows-alt"></i></div>
+            <input type="number" id="areaAcres" min="0.1" step="0.1" placeholder="e.g. 2.5">
+          </div>
+        </div>
+      </div>
+
+      <div class="field" style="margin-bottom:22px">
+        <label><i class="fas fa-cloud-sun" style="color:var(--sprout)"></i>&nbsp; <span class="lc en">Season</span><span class="lc hi">मौसम</span><span class="lc mr">हंगाम</span></label>
+        <div class="season-row">
+          <div class="sp sel" data-s="kharif" onclick="pickSeason(this)">☀️ <span class="lc en">Kharif (Jun–Oct)</span><span class="lc hi">खरीफ (जून–अक्टूबर)</span><span class="lc mr">खरीप (जून–ऑक्टोबर)</span></div>
+          <div class="sp" data-s="rabi" onclick="pickSeason(this)">❄️ <span class="lc en">Rabi (Oct–Mar)</span><span class="lc hi">रबी (अक्टूबर–मार्च)</span><span class="lc mr">रब्बी (ऑक्टोबर–मार्च)</span></div>
+          <div class="sp" data-s="zaid" onclick="pickSeason(this)">🌸 <span class="lc en">Zaid/Summer</span><span class="lc hi">जायद/गर्मी</span><span class="lc mr">उन्हाळी</span></div>
+        </div>
+      </div>
+
+      <button class="btn-gen" id="genBtn" onclick="preparePlan()">
+        <i class="fas fa-clipboard-list"></i>
+        <span class="lc en">Prepare My Farm Plan</span>
+        <span class="lc hi">मेरी खेती योजना तैयार करें</span>
+        <span class="lc mr">माझी शेती योजना तयार करा</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- History card -->
+  <div class="form-card" id="histCard" style="margin-top:18px;display:none">
+    <div class="form-card-head">
+      <div class="fch-ico">📋</div>
+      <div>
+        <div class="fch-title"><span class="lc en">Previous Plans</span><span class="lc hi">पिछली योजनाएं</span><span class="lc mr">मागील योजना</span></div>
+        <div class="fch-sub"><span class="lc en">Tap to reload any previous plan</span><span class="lc hi">किसी भी पुरानी योजना को पुनः लोड करें</span><span class="lc mr">कोणतीही जुनी योजना पुन्हा लोड करा</span></div>
+      </div>
+    </div>
+    <div class="form-body"><div class="hist-list" id="histList"></div></div>
+  </div>
+</div>
+
+<!-- GENERATING -->
+<div class="form-wrap">
+  <div class="gen-screen" id="genScreen">
+    <div class="gen-plant">🌱</div>
+    <div class="gen-bar-wrap"><div class="gen-bar" id="genBar"></div></div>
+    <div class="gen-title">
+      <span class="lc en">Preparing Your Plan…</span>
+      <span class="lc hi">योजना तैयार हो रही है…</span>
+      <span class="lc mr">योजना तयार होत आहे…</span>
+    </div>
+    <div class="gen-steps">
+      <div class="gen-step gs1"><i class="fas fa-check-circle"></i> <span class="lc en">Analysing crop cycle & growth stages</span><span class="lc hi">फसल चक्र और विकास चरण विश्लेषण</span><span class="lc mr">पीक चक्र आणि वाढीचे टप्पे विश्लेषण</span></div>
+      <div class="gen-step gs2"><i class="fas fa-check-circle"></i> <span class="lc en">Loading ICAR pesticide database</span><span class="lc hi">ICAR कीटनाशक डेटाबेस लोड हो रहा है</span><span class="lc mr">ICAR किटकनाशक डेटाबेस लोड</span></div>
+      <div class="gen-step gs3"><i class="fas fa-check-circle"></i> <span class="lc en">Calculating fertilizer NPK requirements</span><span class="lc hi">उर्वरक NPK आवश्यकताएं गणना</span><span class="lc mr">खत NPK आवश्यकता मोजत आहे</span></div>
+      <div class="gen-step gs4"><i class="fas fa-check-circle"></i> <span class="lc en">Building day-by-day calendar</span><span class="lc hi">दिन-दर-दिन कैलेंडर बनाया जा रहा है</span><span class="lc mr">दिवसागणिक कॅलेंडर तयार करत आहे</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- PLAN OUTPUT -->
+<div class="plan-wrap" id="planWrap" style="display:none">
+
+  <!-- Action row -->
+  <div class="action-row">
+    <button class="btn-secondary" onclick="window.print()"><i class="fas fa-print"></i> <span class="lc en">Print Plan</span><span class="lc hi">प्रिंट करें</span><span class="lc mr">प्रिंट करा</span></button>
+    <button class="btn-new" onclick="newPlan()"><i class="fas fa-plus"></i> <span class="lc en">New Plan</span><span class="lc hi">नई योजना</span><span class="lc mr">नवीन योजना</span></button>
+  </div>
+
+  <!-- Plan header -->
+  <div class="plan-header" id="planHeader">
+    <div class="ph-glow"></div>
+    <div class="ph-emoji" id="phEmoji">🌾</div>
+    <div class="ph-right">
+      <div class="ph-tag"><span class="lc en">PREPARE PLAN</span><span class="lc hi">तैयारी योजना</span><span class="lc mr">तयारी योजना</span> · AgriSet.AI</div>
+      <div class="ph-crop" id="phCrop">—</div>
+      <div class="ph-pills" id="phPills"></div>
+      <div class="ph-stats" id="phStats"></div>
+    </div>
+  </div>
+
+  <!-- Today's tasks -->
+  <div class="today-banner" id="todayBanner" style="display:none">
+    <div class="tb-ico">⚡</div>
+    <div>
+      <div class="tb-title" id="todayTitle">Today's Tasks</div>
+      <div class="tb-tasks" id="todayTasks"></div>
+    </div>
+  </div>
+
+  <!-- Progress + stages -->
+  <div class="section">
+    <div class="section-bar sb-leaf"></div>
+    <div class="section-head">
+      <div class="sec-title"><span>📊</span> <span class="lc en">Growth Progress & Stages</span><span class="lc hi">विकास प्रगति और चरण</span><span class="lc mr">वाढीची प्रगती आणि टप्पे</span></div>
+    </div>
+    <div class="section-body">
+      <div class="progress-ring-wrap">
+        <div style="position:relative;width:100px;height:100px;flex-shrink:0">
+          <svg class="ring-svg" width="100" height="100" viewBox="0 0 100 100">
+            <circle class="ring-bg" cx="50" cy="50" r="42"/>
+            <circle class="ring-fill" id="ringFill" cx="50" cy="50" r="42" stroke-dasharray="263.9" stroke-dashoffset="263.9"/>
+          </svg>
+          <div class="ring-center">
+            <div class="ring-pct" id="ringPct">0%</div>
+            <div class="ring-lab"><span class="lc en">Done</span><span class="lc hi">पूर्ण</span><span class="lc mr">पूर्ण</span></div>
+          </div>
+        </div>
+        <div class="ring-stats" id="ringStats"></div>
+      </div>
+      <div id="stageList"></div>
+    </div>
+  </div>
+
+  <!-- Weekly timetable -->
+  <div class="section">
+    <div class="section-bar sb-leaf"></div>
+    <div class="section-head">
+      <div class="sec-title"><span>📅</span> <span class="lc en">Week-by-Week Field Calendar</span><span class="lc hi">सप्ताह-दर-सप्ताह कैलेंडर</span><span class="lc mr">आठवडानिहाय कॅलेंडर</span></div>
+    </div>
+    <div class="section-body">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+        <span class="wdt wdt-water" style="font-size:11px;padding:4px 9px">💧 Water</span>
+        <span class="wdt wdt-fert"  style="font-size:11px;padding:4px 9px">🌱 Fertilizer</span>
+        <span class="wdt wdt-pest"  style="font-size:11px;padding:4px 9px">🐛 Pesticide</span>
+        <span class="wdt wdt-weed"  style="font-size:11px;padding:4px 9px">🌿 Weeding</span>
+        <span class="wdt wdt-harv"  style="font-size:11px;padding:4px 9px">🌾 Harvest</span>
+        <span class="wdt wdt-rest"  style="font-size:11px;padding:4px 9px">😴 Rest</span>
+      </div>
+      <div id="calendarWrap"></div>
+    </div>
+  </div>
+
+  <!-- Pesticide schedule -->
+  <div class="section">
+    <div class="section-bar sb-red"></div>
+    <div class="section-head">
+      <div class="sec-title"><span>🧪</span> <span class="lc en">Pesticide & Spray Schedule</span><span class="lc hi">कीटनाशक और छिड़काव शेड्यूल</span><span class="lc mr">किटकनाशक आणि फवारणी वेळापत्रक</span></div>
+    </div>
+    <div class="section-body" id="pestSection"></div>
+  </div>
+
+  <!-- Fertilizer -->
+  <div class="section">
+    <div class="section-bar sb-leaf"></div>
+    <div class="section-head">
+      <div class="sec-title"><span>🌱</span> <span class="lc en">Fertilizer Application Plan</span><span class="lc hi">खाद आवेदन योजना</span><span class="lc mr">खत वापर योजना</span></div>
+    </div>
+    <div class="section-body" id="fertSection"></div>
+  </div>
+
+  <!-- Watering -->
+  <div class="section">
+    <div class="section-bar sb-sky"></div>
+    <div class="section-head">
+      <div class="sec-title"><span>💧</span> <span class="lc en">Irrigation Schedule</span><span class="lc hi">सिंचाई शेड्यूल</span><span class="lc mr">सिंचन वेळापत्रक</span></div>
+    </div>
+    <div class="section-body" id="waterSection"></div>
+  </div>
+
+  <!-- Key reminders -->
+  <div class="section">
+    <div class="section-bar sb-sun"></div>
+    <div class="section-head">
+      <div class="sec-title"><span>🔔</span> <span class="lc en">Critical Milestone Reminders</span><span class="lc hi">महत्वपूर्ण मील-स्टोन</span><span class="lc mr">महत्त्वाच्या टप्प्यांच्या सूचना</span></div>
+    </div>
+    <div class="section-body" id="remSection"></div>
+  </div>
+
+</div>
+
+<!-- DAY MODAL -->
+<div class="modal-bg" id="dayModal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <div class="modal-hd">
+      <div class="modal-hd-title" id="mTitle">—</div>
+      <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-bd" id="mBody"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+//   REAL-WORLD CROP DATABASE (ICAR / KVK based)
+// ═══════════════════════════════════════════════
+const CROPS = {
+  wheat:     { en:'Wheat',     hi:'गेहूं',    mr:'गहू',     emoji:'🌾', dur:120, waterDays:15,  season:'rabi' },
+  rice:      { en:'Rice',      hi:'धान',      mr:'भात',     emoji:'🍚', dur:130, waterDays:5,   season:'kharif' },
+  cotton:    { en:'Cotton',    hi:'कपास',     mr:'कापूस',   emoji:'🧶', dur:180, waterDays:12,  season:'kharif' },
+  maize:     { en:'Maize',     hi:'मक्का',    mr:'मका',     emoji:'🌽', dur:100, waterDays:8,   season:'kharif' },
+  soybean:   { en:'Soybean',   hi:'सोयाबीन',  mr:'सोयाबीन', emoji:'🫘', dur:110, waterDays:10,  season:'kharif' },
+  tomato:    { en:'Tomato',    hi:'टमाटर',    mr:'टोमॅटो',  emoji:'🍅', dur:90,  waterDays:4,   season:'kharif' },
+  onion:     { en:'Onion',     hi:'प्याज',    mr:'कांदा',   emoji:'🧅', dur:120, waterDays:8,   season:'rabi' },
+  chickpea:  { en:'Chickpea',  hi:'चना',      mr:'हरभरा',   emoji:'🫛', dur:100, waterDays:18,  season:'rabi' },
+  sugarcane: { en:'Sugarcane', hi:'गन्ना',    mr:'ऊस',      emoji:'🌿', dur:365, waterDays:7,   season:'kharif' },
+  moong:     { en:'Moong Dal', hi:'मूंग',     mr:'मूग',     emoji:'🟢', dur:70,  waterDays:8,   season:'kharif' },
+};
+
+// REAL PESTICIDE DATA — brand names used across Maharashtra/MP/Punjab
+const PESTS = {
+  wheat:[
+    { day:1,  name:{en:'Vitavax Power (Carboxin+Thiram)',hi:'विटावैक्स पावर',mr:'विटावॅक्स पावर'},
+      brand:'Bayer CropScience',
+      target:{en:'Loose smut, Karnal bunt, Seed rot',hi:'लूज स्मट, करनाल बंट, बीज सड़न',mr:'ढीला काजळी, करनाल बंट, बियाणे कुज'},
+      dose:{en:'2.5g per kg seed — dry seed treatment',hi:'2.5g प्रति kg बीज — सूखा बीज उपचार',mr:'2.5g प्रति kg बियाणे — कोरडे बियाणे प्रक्रिया'},
+      timing:{en:'Before sowing, mix & dry 30 min in shade',hi:'बुवाई से पहले, छांव में 30 मिनट सुखाएं',mr:'पेरणीपूर्वी, सावलीत 30 मिनिट वाळवा'},
+      warning:{en:'Do not use treated seed as food',hi:'उपचारित बीज भोजन में उपयोग न करें',mr:'उपचारित बियाणे खाण्यासाठी वापरू नका'} },
+    { day:30, name:{en:'Propiconazole 25EC (Tilt / Bumper)',hi:'प्रोपिकोनाजोल (टिल्ट)',mr:'प्रोपिकोनाझोल (टिल्ट)'},
+      brand:'Syngenta / Dhanuka',
+      target:{en:'Brown rust, Yellow rust, Powdery mildew',hi:'भूरा रतुआ, पीला रतुआ, पाउडरी फफूंदी',mr:'तांबेरा, पिवळा गंज, पावडरी बुरशी'},
+      dose:{en:'1ml per litre — 200 litres per acre',hi:'1ml प्रति लीटर — 200 लीटर प्रति एकड़',mr:'1ml प्रति लिटर — 200 लिटर प्रति एकर'},
+      timing:{en:'Morning 6–9AM, avoid strong wind',hi:'सुबह 6–9 बजे, तेज हवा से बचें',mr:'सकाळी 6–9, जोरदार वारा टाळा'},
+      warning:{en:'Do not spray within 21 days of harvest',hi:'कटाई के 21 दिन के भीतर छिड़काव न करें',mr:'कापणीच्या 21 दिवस आधी फवारू नका'} },
+    { day:60, name:{en:'Chlorpyrifos 20EC + Cypermethrin 3EC (Durmet)',hi:'क्लोरपाइरीफॉस + साइपरमेथ्रिन',mr:'क्लोरपायरीफॉस + सायपरमेथ्रिन'},
+      brand:'Dhanuka Agritech',
+      target:{en:'Aphids, Armyworm, Leaf miner',hi:'माहू, आर्मीवर्म, पत्ती खनिक',mr:'माव, आर्मीवर्म, पान खाण'},
+      dose:{en:'2ml+1ml per litre — full spray coverage',hi:'2ml+1ml प्रति लीटर — पूरी फसल पर',mr:'2ml+1ml प्रति लिटर — संपूर्ण पीकावर'},
+      timing:{en:'Evening spray only (4–7PM)',hi:'केवल शाम को (शाम 4–7 बजे)',mr:'फक्त संध्याकाळी (4–7PM)'},
+      warning:{en:'PHI 21 days. Wear gloves & mask',hi:'PHI 21 दिन। दस्ताने और मास्क पहनें',mr:'PHI 21 दिवस. हातमोजे व मास्क घाला'} },
+    { day:90, name:{en:'Tebuconazole 25.9EC (Raxil Star)',hi:'टेबुकोनाजोल (रैक्सिल)',mr:'टेब्युकोनाझोल (रेक्सिल)'},
+      brand:'Bayer CropScience',
+      target:{en:'Powdery mildew — pre-harvest stage',hi:'पाउडरी फफूंदी — कटाई पूर्व चरण',mr:'पावडरी बुरशी — कापणीपूर्व टप्पा'},
+      dose:{en:'1.5ml per litre — 200L/acre',hi:'1.5ml प्रति लीटर — 200L/एकड़',mr:'1.5ml प्रति लिटर — 200L/एकर'},
+      timing:{en:'Early morning',hi:'सुबह जल्दी',mr:'पहाटे'},
+      warning:{en:'PHI 28 days before harvest',hi:'कटाई से 28 दिन पहले PHI',mr:'कापणीच्या 28 दिवस आधी PHI'} },
+  ],
+  rice:[
+    { day:1,  name:{en:'Bavistin DF (Carbendazim 50WP)',hi:'बाविस्टिन DF',mr:'बाविस्टिन DF'},
+      brand:'BASF India',
+      target:{en:'Seed rot, Foot rot, Sheath blight at seedling',hi:'बीज सड़न, जड़ गलन, शीथ ब्लाइट',mr:'बियाणे कुज, मूळ गळती, शीथ ब्लाइट'},
+      dose:{en:'2g per kg seed — slurry treatment',hi:'2g प्रति kg बीज — स्लरी उपचार',mr:'2g प्रति kg बियाणे — स्लरी प्रक्रिया'},
+      timing:{en:'24 hours before sowing, dry in shade',hi:'बुवाई से 24 घंटे पहले, छांव में सुखाएं',mr:'पेरणीच्या 24 तास आधी, सावलीत वाळवा'},
+      warning:{en:'Do not eat treated seed',hi:'उपचारित बीज न खाएं',mr:'उपचारित बियाणे खाऊ नका'} },
+    { day:25, name:{en:'Tricyclazole 75WP (Beam / Blaze)',hi:'ट्राइसाइक्लाजोल (बीम)',mr:'ट्रायसायक्लाझोल (बीम)'},
+      brand:'Dow AgroSciences / PI Ind',
+      target:{en:'Blast disease — most critical rice disease',hi:'ब्लास्ट — सबसे खतरनाक धान रोग',mr:'ब्लास्ट — सर्वात धोकादायक भात रोग'},
+      dose:{en:'0.6g per litre — 200L per acre',hi:'0.6g प्रति लीटर — 200L/एकड़',mr:'0.6g प्रति लिटर — 200L/एकर'},
+      timing:{en:'Overcast morning or after light rain',hi:'बादल वाली सुबह या हल्की बारिश के बाद',mr:'ढगाळ सकाळी किंवा हलक्या पावसानंतर'},
+      warning:{en:'PHI 21 days',hi:'PHI 21 दिन',mr:'PHI 21 दिवस'} },
+    { day:50, name:{en:'Cartap Hydrochloride 50SP (Padan)',hi:'कार्टाप हाइड्रोक्लोराइड (पडान)',mr:'कार्टाप हायड्रोक्लोराइड (पडान)'},
+      brand:'Syngenta India',
+      target:{en:'Stem borer, Leaf folder, Gall midge',hi:'तना छेदक, पत्ती मोड़क, गाल मिज',mr:'खोड पोखरणारे, पान दुमडणारे, गाल मिज'},
+      dose:{en:'500g per acre — granular broadcast in field water',hi:'500g/एकड़ — खड़े पानी में',mr:'500g/एकर — उभ्या पाण्यात'},
+      timing:{en:'Broadcast early morning in standing water',hi:'सुबह खड़े पानी में',mr:'पहाटे उभ्या पाण्यात'},
+      warning:{en:'Maintain 5cm water for 7 days after application',hi:'डालने के बाद 7 दिन तक 5cm पानी रखें',mr:'टाकल्यानंतर 7 दिवस 5cm पाणी ठेवा'} },
+    { day:75, name:{en:'Hexaconazole 5SC (Contaf Plus)',hi:'हेक्साकोनाजोल (कॉन्टैफ)',mr:'हेक्साकोनाझोल (कॉन्टॅफ)'},
+      brand:'FMC Corporation',
+      target:{en:'Sheath blight (Rhizoctonia solani)',hi:'शीथ ब्लाइट (राइजोक्टोनिया)',mr:'शीथ ब्लाइट (राइझोक्टोनिया)'},
+      dose:{en:'2ml per litre — 200L/acre',hi:'2ml प्रति लीटर — 200L/एकड़',mr:'2ml प्रति लिटर — 200L/एकर'},
+      timing:{en:'Morning when humidity is high',hi:'जब नमी अधिक हो सुबह',mr:'आर्द्रता जास्त असताना सकाळी'},
+      warning:{en:'PHI 28 days',hi:'PHI 28 दिन',mr:'PHI 28 दिवस'} },
+  ],
+  cotton:[
+    { day:1,  name:{en:'Imidacloprid 70WS (Gaucho)',hi:'इमिडाक्लोप्रिड (गाउचो)',mr:'इमिडाक्लोप्रिड (गाउचो)'},
+      brand:'Bayer CropScience',
+      target:{en:'Jassid, Whitefly, Thrips at early stage',hi:'जैसिड, सफेद मक्खी, थ्रिप्स — प्रारंभिक चरण',mr:'जॅसिड, पांढरी माशी, थ्रिप्स — सुरुवातीचा टप्पा'},
+      dose:{en:'5ml per kg seed — film coating treatment',hi:'5ml प्रति kg बीज — फिल्म कोटिंग',mr:'5ml प्रति kg बियाणे — फिल्म कोटिंग'},
+      timing:{en:'Before sowing — seed treatment mandatory',hi:'बुवाई से पहले — बीज उपचार अनिवार्य',mr:'पेरणीपूर्वी — बियाणे प्रक्रिया अनिवार्य'},
+      warning:{en:'Toxic to bees — do not spray near hives',hi:'मधुमक्खियों के लिए जहरीला',mr:'मधमाश्यांसाठी विषारी'} },
+    { day:35, name:{en:'Acetamiprid 20SP (Prime Gold)',hi:'एसीटामिप्रिड (प्राइम गोल्ड)',mr:'अॅसिटामिप्रिड (प्राइम गोल्ड)'},
+      brand:'PI Industries',
+      target:{en:'Jassid — primary sucking pest of cotton',hi:'जैसिड — कपास का मुख्य रस चूसक कीड़ा',mr:'जॅसिड — कापसाचा मुख्य रस शोषणारा किडा'},
+      dose:{en:'0.5g per litre — 200L/acre foliar',hi:'0.5g प्रति लीटर — 200L/एकड़',mr:'0.5g प्रति लिटर — 200L/एकर'},
+      timing:{en:'Cool morning (before 9AM)',hi:'ठंडी सुबह (9 बजे से पहले)',mr:'थंड सकाळी (9 पूर्वी)'},
+      warning:{en:'PHI 7 days',hi:'PHI 7 दिन',mr:'PHI 7 दिवस'} },
+    { day:65, name:{en:'Emamectin Benzoate 5SG (Premio)',hi:'इमामेक्टिन बेंजोएट (प्रीमियो)',mr:'इमामेक्टिन बेंझोएट (प्रीमियो)'},
+      brand:'Syngenta India',
+      target:{en:'American bollworm (Helicoverpa armigera)',hi:'अमेरिकन बोलवर्म — कपास की जान',mr:'अमेरिकन बोलवर्म — कापसाचा सर्वात मोठा धोका'},
+      dose:{en:'0.4g per litre — 200–400L/acre',hi:'0.4g प्रति लीटर — 200–400L/एकड़',mr:'0.4g प्रति लिटर — 200–400L/एकर'},
+      timing:{en:'Evening 5–8PM only — protect pollinators',hi:'शाम 5–8 बजे — परागणकों की रक्षा',mr:'संध्याकाळी 5–8 — परागीकरण करणाऱ्यांचे संरक्षण'},
+      warning:{en:'Do not mix with alkaline pesticides',hi:'क्षारीय कीटनाशकों के साथ न मिलाएं',mr:'अल्कलाईन किटकनाशकांसोबत मिसळू नका'} },
+    { day:100, name:{en:'Profenofos 50EC (Curacron)',hi:'प्रोफेनोफॉस (क्यूराक्रॉन)',mr:'प्रोफेनोफॉस (क्युराक्रॉन)'},
+      brand:'Syngenta India',
+      target:{en:'Mixed bollworm + sucking pest complex',hi:'बोलवर्म + रस चूसक कीट मिश्रण',mr:'बोलवर्म + रस शोषणारे किडे'},
+      dose:{en:'2ml per litre — 400L/acre',hi:'2ml प्रति लीटर — 400L/एकड़',mr:'2ml प्रति लिटर — 400L/एकर'},
+      timing:{en:'Morning spray',hi:'सुबह छिड़काव',mr:'सकाळी फवारणी'},
+      warning:{en:'PHI 28 days. Highly toxic — use PPE',hi:'PHI 28 दिन। अत्यधिक जहरीला — PPE पहनें',mr:'PHI 28 दिवस. अत्यंत विषारी — PPE घाला'} },
+    { day:140, name:{en:'Spinosad 45SC (Tracer)',hi:'स्पिनोसैड (ट्रेसर)',mr:'स्पिनोसॅड (ट्रेसर)'},
+      brand:'Corteva Agriscience',
+      target:{en:'Pink bollworm (Pectinophora gossypiella)',hi:'गुलाबी बोलवर्म — कपास की सबसे बड़ी समस्या',mr:'गुलाबी बोलवर्म — कापसाची सर्वात मोठी समस्या'},
+      dose:{en:'0.3ml per litre',hi:'0.3ml प्रति लीटर',mr:'0.3ml प्रति लिटर'},
+      timing:{en:'Evening spray for max efficacy',hi:'अधिकतम प्रभाव के लिए शाम को',mr:'जास्तीत जास्त परिणामासाठी संध्याकाळी'},
+      warning:{en:'Excellent bee safety — can spray any time',hi:'मधुमक्खी के लिए सुरक्षित',mr:'मधमाश्यांसाठी सुरक्षित'} },
+  ],
+  maize:[
+    { day:10, name:{en:'Chlorpyrifos 20EC (Dursban)',hi:'क्लोरपाइरीफॉस (डर्सबान)',mr:'क्लोरपायरीफॉस (डर्सबान)'},
+      brand:'Dow AgroSciences',
+      target:{en:'Cutworm, Termite, Soil insects',hi:'कटवर्म, दीमक, मिट्टी के कीड़े',mr:'कटवर्म, वाळवी, माती किडे'},
+      dose:{en:'2.5ml per litre — soil drench near stem',hi:'2.5ml/L — तने के पास मिट्टी में',mr:'2.5ml/L — खोडाजवळ मातीत'},
+      timing:{en:'After germination, evening',hi:'अंकुरण के बाद शाम को',mr:'उगवणीनंतर संध्याकाळी'},
+      warning:{en:'Do not spray on wet soil',hi:'गीली मिट्टी पर न छिड़कें',mr:'ओल्या मातीवर फवारू नका'} },
+    { day:32, name:{en:'Lambda-Cyhalothrin 5EC (Warrior)',hi:'लैम्बडा-साइहेलोथ्रिन (वारियर)',mr:'लॅम्बडा-सायहेलोथ्रिन (वारियर)'},
+      brand:'Syngenta India',
+      target:{en:'Fall Armyworm — FAW (Spodoptera frugiperda)',hi:'फॉल आर्मीवर्म (FAW) — खतरनाक आक्रामक कीट',mr:'फॉल आर्मीवर्म (FAW) — धोकादायक आक्रमक किडा'},
+      dose:{en:'1ml per litre — 200L/acre, spray into whorl',hi:'1ml/L — 200L/एकड़, गोल में छिड़कें',mr:'1ml/L — 200L/एकर, शेंड्यावर फवारा'},
+      timing:{en:'Early morning — 5 to 8AM',hi:'सुबह जल्दी — 5 से 8 बजे',mr:'पहाटे — 5 ते 8'},
+      warning:{en:'Check whorl daily after day 25',hi:'दिन 25 के बाद रोज गोल देखें',mr:'दिवस 25 नंतर रोज शेंडा तपासा'} },
+    { day:55, name:{en:'Mancozeb 75WP + Carbendazim 12WP (Saaf)',hi:'मैनकोजेब + कार्बेन्डाजिम (साफ)',mr:'मॅन्कोझेब + कार्बेन्डाझिम (साफ)'},
+      brand:'UPL Limited',
+      target:{en:'Turcicum leaf blight, Northern leaf blight',hi:'टर्सिकम लीफ ब्लाइट, उत्तरी पत्ती झुलसन',mr:'टर्सिकम पान करपा, उत्तरी पान करपा'},
+      dose:{en:'2g + 1g per litre — 200L/acre',hi:'2g+1g प्रति लीटर',mr:'2g+1g प्रति लिटर'},
+      timing:{en:'Morning',hi:'सुबह',mr:'सकाळी'},
+      warning:{en:'PHI 28 days',hi:'PHI 28 दिन',mr:'PHI 28 दिवस'} },
+  ],
+  soybean:[
+    { day:1,  name:{en:'Thiram 75WS + Carbendazim 25DS (Vital)',hi:'थिरम + कार्बेन्डाजिम',mr:'थिरम + कार्बेन्डाझिम'},
+      brand:'Rallis India',
+      target:{en:'Seed rot, Collar rot, Root rot — soil borne',hi:'बीज सड़न, कॉलर रोट, जड़ गलन',mr:'बियाणे कुज, कॉलर रॉट, मूळ कूज'},
+      dose:{en:'3g per kg seed — dry seed treatment',hi:'3g प्रति kg — सूखा बीज उपचार',mr:'3g प्रति kg — कोरडी बियाणे प्रक्रिया'},
+      timing:{en:'Before sowing — mandatory',hi:'बुवाई से पहले — अनिवार्य',mr:'पेरणीपूर्वी — अनिवार्य'},
+      warning:{en:'Must also use Rhizobium + PSB biofertilizer inoculant',hi:'राइजोबियम + PSB जैव उर्वरक भी लगाएं',mr:'रायझोबियम + PSB जैव खत देखील लावा'} },
+    { day:28, name:{en:'Indoxacarb 14.5SC + Acetamiprid 7.7SC (Avaunt)',hi:'इंडोक्साकार्ब (अवंत)',mr:'इंडोक्साकार्ब (अवंत)'},
+      brand:'Corteva Agriscience',
+      target:{en:'Girdle beetle, Leaf eating caterpillar, Blue butterfly',hi:'गर्डल बीटल, पत्ती खाने वाली इल्ली, नीली तितली',mr:'गर्डल बीटल, पान खाणारी अळी, निळी फुलपाखरू'},
+      dose:{en:'1.5ml per litre — 200L/acre',hi:'1.5ml/L — 200L/एकड़',mr:'1.5ml/L — 200L/एकर'},
+      timing:{en:'Evening spray (4–7PM)',hi:'शाम को (4–7 बजे)',mr:'संध्याकाळी (4–7)'},
+      warning:{en:'PHI 14 days',hi:'PHI 14 दिन',mr:'PHI 14 दिवस'} },
+    { day:60, name:{en:'Tebuconazole 25.9EC (Folicur)',hi:'टेबुकोनाजोल (फोलिकुर)',mr:'टेब्युकोनाझोल (फोलिकुर)'},
+      brand:'Bayer CropScience',
+      target:{en:'Target spot (Corynespora), Rust, Anthracnose',hi:'टार्गेट स्पॉट, रतुआ, एन्थ्रेक्नोज',mr:'टार्गेट स्पॉट, गंज, अँथ्रॅक्नोज'},
+      dose:{en:'1ml per litre — 200L/acre',hi:'1ml/L — 200L/एकड़',mr:'1ml/L — 200L/एकर'},
+      timing:{en:'Morning spray',hi:'सुबह छिड़काव',mr:'सकाळी फवारणी'},
+      warning:{en:'PHI 21 days — critical soybean disease spray',hi:'PHI 21 दिन — सोयाबीन के लिए महत्वपूर्ण',mr:'PHI 21 दिवस — सोयाबीनसाठी महत्त्वाचे'} },
+  ],
+  tomato:[
+    { day:5,  name:{en:'Metalaxyl-M + Mancozeb (Ridomil Gold)',hi:'मेटालैक्सिल-M + मैनकोजेब (रिडोमिल गोल्ड)',mr:'मेटालॅक्सिल-M + मॅन्कोझेब (रिडोमिल गोल्ड)'},
+      brand:'Syngenta India',
+      target:{en:'Damping off (Pythium), Early blight, Downy mildew',hi:'डैंपिंग ऑफ, अर्ली ब्लाइट, डाउनी मिल्ड्यू',mr:'डँपिंग ऑफ, अर्ली ब्लाइट, डाउनी मिल्ड्यू'},
+      dose:{en:'3g per litre — soil drench 250ml per plant',hi:'3g/L — प्रति पौधा 250ml मिट्टी में',mr:'3g/L — प्रति झाड 250ml मातीत'},
+      timing:{en:'After transplanting — day 3–7',hi:'रोपाई के 3–7 दिन बाद',mr:'लावणीनंतर 3–7 दिवस'},
+      warning:{en:'Do not drench on hot afternoon',hi:'गर्म दोपहर में मिट्टी न भिगोएं',mr:'गरम दुपारी मातीत टाकू नका'} },
+    { day:22, name:{en:'Imidacloprid 17.8SL (Confidor)',hi:'इमिडाक्लोप्रिड (कॉन्फिडोर)',mr:'इमिडाक्लोप्रिड (कॉन्फिडर)'},
+      brand:'Bayer CropScience',
+      target:{en:'Whitefly (TYLCV vector), Aphids, Thrips',hi:'सफेद मक्खी (TYLCV वाहक), माहू, थ्रिप्स',mr:'पांढरी माशी (TYLCV वाहक), माव, थ्रिप्स'},
+      dose:{en:'0.5ml per litre — foliar spray',hi:'0.5ml/L — पत्तियों पर छिड़काव',mr:'0.5ml/L — पानांवर फवारणी'},
+      timing:{en:'Morning only — before 9AM',hi:'केवल सुबह — 9 बजे से पहले',mr:'फक्त सकाळी — 9 पूर्वी'},
+      warning:{en:'PHI 7 days — systemic insecticide',hi:'PHI 7 दिन — प्रणालीगत कीटनाशक',mr:'PHI 7 दिवस — सिस्टेमिक किटकनाशक'} },
+    { day:42, name:{en:'Azoxystrobin 11% + Difenconazole 3% (Amistar Top)',hi:'अजोक्सीस्ट्रोबिन+डाइफेनकोनाजोल (अमिस्टार टॉप)',mr:'अझोक्सीस्ट्रोबिन+डायफेनकोनाझोल (अमिस्टार टॉप)'},
+      brand:'Syngenta India',
+      target:{en:'Early blight, Late blight, Septoria leaf spot',hi:'अर्ली ब्लाइट, लेट ब्लाइट, सेप्टोरिया',mr:'अर्ली ब्लाइट, लेट ब्लाइट, सेप्टोरिया'},
+      dose:{en:'1ml per litre — 200L/acre',hi:'1ml/L — 200L/एकड़',mr:'1ml/L — 200L/एकर'},
+      timing:{en:'Morning spray',hi:'सुबह छिड़काव',mr:'सकाळी फवारणी'},
+      warning:{en:'PHI 3 days — excellent systemic + contact action',hi:'PHI 3 दिन — प्रणालीगत + संपर्क क्रिया',mr:'PHI 3 दिवस — सिस्टेमिक + संपर्क क्रिया'} },
+    { day:65, name:{en:'Chlorfenapyr 10SC (Intrepid)',hi:'क्लोरफेनापायर (इंट्रेपिड)',mr:'क्लोरफेनापायर (इंट्रेपिड)'},
+      brand:'BASF India',
+      target:{en:'Tomato fruit borer (Helicoverpa armigera)',hi:'टमाटर का फल छेदक',mr:'टोमॅटो फळ पोखरणारे'},
+      dose:{en:'1.5ml per litre — evening spray',hi:'1.5ml/L — शाम को छिड़काव',mr:'1.5ml/L — संध्याकाळी फवारणी'},
+      timing:{en:'Evening spray — 5 to 7PM',hi:'शाम 5–7 बजे',mr:'संध्याकाळी 5–7'},
+      warning:{en:'PHI 3 days. Alternate with different MOA',hi:'PHI 3 दिन. अलग MOA के साथ बदलें',mr:'PHI 3 दिवस. वेगळ्या MOA सोबत बदला'} },
+  ],
+  onion:[
+    { day:14, name:{en:'Metalaxyl 8% + Mancozeb 64% (Ridomil)',hi:'मेटालैक्सिल+मैनकोजेब (रिडोमिल)',mr:'मेटालॅक्सिल+मॅन्कोझेब (रिडोमिल)'},
+      brand:'Syngenta India',
+      target:{en:'Downy mildew (Peronospora destructor)',hi:'डाउनी मिल्ड्यू — प्याज का सबसे खतरनाक रोग',mr:'डाउनी मिल्ड्यू — कांद्याचा सर्वात धोकादायक रोग'},
+      dose:{en:'2.5g per litre — 200L/acre',hi:'2.5g/L — 200L/एकड़',mr:'2.5g/L — 200L/एकर'},
+      timing:{en:'Morning at high humidity',hi:'अधिक नमी पर सुबह',mr:'जास्त आर्द्रतेत सकाळी'},
+      warning:{en:'Spray before symptoms appear — preventive',hi:'लक्षण दिखने से पहले छिड़कें — निवारक',mr:'लक्षणे दिसण्यापूर्वी फवारा — प्रतिबंधात्मक'} },
+    { day:38, name:{en:'Tebuconazole 25.9EC + Trifloxystrobin 50WG (Nativo)',hi:'टेबुकोनाजोल + ट्राइफ्लोक्सीस्ट्रोबिन (नेटिवो)',mr:'टेब्युकोनाझोल + ट्रायफ्लोक्सीस्ट्रोबिन (नेटिवो)'},
+      brand:'Bayer CropScience',
+      target:{en:'Purple blotch (Alternaria porri), Stemphylium blight',hi:'पर्पल ब्लॉच, स्टेम्फीलियम — प्याज के मुख्य रोग',mr:'पर्पल ब्लॉच, स्टेम्फीलियम — कांद्याचे मुख्य रोग'},
+      dose:{en:'1g per litre — 200L/acre',hi:'1g/L — 200L/एकड़',mr:'1g/L — 200L/एकर'},
+      timing:{en:'Morning — cool and calm weather',hi:'ठंडे और शांत मौसम में सुबह',mr:'थंड व शांत हवामानात सकाळी'},
+      warning:{en:'PHI 7 days',hi:'PHI 7 दिन',mr:'PHI 7 दिवस'} },
+    { day:68, name:{en:'Fipronil 5SC (Regent)',hi:'फिप्रोनिल (रीजेंट)',mr:'फिप्रोनिल (रीजेंट)'},
+      brand:'BASF India',
+      target:{en:'Thrips (Thrips tabaci) — most damaging onion pest',hi:'थ्रिप्स — प्याज का सबसे नुकसानदायक कीट',mr:'थ्रिप्स — कांद्याचा सर्वात हानिकारक किडा'},
+      dose:{en:'1.5ml per litre',hi:'1.5ml/L',mr:'1.5ml/L'},
+      timing:{en:'Evening spray — thrips active in evening',hi:'शाम को — थ्रिप्स शाम को सक्रिय',mr:'संध्याकाळी — थ्रिप्स संध्याकाळी सक्रिय'},
+      warning:{en:'Rotate with Spinosad next spray',hi:'अगली बार स्पिनोसैड इस्तेमाल करें',mr:'पुढच्या वेळी स्पिनोसॅड वापरा'} },
+  ],
+  chickpea:[
+    { day:1,  name:{en:'Thiamethoxam 70WS (Cruiser)',hi:'थायमेथोक्सम (क्रूजर)',mr:'थायमेथोक्सॅम (क्रूझर)'},
+      brand:'Syngenta India',
+      target:{en:'Aphids, Jassids at seedling stage',hi:'माहू, जैसिड — अंकुरण चरण',mr:'माव, जॅसिड — रोप टप्पा'},
+      dose:{en:'3g per kg seed — slurry treatment',hi:'3g/kg — स्लरी बीज उपचार',mr:'3g/kg — स्लरी बियाणे प्रक्रिया'},
+      timing:{en:'Before sowing + Rhizobium inoculant',hi:'बुवाई से पहले + राइजोबियम',mr:'पेरणीपूर्वी + रायझोबियम'},
+      warning:{en:'Apply Rhizobium separately — do not mix',hi:'राइजोबियम अलग से लगाएं — मिलाएं नहीं',mr:'रायझोबियम स्वतंत्र लावा — मिसळू नका'} },
+    { day:38, name:{en:'Emamectin Benzoate 5SG (Premio)',hi:'इमामेक्टिन बेंजोएट (प्रीमियो)',mr:'इमामेक्टिन बेंझोएट (प्रीमियो)'},
+      brand:'Syngenta India',
+      target:{en:'Pod borer (Helicoverpa armigera) — #1 chickpea pest',hi:'फली छेदक — चने का नंबर 1 कीट',mr:'शेंग पोखरणारे — हरभऱ्याचा क्रमांक 1 किडा'},
+      dose:{en:'0.4g per litre — 200L/acre',hi:'0.4g/L — 200L/एकड़',mr:'0.4g/L — 200L/एकर'},
+      timing:{en:'Evening spray',hi:'शाम को',mr:'संध्याकाळी'},
+      warning:{en:'PHI 7 days',hi:'PHI 7 दिन',mr:'PHI 7 दिवस'} },
+    { day:62, name:{en:'Hexaconazole 5SC (Contaf)',hi:'हेक्साकोनाजोल (कॉन्टैफ)',mr:'हेक्साकोनाझोल (कॉन्टॅफ)'},
+      brand:'FMC Corporation',
+      target:{en:'Wilt (Fusarium oxysporum), Root rot',hi:'उखटा (फ्यूजेरियम), जड़ गलन',mr:'मर रोग (फ्युझेरियम), मूळ कूज'},
+      dose:{en:'2ml per litre — drench at root zone',hi:'2ml/L — जड़ों में ड्रेंच',mr:'2ml/L — मुळाशी ड्रेंच'},
+      timing:{en:'Morning, calm weather',hi:'सुबह, शांत मौसम',mr:'सकाळी, शांत हवामान'},
+      warning:{en:'Preventive spray at first wilt sign',hi:'पहले उखटा के लक्षण पर निवारक छिड़काव',mr:'मर रोगाच्या पहिल्या चिन्हावर प्रतिबंधात्मक'} },
+  ],
+  sugarcane:[
+    { day:15, name:{en:'Chlorpyrifos 20EC (Dursban)',hi:'क्लोरपाइरीफॉस (डर्सबान)',mr:'क्लोरपायरीफॉस (डर्सबान)'},
+      brand:'Dow AgroSciences',
+      target:{en:'Early shoot borer (Chilo infuscatellus)',hi:'प्रारंभिक अंकुर छेदक',mr:'सुरुवातीचे कोंब पोखरणारे'},
+      dose:{en:'4 litres per acre — furrow drench',hi:'4 लीटर/एकड़ — नाली ड्रेंच',mr:'4 लिटर/एकर — चर ड्रेंच'},
+      timing:{en:'After planting, before earthing up',hi:'लगाने के बाद, मिट्टी चढ़ाने से पहले',mr:'लावणीनंतर, मातीचढणीपूर्वी'},
+      warning:{en:'Highly toxic to birds & fish',hi:'पक्षियों और मछलियों के लिए बहुत जहरीला',mr:'पक्षी व माशांसाठी अत्यंत विषारी'} },
+    { day:55, name:{en:'Carbofuran 3G (Furadan)',hi:'कार्बोफ्यूरान (फ्यूराडान)',mr:'कार्बोफुरान (फुराडान)'},
+      brand:'FMC Corporation',
+      target:{en:'Root borer (Emmalocera depressella), Grub',hi:'जड़ छेदक, ग्रब',mr:'मूळ पोखरणारे, ग्रब'},
+      dose:{en:'25kg per acre — granule broadcast',hi:'25kg/एकड़ — दाना छिड़कें',mr:'25kg/एकर — दाणे पसरवा'},
+      timing:{en:'Rain after application for soil activation',hi:'डालने के बाद बारिश जरूरी',mr:'टाकल्यानंतर पाऊस आवश्यक'},
+      warning:{en:'Highly toxic — wear full PPE, no food/water during use',hi:'अत्यधिक विषैला — पूरा PPE पहनें',mr:'अत्यंत विषारी — पूर्ण PPE घाला'} },
+    { day:120, name:{en:'Fipronil 0.3G (Regent)',hi:'फिप्रोनिल (रीजेंट)',mr:'फिप्रोनिल (रीजेंट)'},
+      brand:'BASF India',
+      target:{en:'Pyrilla perpusilla (leafhopper)',hi:'पिरिल्ला — पत्ती फुदका',mr:'पिरिल्ला — पान उडी'},
+      dose:{en:'8kg per acre — broadcast',hi:'8kg/एकड़',mr:'8kg/एकर'},
+      timing:{en:'Dry morning broadcast',hi:'सूखी सुबह में',mr:'कोरड्या सकाळी'},
+      warning:{en:'Do not apply near water bodies',hi:'जल निकायों के पास न डालें',mr:'जलस्रोतांजवळ टाकू नका'} },
+  ],
+  moong:[
+    { day:1,  name:{en:'Carbendazim 50WP (Bavistin)',hi:'कार्बेन्डाजिम (बाविस्टिन)',mr:'कार्बेन्डाझिम (बाविस्टिन)'},
+      brand:'BASF India',
+      target:{en:'Seed rot, Rhizoctonia root rot',hi:'बीज सड़न, राइजोक्टोनिया जड़ गलन',mr:'बियाणे कुज, राइझोक्टोनिया मूळ कूज'},
+      dose:{en:'2g per kg seed',hi:'2g/kg बीज',mr:'2g/kg बियाणे'},
+      timing:{en:'Before sowing + Rhizobium + PSB',hi:'बुवाई से पहले + राइजोबियम + PSB',mr:'पेरणीपूर्वी + रायझोबियम + PSB'},
+      warning:{en:'Must use Rhizobium culture for nitrogen fixation',hi:'नाइट्रोजन स्थिरीकरण के लिए राइजोबियम जरूरी',mr:'नायट्रोजन स्थिरीकरणासाठी रायझोबियम आवश्यक'} },
+    { day:26, name:{en:'Dimethoate 30EC (Rogor)',hi:'डाइमेथोएट (रोगोर)',mr:'डायमेथोएट (रोगर)'},
+      brand:'Rashtriya Chemicals',
+      target:{en:'Aphid, Thrips, Jassid',hi:'माहू, थ्रिप्स, जैसिड',mr:'माव, थ्रिप्स, जॅसिड'},
+      dose:{en:'2ml per litre — foliar spray',hi:'2ml/L — पत्तियों पर',mr:'2ml/L — पानांवर'},
+      timing:{en:'Morning',hi:'सुबह',mr:'सकाळी'},
+      warning:{en:'PHI 7 days',hi:'PHI 7 दिन',mr:'PHI 7 दिवस'} },
+    { day:48, name:{en:'Mancozeb 75WP (Dithane M-45)',hi:'मैनकोजेब (डाइथेन M-45)',mr:'मॅन्कोझेब (डायथेन M-45)'},
+      brand:'UPL Limited / Dow',
+      target:{en:'Cercospora leaf spot, Powdery mildew',hi:'सर्कोस्पोरा पत्ती धब्बा, पाउडरी फफूंदी',mr:'सर्कोस्पोरा पान डाग, पावडरी बुरशी'},
+      dose:{en:'2.5g per litre — 200L/acre',hi:'2.5g/L — 200L/एकड़',mr:'2.5g/L — 200L/एकर'},
+      timing:{en:'Cool morning',hi:'ठंडी सुबह',mr:'थंड सकाळ'},
+      warning:{en:'PHI 7 days',hi:'PHI 7 दिन',mr:'PHI 7 दिवस'} },
+  ],
+};
+
+// REAL FERTILIZER DOSES (ICAR / State Dept recommendations kg/acre)
+const FERTS = {
+  wheat:[
+    { day:0,  stage:{en:'Basal at Sowing',hi:'बुवाई पर आधार खाद',mr:'पेरणीवेळी पाया खत'}, name:{en:'DAP (Di-Ammonium Phosphate)',hi:'DAP (डाय अमोनियम फॉस्फेट)',mr:'DAP'}, qty:{en:'50 kg/acre',hi:'50 kg/एकड़',mr:'50 kg/एकर'}, method:{en:'Broadcast & mix 5cm into soil before sowing',hi:'बुवाई से पहले 5cm मिट्टी में मिलाएं',mr:'पेरणीपूर्वी 5cm मातीत मिसळा'}, npk:'18-46-0' },
+    { day:0,  stage:{en:'Basal — Potash',hi:'आधार — पोटाश',mr:'पाया — पोटॅश'}, name:{en:'MOP (Muriate of Potash)',hi:'MOP (म्यूरेट ऑफ पोटाश)',mr:'MOP'}, qty:{en:'20 kg/acre',hi:'20 kg/एकड़',mr:'20 kg/एकर'}, method:{en:'Mix with DAP — broadcast & incorporate',hi:'DAP के साथ मिलाएं',mr:'DAP सोबत मिसळा'}, npk:'0-0-60' },
+    { day:30, stage:{en:'Top Dressing — CRI Stage',hi:'CRI चरण — टॉप ड्रेसिंग',mr:'CRI टप्पा — टॉप ड्रेसिंग'}, name:{en:'Urea (46% Nitrogen)',hi:'यूरिया (46% नाइट्रोजन)',mr:'युरिया (46% नायट्रोजन)'}, qty:{en:'40 kg/acre',hi:'40 kg/एकड़',mr:'40 kg/एकर'}, method:{en:'Broadcast in field — irrigate immediately after',hi:'खेत में छिड़कें — तुरंत सिंचाई करें',mr:'शेतात पसरवा — लगेच पाणी द्या'}, npk:'46-0-0' },
+    { day:70, stage:{en:'Top Dressing — Jointing',hi:'जोड़ चरण — टॉप ड्रेसिंग',mr:'जोडणी टप्पा'}, name:{en:'Urea (46% Nitrogen)',hi:'यूरिया',mr:'युरिया'}, qty:{en:'30 kg/acre',hi:'30 kg/एकड़',mr:'30 kg/एकर'}, method:{en:'Broadcast before irrigation — morning only',hi:'सिंचाई से पहले सुबह',mr:'पाण्यापूर्वी सकाळी'}, npk:'46-0-0' },
+  ],
+  rice:[
+    { day:0,  stage:{en:'Basal at Transplanting',hi:'रोपाई पर आधार',mr:'लावणीवेळी पाया'}, name:{en:'DAP (Di-Ammonium Phosphate)',hi:'DAP',mr:'DAP'}, qty:{en:'40 kg/acre',hi:'40 kg/एकड़',mr:'40 kg/एकर'}, method:{en:'Broadcast in puddled field before transplanting',hi:'रोपाई से पहले पोखरे खेत में',mr:'लावणीपूर्वी पाण्यात चिखलात'}, npk:'18-46-0' },
+    { day:0,  stage:{en:'Basal — MOP',hi:'आधार — MOP',mr:'पाया — MOP'}, name:{en:'MOP',hi:'MOP',mr:'MOP'}, qty:{en:'20 kg/acre',hi:'20 kg/एकड़',mr:'20 kg/एकर'}, method:{en:'Mix with DAP',hi:'DAP के साथ',mr:'DAP सोबत'}, npk:'0-0-60' },
+    { day:22, stage:{en:'Tillering Stage',hi:'कांसे फूटने का चरण',mr:'फुटवा टप्पा'}, name:{en:'Urea (46% N)',hi:'यूरिया',mr:'युरिया'}, qty:{en:'35 kg/acre',hi:'35 kg/एकड़',mr:'35 kg/एकर'}, method:{en:'Broadcast in standing water — 5cm depth',hi:'खड़े पानी में (5cm) — सुबह',mr:'उभ्या पाण्यात (5cm) — सकाळी'}, npk:'46-0-0' },
+    { day:55, stage:{en:'Panicle Initiation',hi:'पनिकल निकलने का चरण',mr:'ओंबी येण्याचा टप्पा'}, name:{en:'Urea',hi:'यूरिया',mr:'युरिया'}, qty:{en:'20 kg/acre',hi:'20 kg/एकड़',mr:'20 kg/एकर'}, method:{en:'Broadcast before heading — morning',hi:'बाली निकलने से पहले — सुबह',mr:'ओंबी येण्यापूर्वी — सकाळी'}, npk:'46-0-0' },
+  ],
+  cotton:[
+    { day:0,  stage:{en:'Basal — NPK',hi:'आधार — NPK',mr:'पाया — NPK'}, name:{en:'DAP + MOP',hi:'DAP + MOP',mr:'DAP + MOP'}, qty:{en:'40 + 20 kg/acre',hi:'40+20 kg/एकड़',mr:'40+20 kg/एकर'}, method:{en:'Furrow placement 7–10cm deep',hi:'7–10cm गहरी नाली में',mr:'7–10cm खोल चरात'}, npk:'18-46-0 + 0-0-60' },
+    { day:45, stage:{en:'Squaring (Bud formation)',hi:'स्क्वेयरिंग (कली)',mr:'कळी अवस्था'}, name:{en:'Urea',hi:'यूरिया',mr:'युरिया'}, qty:{en:'35 kg/acre',hi:'35 kg/एकड़',mr:'35 kg/एकर'}, method:{en:'Side dress near root zone, then irrigate',hi:'जड़ के पास किनारे डालें, फिर सिंचाई',mr:'मुळाजवळ किनाऱ्यात, नंतर पाणी'}, npk:'46-0-0' },
+    { day:90, stage:{en:'Boll Development',hi:'बोल विकास',mr:'बोंड विकास'}, name:{en:'MOP + Boron (Solubor)',hi:'MOP + बोरोन (सोलुबोर)',mr:'MOP + बोरॉन (सोलुबोर)'}, qty:{en:'25 kg MOP + 1 kg Boron/acre',hi:'25 kg MOP + 1 kg बोरोन/एकड़',mr:'25 kg MOP + 1 kg बोरॉन/एकर'}, method:{en:'MOP broadcast + Boron as foliar 0.2%',hi:'MOP छिड़कें + बोरोन 0.2% पत्तियों पर',mr:'MOP पसरवा + बोरॉन 0.2% पानांवर'}, npk:'0-0-60 + Boron' },
+  ],
+  maize:[
+    { day:0,  stage:{en:'Basal at Sowing',hi:'बुवाई पर',mr:'पेरणीवेळी'}, name:{en:'DAP + MOP',hi:'DAP + MOP',mr:'DAP + MOP'}, qty:{en:'50 + 25 kg/acre',hi:'50+25 kg/एकड़',mr:'50+25 kg/एकर'}, method:{en:'Furrow placement 5cm below seed',hi:'बीज से 5cm नीचे नाली में',mr:'बियाण्याखाली 5cm चरात'}, npk:'NPK + Potash base' },
+    { day:28, stage:{en:'Knee-high (V6 Stage)',hi:'घुटने ऊंचाई (V6)',mr:'गुडघ्याएवढी उंची (V6)'}, name:{en:'Urea',hi:'यूरिया',mr:'युरिया'}, qty:{en:'55 kg/acre',hi:'55 kg/एकड़',mr:'55 kg/एकर'}, method:{en:'Side dress 8cm from plant, cover with soil',hi:'पौधे से 8cm किनारे, मिट्टी से ढकें',mr:'झाडापासून 8cm किनाऱ्यात, मातीने झाका'}, npk:'46-0-0' },
+    { day:58, stage:{en:'Tasseling / Silking',hi:'टैसेलिंग / सिल्किंग',mr:'झुपका / रेशीम'}, name:{en:'Urea',hi:'यूरिया',mr:'युरिया'}, qty:{en:'25 kg/acre',hi:'25 kg/एकड़',mr:'25 kg/एकर'}, method:{en:'Broadcast before irrigation',hi:'सिंचाई से पहले',mr:'पाण्यापूर्वी'}, npk:'46-0-0' },
+  ],
+  soybean:[
+    { day:0,  stage:{en:'Basal — Seed Treatment + Soil',hi:'आधार — बीज + मिट्टी',mr:'पाया — बियाणे + माती'}, name:{en:'DAP + Rhizobium + PSB',hi:'DAP + राइजोबियम + PSB',mr:'DAP + रायझोबियम + PSB'}, qty:{en:'25 kg DAP + Rhizobium 250g/acre',hi:'25 kg DAP + राइजोबियम 250g/एकड़',mr:'25 kg DAP + रायझोबियम 250g/एकर'}, method:{en:'DAP furrow + Rhizobium on seed coat separately',hi:'DAP नाली में + राइजोबियम बीज पर अलग',mr:'DAP चरात + रायझोबियम बियाण्यावर वेगळे'}, npk:'18-46-0' },
+    { day:42, stage:{en:'Flowering — Potash',hi:'फूल — पोटाश',mr:'फुलोरा — पोटॅश'}, name:{en:'MOP (Potassium)',hi:'MOP (पोटाश)',mr:'MOP (पोटॅशियम)'}, qty:{en:'20 kg/acre',hi:'20 kg/एकड़',mr:'20 kg/एकर'}, method:{en:'Side dress before irrigation',hi:'सिंचाई से पहले किनारे',mr:'पाण्यापूर्वी किनाऱ्यात'}, npk:'0-0-60' },
+    { day:50, stage:{en:'Pod Fill — Micronutrient',hi:'फली भरना — सूक्ष्म पोषक',mr:'शेंग भरणे — सूक्ष्म पोषके'}, name:{en:'Ferrous Sulphate 19% + Zinc Sulphate',hi:'फेरस सल्फेट + जिंक सल्फेट',mr:'फेरस सल्फेट + झिंक सल्फेट'}, qty:{en:'10 kg FeSO4 + 5 kg ZnSO4/acre',hi:'10 kg FeSO4 + 5 kg ZnSO4',mr:'10 kg FeSO4 + 5 kg ZnSO4'}, method:{en:'Foliar spray 0.5% each',hi:'0.5% प्रत्येक पत्तियों पर',mr:'0.5% प्रत्येक पानांवर'}, npk:'Fe + Zn micronutrient' },
+  ],
+  tomato:[
+    { day:0,  stage:{en:'At Transplanting — Basal',hi:'रोपाई पर',mr:'लावणीवेळी'}, name:{en:'FYM + DAP + MOP',hi:'गोबर खाद + DAP + MOP',mr:'शेणखत + DAP + MOP'}, qty:{en:'4 tonnes FYM + 40 kg DAP + 30 kg MOP/acre',hi:'4 टन गोबर + 40 kg DAP + 30 kg MOP',mr:'4 टन शेणखत + 40 kg DAP + 30 kg MOP'}, method:{en:'Mix FYM in soil 15 days before + DAP/MOP in pit',hi:'15 दिन पहले FYM मिट्टी में + DAP/MOP गड्ढे में',mr:'15 दिवस आधी FYM मातीत + DAP/MOP खड्ड्यात'}, npk:'Full NPK base + Organic' },
+    { day:20, stage:{en:'Vegetative Growth',hi:'वानस्पतिक वृद्धि',mr:'वनस्पती वाढ'}, name:{en:'Urea + Micronutrient mix',hi:'यूरिया + सूक्ष्म पोषक मिश्रण',mr:'युरिया + सूक्ष्म पोषण मिश्रण'}, qty:{en:'20 kg Urea + 5 kg MultiMicro/acre',hi:'20 kg यूरिया + 5 kg मल्टी माइक्रो',mr:'20 kg युरिया + 5 kg मल्टी मायक्रो'}, method:{en:'Drip fertigation or ring method',hi:'ड्रिप फर्टिगेशन या रिंग विधि',mr:'ठिबक फर्टिगेशन किंवा रिंग पद्धत'}, npk:'N + micronutrients' },
+    { day:48, stage:{en:'Fruit Setting — Potash + Calcium',hi:'फल लगाना — पोटाश + कैल्शियम',mr:'फळ लागणे — पोटॅश + कॅल्शियम'}, name:{en:'MOP + Calcium Nitrate (YaraLiva)',hi:'MOP + कैल्शियम नाइट्रेट',mr:'MOP + कॅल्शियम नायट्रेट'}, qty:{en:'25 kg MOP + 10 kg CaNO3/acre',hi:'25 kg MOP + 10 kg CaNO3',mr:'25 kg MOP + 10 kg CaNO3'}, method:{en:'Drip fertigation — split over 7 days',hi:'ड्रिप — 7 दिन में विभाजित',mr:'ठिबक — 7 दिवसांत विभागून'}, npk:'K + Ca + N' },
+  ],
+  onion:[
+    { day:0,  stage:{en:'At Transplanting',hi:'रोपाई पर',mr:'लावणीवेळी'}, name:{en:'FYM + DAP + MOP',hi:'गोबर + DAP + MOP',mr:'शेणखत + DAP + MOP'}, qty:{en:'5 tonnes FYM + 40 kg DAP + 20 kg MOP/acre',hi:'5 टन FYM + 40 kg DAP + 20 kg MOP',mr:'5 टन शेणखत + 40 kg DAP + 20 kg MOP'}, method:{en:'FYM in soil before transplant + DAP/MOP broadcast',hi:'रोपाई से पहले FYM + DAP/MOP छिड़कें',mr:'लावणीपूर्वी FYM + DAP/MOP पसरवा'}, npk:'Full base NPK' },
+    { day:30, stage:{en:'Active Growth',hi:'सक्रिय वृद्धि',mr:'सक्रिय वाढ'}, name:{en:'Urea',hi:'यूरिया',mr:'युरिया'}, qty:{en:'25 kg/acre',hi:'25 kg/एकड़',mr:'25 kg/एकर'}, method:{en:'Side dress & irrigate',hi:'किनारे डालें और सिंचाई',mr:'किनाऱ्यात आणि पाणी'}, npk:'46-0-0' },
+    { day:55, stage:{en:'Bulb Enlargement',hi:'कंद वृद्धि',mr:'कांदा वाढ'}, name:{en:'MOP + Sulphur',hi:'MOP + सल्फर',mr:'MOP + सल्फर'}, qty:{en:'25 kg MOP + 15 kg Sulphur/acre',hi:'25 kg MOP + 15 kg सल्फर',mr:'25 kg MOP + 15 kg सल्फर'}, method:{en:'Broadcast before irrigation — critical for bulb quality',hi:'सिंचाई से पहले — कंद गुणवत्ता के लिए',mr:'पाण्यापूर्वी — कांद्याच्या गुणवत्तेसाठी'}, npk:'K + S for pungency' },
+  ],
+  chickpea:[
+    { day:0,  stage:{en:'Basal at Sowing',hi:'बुवाई पर',mr:'पेरणीवेळी'}, name:{en:'DAP + Rhizobium + PSB',hi:'DAP + राइजोबियम + PSB',mr:'DAP + रायझोबियम + PSB'}, qty:{en:'20 kg DAP + Rhizobium culture 250g/acre',hi:'20 kg DAP + राइजोबियम 250g/एकड़',mr:'20 kg DAP + रायझोबियम 250g/एकर'}, method:{en:'DAP in furrow + Rhizobium on seed separately',hi:'DAP नाली में + राइजोबियम बीज पर अलग',mr:'DAP चरात + रायझोबियम बियाण्यावर वेगळे'}, npk:'Low N — Rhizobium fixes N' },
+    { day:38, stage:{en:'Branching + Potash',hi:'शाखाएं + पोटाश',mr:'फांद्या + पोटॅश'}, name:{en:'MOP',hi:'MOP',mr:'MOP'}, qty:{en:'15 kg/acre',hi:'15 kg/एकड़',mr:'15 kg/एकर'}, method:{en:'Broadcast before irrigation',hi:'सिंचाई से पहले',mr:'पाण्यापूर्वी'}, npk:'0-0-60' },
+    { day:55, stage:{en:'Pod Fill — Micronutrient',hi:'फली भरना — सूक्ष्म पोषक',mr:'शेंग भरणे'}, name:{en:'Zinc Sulphate (foliar)',hi:'जिंक सल्फेट (पत्तियों पर)',mr:'झिंक सल्फेट (पानांवर)'}, qty:{en:'0.5% solution — 200L/acre',hi:'0.5% घोल — 200L/एकड़',mr:'0.5% द्रावण — 200L/एकर'}, method:{en:'Foliar spray during pod fill',hi:'फली भरने के दौरान पत्तियों पर',mr:'शेंग भरताना पानांवर'}, npk:'Zn micronutrient' },
+  ],
+  sugarcane:[
+    { day:0,  stage:{en:'At Planting',hi:'रोपाई पर',mr:'लावणीवेळी'}, name:{en:'FYM + DAP + MOP',hi:'गोबर + DAP + MOP',mr:'शेणखत + DAP + MOP'}, qty:{en:'10 tonnes FYM + 60 kg DAP + 40 kg MOP/acre',hi:'10 टन FYM + 60 kg DAP + 40 kg MOP',mr:'10 टन शेणखत + 60 kg DAP + 40 kg MOP'}, method:{en:'FYM in trench + DAP/MOP in furrow at planting',hi:'खाई में FYM + नाली में DAP/MOP',mr:'खंदकात FYM + चरात DAP/MOP'}, npk:'Full base NPK + Organic' },
+    { day:60, stage:{en:'Grand Growth Phase',hi:'बड़ी वृद्धि चरण',mr:'मोठी वाढ टप्पा'}, name:{en:'Urea (Split 1)',hi:'यूरिया (भाग 1)',mr:'युरिया (भाग 1)'}, qty:{en:'40 kg/acre',hi:'40 kg/एकड़',mr:'40 kg/एकर'}, method:{en:'Drench or incorporate near root zone',hi:'जड़ क्षेत्र में',mr:'मुळाशी'}, npk:'46-0-0' },
+    { day:105, stage:{en:'Grand Growth Phase',hi:'बड़ी वृद्धि — भाग 2',mr:'मोठी वाढ — भाग 2'}, name:{en:'Urea (Split 2)',hi:'यूरिया (भाग 2)',mr:'युरिया (भाग 2)'}, qty:{en:'40 kg/acre',hi:'40 kg/एकड़',mr:'40 kg/एकर'}, method:{en:'Earthing up + side dress',hi:'मिट्टी चढ़ाने के समय',mr:'माती चढवताना'}, npk:'46-0-0' },
+  ],
+  moong:[
+    { day:0,  stage:{en:'Basal at Sowing',hi:'बुवाई पर',mr:'पेरणीवेळी'}, name:{en:'DAP + Rhizobium + PSB',hi:'DAP + राइजोबियम + PSB',mr:'DAP + रायझोबियम + PSB'}, qty:{en:'20 kg DAP + 250g Rhizobium/acre',hi:'20 kg DAP + 250g राइजोबियम',mr:'20 kg DAP + 250g रायझोबियम'}, method:{en:'DAP in furrow — Rhizobium on seed ONLY',hi:'DAP नाली में — राइजोबियम केवल बीज पर',mr:'DAP चरात — रायझोबियम फक्त बियाण्यावर'}, npk:'Low N — Rhizobium fixes N2' },
+    { day:33, stage:{en:'Flowering — Potash',hi:'फूल — पोटाश',mr:'फुलोरा — पोटॅश'}, name:{en:'MOP + foliar Boron',hi:'MOP + बोरोन छिड़काव',mr:'MOP + बोरॉन फवारणी'}, qty:{en:'10 kg MOP + 0.2% Boron/acre',hi:'10 kg MOP + 0.2% बोरोन',mr:'10 kg MOP + 0.2% बोरॉन'}, method:{en:'MOP broadcast + Boron foliar spray',hi:'MOP छिड़कें + बोरोन पत्तियों पर',mr:'MOP पसरवा + बोरॉन पानांवर'}, npk:'K + B for pod set' },
+  ],
+};
+
+// ═══════════════════════════════════════════════
+//   APP STATE
+// ═══════════════════════════════════════════════
+let lang = localStorage.getItem('language') || 'en';
+let cropKey = 'wheat', cropDur = 120, season = 'kharif';
+let activePlan = null;
+
+function g(mr, hi, en) { return lang === 'mr' ? mr : lang === 'hi' ? hi : en; }
+
+// ─── INIT ───
+document.addEventListener('DOMContentLoaded', () => {
+  const u = localStorage.getItem('user');
+  if (!u) { alert('Login required'); location.href = 'login.html'; return; }
+  ['en','hi','mr'].forEach(l => document.getElementById('btn-'+l).addEventListener('click', () => switchLang(l)));
+  switchLang(lang);
+  document.getElementById('sowDate').value = new Date().toISOString().split('T')[0];
+  loadHistory();
+  // Auto-reload
+  const saved = localStorage.getItem('preparePlan');
+  if (saved) {
+    try {
+      activePlan = JSON.parse(saved);
+      cropKey = activePlan.cropKey;
+      cropDur = activePlan.dur;
+      season  = activePlan.season;
+      document.getElementById('sowDate').value   = activePlan.sowDate;
+      document.getElementById('areaAcres').value = activePlan.area || 1;
+      document.querySelectorAll('.cc').forEach(c => c.classList.toggle('sel', c.dataset.k === cropKey));
+      renderPlan(activePlan);
+      showPlan();
+    } catch(e) { localStorage.removeItem('preparePlan'); }
+  }
+});
+
+function switchLang(l) {
+  lang = l;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn-'+l).classList.add('active');
+  document.querySelectorAll('.lc').forEach(el => el.style.display='none');
+  document.querySelectorAll('.lc.'+l).forEach(el => {
+    el.style.display = el.classList.contains('blk') ? 'block' : 'inline';
+  });
+  document.title = g('तयारी योजना | AgriSet.AI','तैयारी योजना | AgriSet.AI','Prepare Plan | AgriSet.AI');
+  localStorage.setItem('language', l);
+  if (activePlan) renderPlan(activePlan);
+  loadHistory();
+}
+
+function pickCrop(el) {
+  document.querySelectorAll('.cc').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+  cropKey = el.dataset.k;
+  cropDur = parseInt(el.dataset.dur) || 90;
+  recalcHarvest();
+}
+function pickSeason(el) {
+  document.querySelectorAll('.sp').forEach(s => s.classList.remove('sel'));
+  el.classList.add('sel');
+  season = el.dataset.s;
+}
+function recalcHarvest() {}
+
+// ─── GENERATE PLAN ───
+async function preparePlan() {
+  const sowDate = document.getElementById('sowDate').value;
+  const area    = parseFloat(document.getElementById('areaAcres').value) || 1;
+  if (!sowDate) { alert(g('कृपया पेरणी तारीख द्या','कृपया बुवाई तिथि दें','Please enter sowing date')); return; }
+
+  const btn = document.getElementById('genBtn');
+  btn.innerHTML = '<span class="spin"></span>&nbsp;' + g('तयार होत आहे…','तैयार हो रहा है…','Preparing plan…');
+  btn.disabled = true;
+
+  document.getElementById('formCard').style.display = 'none';
+  document.getElementById('genScreen').style.display = 'block';
+  document.getElementById('genScreen').scrollIntoView({behavior:'smooth'});
+
+  await delay(2400);
+
+  const sow      = new Date(sowDate);
+  const harvest  = new Date(sow); harvest.setDate(harvest.getDate() + cropDur);
+  const today    = new Date(); today.setHours(0,0,0,0);
+  const passed   = Math.max(0, Math.floor((today - sow) / 86400000));
+  const left     = Math.max(0, cropDur - passed);
+  const pct      = Math.min(100, Math.round((passed/cropDur)*100));
+
+  const plan = {
+    cropKey, dur: cropDur, season, sowDate, area,
+    harvestDate: harvest.toISOString().split('T')[0],
+    passed, left, pct,
+    pesticides: PESTS[cropKey] || [],
+    fertilizers: FERTS[cropKey] || [],
+    createdAt: new Date().toISOString()
+  };
+
+  activePlan = plan;
+  localStorage.setItem('preparePlan', JSON.stringify(plan));
+  saveHistory(plan);
+
+  document.getElementById('genScreen').style.display = 'none';
+  renderPlan(plan);
+  showPlan();
+
+  btn.innerHTML = `<i class="fas fa-clipboard-list"></i> ${g('माझी शेती योजना तयार करा','मेरी खेती योजना तैयार करें','Prepare My Farm Plan')}`;
+  btn.disabled = false;
+
+  // Backend
+  try {
+    const u = JSON.parse(localStorage.getItem('user')||'{}');
+    fetch('http://127.0.0.1:5000/add-crop',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({user_id:u.id, crop_name:cropKey, sowing_date:sowDate, harvest_date:plan.harvestDate})});
+  } catch(e){}
+}
+
+function showPlan() {
+  document.getElementById('planWrap').style.display = 'block';
+  document.getElementById('planWrap').scrollIntoView({behavior:'smooth'});
+}
+
+// ─── RENDER ───
+function renderPlan(plan) {
+  const cd    = CROPS[plan.cropKey] || {};
+  const cName = cd[lang] || plan.cropKey;
+  const emoji = cd.emoji || '🌾';
+
+  // Header
+  document.getElementById('phEmoji').textContent = emoji;
+  document.getElementById('phCrop').textContent  = cName;
+  const sl = {kharif:{en:'Kharif ☀️',hi:'खरीफ ☀️',mr:'खरीप ☀️'},rabi:{en:'Rabi ❄️',hi:'रबी ❄️',mr:'रब्बी ❄️'},zaid:{en:'Zaid 🌸',hi:'जायद 🌸',mr:'उन्हाळी 🌸'}};
+  document.getElementById('phPills').innerHTML = `
+    <div class="ph-pill"><i class="fas fa-calendar-alt"></i> ${plan.dur} ${g('दिवस','दिन','days')}</div>
+    <div class="ph-pill"><i class="fas fa-percent"></i> ${plan.pct}% ${g('पूर्ण','पूर्ण','done')}</div>
+    <div class="ph-pill"><i class="fas fa-cloud-sun"></i> ${(sl[plan.season]||{})[lang]||''}</div>
+    <div class="ph-pill"><i class="fas fa-ruler-combined"></i> ${plan.area} ${g('एकर','एकड़','acres')}</div>`;
+  document.getElementById('phStats').innerHTML = `
+    <div class="phs"><div class="phs-val">${plan.passed}</div><div class="phs-label">${g('बीत गेले','बीत गए','Days Done')}</div></div>
+    <div class="phs"><div class="phs-val">${plan.left}</div><div class="phs-label">${g('उरलेले','बचे','Days Left')}</div></div>
+    <div class="phs"><div class="phs-val">${plan.pesticides.length}</div><div class="phs-label">${g('फवारण्या','छिड़काव','Sprays')}</div></div>
+    <div class="phs"><div class="phs-val" style="font-size:14px">${fmtDate(plan.harvestDate)}</div><div class="phs-label">${g('कापणी','कटाई','Harvest')}</div></div>`;
+
+  renderToday(plan);
+  renderProgress(plan);
+  renderCalendar(plan);
+  renderPesticides(plan);
+  renderFertilizers(plan);
+  renderWatering(plan);
+  renderReminders(plan);
+}
+
+function renderToday(plan) {
+  const sow   = new Date(plan.sowDate);
+  const today = new Date(); today.setHours(0,0,0,0);
+  const day   = Math.max(0, Math.floor((today-sow)/86400000));
+  const tasks = dayTasks(plan, day);
+  const tb    = document.getElementById('todayBanner');
+  if (!tasks.length) { tb.style.display='none'; return; }
+  tb.style.display='flex';
+  document.getElementById('todayTitle').textContent = g('⚡ आजचे काम — दिवस '+day,'⚡ आज का काम — दिन '+day,'⚡ Today — Day '+day);
+  document.getElementById('todayTasks').innerHTML = tasks.map(t =>
+    `<div class="tb-task"><i class="fas ${t.icon}" style="color:${t.color}"></i>${t.text[lang]||t.text.en}</div>`
+  ).join('');
+}
+
+function renderProgress(plan) {
+  // Ring
+  const circ = 2 * Math.PI * 42;
+  const offset = circ - (plan.pct/100)*circ;
+  document.getElementById('ringFill').setAttribute('stroke-dashoffset', offset.toFixed(1));
+  document.getElementById('ringPct').textContent = plan.pct + '%';
+
+  document.getElementById('ringStats').innerHTML = `
+    <div class="rs-item"><div class="rs-dot" style="background:var(--sprout)"></div><div><div class="rs-text">${plan.passed} ${g('दिवस','दिन','days')} ${g('झाले','हो गए','done')}</div><div class="rs-sub">${fmtDate(plan.sowDate)}</div></div></div>
+    <div class="rs-item"><div class="rs-dot" style="background:#E9C46A"></div><div><div class="rs-text">${plan.left} ${g('दिवस','दिन','days')} ${g('उरले','बचे','remaining')}</div><div class="rs-sub">${g('कापणी','कटाई','Harvest')}: ${fmtDate(plan.harvestDate)}</div></div></div>
+    <div class="rs-item"><div class="rs-dot" style="background:var(--sky)"></div><div><div class="rs-text">${plan.area} ${g('एकर','एकड़','acres')} ${g('शेत','खेत','field')}</div><div class="rs-sub">${g('नोंदणीकृत क्षेत्र','पंजीकृत क्षेत्र','Registered area')}</div></div></div>`;
+
+  // Stage timeline
+  const stages = [
+    { key:'germ', emoji:'🌱', en:'Germination & Establishment', hi:'अंकुरण और स्थापना', mr:'अंकुरण आणि प्रस्थापना',
+      enD:'Seeds sprout, roots establish. Keep soil moist. Watch for damping off & birds.',
+      hiD:'बीज उगते हैं, जड़ें बनती हैं। मिट्टी नम रखें। डैंपिंग ऑफ और पक्षियों से बचाएं।',
+      mrD:'बियाणे उगतात, मुळे तयार होतात. माती ओली ठेवा. डँपिंग ऑफ व पक्ष्यांपासून बचा.',
+      from:0, to:0.15,
+      tasks:['wt-water','wt-soil']},
+    { key:'veg', emoji:'🌿', en:'Vegetative Growth', hi:'वानस्पतिक वृद्धि', mr:'वनस्पती वाढ',
+      enD:'Fast leaf & stem growth. Apply nitrogen. First weeding critical. Watch for sucking pests.',
+      hiD:'पत्ते और तना तेजी से बढ़ते हैं। नाइट्रोजन डालें। पहली निराई जरूरी। रस चूसने वाले कीड़े देखें।',
+      mrD:'पाने व खोड झपाट्याने वाढतात. नायट्रोजन द्या. पहिली खुरपणी आवश्यक. रस शोषणारे किडे तपासा.',
+      from:0.15, to:0.45,
+      tasks:['wt-fert','wt-weed','wt-water','wt-pest']},
+    { key:'flow', emoji:'🌸', en:'Flowering & Pollination', hi:'फूल और परागण', mr:'फुलोरा आणि परागण',
+      enD:'⚠️ Most critical stage! Water stress = 30% yield loss. NO morning spraying — bees pollinating. Phosphorus required.',
+      hiD:'⚠️ सबसे महत्वपूर्ण! पानी की कमी = 30% उपज घटती है। सुबह NO छिड़काव — मधुमक्खियां हैं। फास्फोरस डालें।',
+      mrD:'⚠️ सर्वात महत्त्वाचा टप्पा! पाण्याचा ताण = 30% उत्पन्न घट. सकाळी NO फवारणी. फॉस्फरस द्या.',
+      from:0.45, to:0.80,
+      tasks:['wt-water','wt-fert','wt-pest']},
+    { key:'harv', emoji:'🌾', en:'Grain Filling & Harvest', hi:'दाना भराव और कटाई', mr:'दाणे भरणे आणि कापणी',
+      enD:'Stop irrigation 15 days before harvest. Grain moisture 14–18% is ideal. Arrange labour, transport & storage in advance.',
+      hiD:'कटाई से 15 दिन पहले पानी बंद करें। 14–18% नमी आदर्श। मजदूर, वाहन और भंडारण पहले से बुक करें।',
+      mrD:'कापणीच्या 15 दिवस आधी पाणी बंद. 14–18% आर्द्रता आदर्श. मजूर, वाहन व साठवण आधीच बुक करा.',
+      from:0.80, to:1.0,
+      tasks:['wt-harv']},
+  ];
+  const p = plan.pct/100;
+  let html='';
+  stages.forEach((s,i) => {
+    const isDone   = p > s.to;
+    const isActive = p >= s.from && p < s.to;
+    const fromDay  = Math.round(plan.dur*s.from);
+    const toDay    = Math.round(plan.dur*s.to);
+    const sd = new Date(plan.sowDate); sd.setDate(sd.getDate()+fromDay);
+    const ed = new Date(plan.sowDate); ed.setDate(ed.getDate()+toDay);
+    html += `<div class="timeline-row">
+      <div class="tl-node ${isDone?'done':isActive?'active':'future'}">${s.emoji}</div>
+      <div class="tl-content">
+        <div class="tl-stage-name">${s[lang]||s.en}</div>
+        <div class="tl-date-range">📅 ${g('दिवस','दिन','Day')} ${fromDay}–${toDay} &nbsp;·&nbsp; ${fmtDate(sd.toISOString().split('T')[0])} → ${fmtDate(ed.toISOString().split('T')[0])}</div>
+        <div class="tl-desc">${s[lang+'D']||s.enD}</div>
+        <div class="tl-tasks-inline">
+          ${s.tasks.map(t=>`<span class="tlt ${t}">${taskLabel(t)}</span>`).join('')}
+          ${isActive?`<span class="tlt" style="background:#FEF3C7;color:#78350F">⚡ ${g('सध्या सुरू','अभी चल रहा','Active Now')}</span>`:''}
+        </div>
+      </div>
+    </div>`;
+  });
+  document.getElementById('stageList').innerHTML = html;
+}
+
+function taskLabel(t) {
+  const m = {
+    'wt-water': g('💧 पाणी','💧 पानी','💧 Water'),
+    'wt-fert':  g('🌱 खत','🌱 खाद','🌱 Fertilizer'),
+    'wt-pest':  g('🐛 फवारणी','🐛 छिड़काव','🐛 Pesticide'),
+    'wt-weed':  g('🌿 खुरपणी','🌿 निराई','🌿 Weeding'),
+    'wt-harv':  g('🌾 कापणी','🌾 कटाई','🌾 Harvest'),
+    'wt-soil':  g('🪱 माती','🪱 मिट्टी','🪱 Soil care'),
+  };
+  return m[t]||t;
+}
+
+function renderCalendar(plan) {
+  const sow   = new Date(plan.sowDate);
+  const dur   = plan.dur;
+  const today = new Date(); today.setHours(0,0,0,0);
+  const weeks = Math.ceil(dur/7);
+  const stageNames = {germination:{en:'Germination 🌱',hi:'अंकुरण 🌱',mr:'अंकुरण 🌱'}, vegetative:{en:'Vegetative 🌿',hi:'वानस्पतिक 🌿',mr:'वनस्पती 🌿'}, flowering:{en:'Flowering 🌸',hi:'फूल 🌸',mr:'फुलोरा 🌸'}, harvest:{en:'Harvest 🌾',hi:'कटाई 🌾',mr:'कापणी 🌾'}};
+  let html='';
+  for (let w=0;w<weeks;w++) {
+    const ws=w*7, we=Math.min(ws+6,dur);
+    const sk=stageOf(ws,dur);
+    const sn=(stageNames[sk]||{})[lang]||sk;
+    const sClass='wh-'+sk;
+    html+=`<div class="week-block">
+      <div class="wb-title ${sClass}">
+        📅 ${g('आठवडा '+(w+1)+' (दिवस '+(ws+1)+'–'+(we+1)+')', 'सप्ताह '+(w+1)+' (दिन '+(ws+1)+'–'+(we+1)+')', 'Week '+(w+1)+' (Day '+(ws+1)+'–'+(we+1)+')')}
+        <span class="wb-stage-badge">${sn}</span>
+      </div>
+      <div class="wb-days">`;
+    for (let d=ws;d<=we;d++) {
+      const cd=new Date(sow); cd.setDate(cd.getDate()+d); cd.setHours(0,0,0,0);
+      const isTod=cd.getTime()===today.getTime();
+      const isPast=cd<today;
+      const ts=dayTasks(plan,d);
+      const enc=encodeURIComponent(JSON.stringify(ts.map(t=>({ico:t.ico,text:t.text,desc:t.desc,bg:t.bg}))));
+      const shown=ts.slice(0,3);
+      html+=`<div class="wd ${isTod?'today':''} ${isPast?'past':''}" onclick="openDay(${d},'${cd.toLocaleDateString('en-IN',{day:'2-digit',month:'short'})}','${enc}')">
+        <div class="wd-num ${isTod?'today-n':''}">D${d+1}${isTod?'●':''}</div>
+        <div class="wd-tags">
+          ${shown.map(t=>`<span class="wdt ${t.cls}" title="${t.text.en||''}">${t.ico} ${(t.short[lang]||t.short.en||'')}</span>`).join('')}
+          ${ts.length>3?`<div class="wd-more">+${ts.length-3}</div>`:''}
+          ${ts.length===0?`<span class="wdt wdt-rest">${g('आराम','आराम','Rest')}</span>`:''}
+        </div>
+      </div>`;
+    }
+    html+='</div></div>';
+  }
+  document.getElementById('calendarWrap').innerHTML = html;
+}
+
+function dayTasks(plan, day) {
+  const dur=plan.dur, tasks=[];
+  const cd=CROPS[plan.cropKey]||{};
+  const wi=cd.waterDays||7;
+  // Sowing
+  if(day===0) tasks.push({ico:'🌱',cls:'wdt-fert',short:{en:'Sow',hi:'बुवाई',mr:'पेरणी'},text:{en:'Sowing Day — plant seeds at recommended depth',hi:'बुवाई का दिन — सही गहराई पर बीज बोएं',mr:'पेरणीचा दिवस — शिफारस केलेल्या खोलीवर पेरा'},desc:{en:'Apply basal fertilizer before sowing. Sow in lines. Water lightly.',hi:'बुवाई से पहले आधार खाद। कतार में बोएं।',mr:'पेरणीपूर्वी पाया खत. ओळीत पेरा.'},icon:'fa-seedling',color:'var(--leaf)',bg:'#F0FDF4'});
+  // Watering
+  if(day>0 && day%wi===0 && day<dur-12) tasks.push({ico:'💧',cls:'wdt-water',short:{en:'Water',hi:'पानी',mr:'पाणी'},text:{en:'Irrigation — water at root zone, not on leaves',hi:'सिंचाई — जड़ में पानी, पत्तियों पर नहीं',mr:'सिंचन — मुळाशी पाणी, पानांवर नाही'},desc:{en:'Best time: early morning (5–8AM). Deep watering once better than shallow twice.',hi:'सुबह 5–8 बजे। एक बार गहरा पानी बेहतर।',mr:'सकाळी 5–8. एकदा खोल पाणी चांगले.'},icon:'fa-water',color:'#1D4ED8',bg:'#EFF6FF'});
+  // Weeding
+  const wd=[Math.round(dur*0.12),Math.round(dur*0.32)];
+  if(wd.some(d=>Math.abs(day-d)<1)) tasks.push({ico:'🌿',cls:'wdt-weed',short:{en:'Weed',hi:'निराई',mr:'खुरपणी'},text:{en:'Weeding — remove all weeds thoroughly',hi:'निराई — सभी खरपतवार हटाएं',mr:'खुरपणी — सर्व तण काढा'},desc:{en:'Use hoe or hand weeding. Weed stress reduces yield by 20–40%.',hi:'खुरपी या हाथ से। खरपतवार 20–40% उपज घटाते हैं।',mr:'खुरपी किंवा हाताने. तण 20–40% उत्पन्न घटवते.'},icon:'fa-leaf',color:'#7C3AED',bg:'#F5F3FF'});
+  // Fertilizers
+  const fertDays=getDayMap(plan.fertilizers, dur);
+  if(fertDays[day]) tasks.push({ico:'🌱',cls:'wdt-fert',short:{en:'Fert',hi:'खाद',mr:'खत'},text:{en:'Fertilizer: '+(fertDays[day].name.en||''),hi:'खाद: '+(fertDays[day].name.hi||''),mr:'खत: '+(fertDays[day].name.mr||'')},desc:{en:(fertDays[day].method.en||''),hi:(fertDays[day].method.hi||''),mr:(fertDays[day].method.mr||'')},icon:'fa-circle-dot',color:'var(--leaf)',bg:'#F0FDF4'});
+  // Pesticides
+  plan.pesticides.forEach(p => {
+    if(p.day===day) tasks.push({ico:'🐛',cls:'wdt-pest',short:{en:'Spray',hi:'स्प्रे',mr:'फवारणी'},text:{en:'Spray: '+(p.name.en||''),hi:'छिड़काव: '+(p.name.hi||''),mr:'फवारणी: '+(p.name.mr||'')},desc:{en:'Target: '+(p.target.en||'')+'. '+p.dose.en+'. Time: '+p.timing.en,hi:'लक्ष्य: '+(p.target.hi||'')+'. '+p.dose.hi+'. समय: '+p.timing.hi,mr:'लक्ष्य: '+(p.target.mr||'')+'. '+p.dose.mr+'. वेळ: '+p.timing.mr},icon:'fa-bug',color:'#DC2626',bg:'#FEF2F2'});
+  });
+  // Soil check
+  if(day===5||day===15) tasks.push({ico:'🪱',cls:'wdt-soil',short:{en:'Check',hi:'जांचें',mr:'तपासा'},text:{en:'Soil & seedling inspection',hi:'मिट्टी और अंकुर जांच',mr:'माती व रोप तपासणी'},desc:{en:'Check germination gaps, soil moisture, and early pest signs.',hi:'अंकुरण की कमी, मिट्टी नमी और कीट के प्रारंभिक लक्षण।',mr:'उगवण अंतर, माती ओलावा आणि किडे यांची सुरुवातीची चिन्हे.'},icon:'fa-magnifying-glass',color:'#C2410C',bg:'#FFF7ED'});
+  // Harvest zone
+  if(day>=dur-3) tasks.push({ico:'🌾',cls:'wdt-harv',short:{en:'Harvest',hi:'कटाई',mr:'कापणी'},text:{en:'Harvest time — morning harvest for best quality',hi:'कटाई का समय — सुबह काटें',mr:'कापणीची वेळ — सकाळी काढा'},desc:{en:'Ideal moisture: 14–18%. Arrange labour, transport, storage in advance. Check Mandi price.',hi:'आदर्श नमी: 14–18%। पहले से मजदूर, वाहन और भंडारण।',mr:'आदर्श आर्द्रता: 14–18%. आधीच मजूर, वाहन, साठवण. मंडई किंमत तपासा.'},icon:'fa-wheat-awn',color:'#B45309',bg:'#FEF3C7'});
+
+  return tasks;
+}
+
+function getDayMap(ferts, dur) {
+  const map={};
+  const keyToDay={
+    'Basal':0,'Transplant':0,'Planting':0,'Sowing':0,
+    'Tillering':Math.round(dur*0.18),'Vegetative':Math.round(dur*0.22),'CRI':Math.round(dur*0.25),
+    'Top Dressing':Math.round(dur*0.25),'Active Growth':Math.round(dur*0.25),
+    'Squaring':Math.round(dur*0.28),'Knee-high':Math.round(dur*0.28),'Branching':Math.round(dur*0.38),
+    'Panicle':Math.round(dur*0.42),'Fruit Setting':Math.round(dur*0.53),'Pod Fill':Math.round(dur*0.75),
+    'Flowering':Math.round(dur*0.50),'Bulb':Math.round(dur*0.46),'Boll':Math.round(dur*0.50),
+    'Grand Growth':Math.round(dur*0.16),'Jointing':Math.round(dur*0.58),
+    'Tasseling':Math.round(dur*0.58),'Enlargement':Math.round(dur*0.46),
+  };
+  ferts.forEach(f=>{
+    const k=Object.keys(keyToDay).find(k=>f.stage.en.includes(k));
+    const d=k?keyToDay[k]:0;
+    map[d]=f;
+  });
+  return map;
+}
+
+function stageOf(day, dur) {
+  const r=day/dur;
+  if(r<0.15)return'germination';
+  if(r<0.45)return'vegetative';
+  if(r<0.80)return'flowering';
+  return'harvest';
+}
+
+function renderPesticides(plan) {
+  const sow=new Date(plan.sowDate);
+  const ps=plan.pesticides;
+  if(!ps.length){document.getElementById('pestSection').innerHTML=`<div class="empty"><i class="fas fa-check-circle" style="color:var(--sprout)"></i><p>${g('उपलब्ध नाही','उपलब्ध नहीं','Not available for this crop')}</p></div>`;return;}
+  document.getElementById('pestSection').innerHTML = ps.map(p=>{
+    const appD=new Date(sow); appD.setDate(appD.getDate()+p.day);
+    const ds=appD.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+    return `<div class="pest-row">
+      <div class="pest-day-col">
+        <div class="pdc-day">${p.day}</div>
+        <div class="pdc-label">${g('दिवस','दिन','Day')}</div>
+        <div class="pdc-date">${ds}</div>
+      </div>
+      <div class="pest-info-col">
+        <div class="pi-name">🧪 ${p.name[lang]||p.name.en}</div>
+        <div class="pi-brand">🏷️ ${p.brand}</div>
+        <div class="pi-grid">
+          <div class="pi-item"><b>${g('लक्ष्य','लक्ष्य','Target Pest')}</b>${p.target[lang]||p.target.en}</div>
+          <div class="pi-item"><b>${g('मात्रा','खुराक','Dose')}</b>${p.dose[lang]||p.dose.en}</div>
+          <div class="pi-item"><b>${g('वेळ','समय','Best Time')}</b>${p.timing[lang]||p.timing.en}</div>
+          <div class="pi-item"><b>${g('PHI सुरक्षा','PHI सुरक्षा','Safety')}</b>${g('हातमोजे घाला','दस्ताने पहनें','Wear gloves & mask')}</div>
+        </div>
+        ${p.warning?`<div class="pi-warning"><i class="fas fa-triangle-exclamation"></i>${p.warning[lang]||p.warning.en}</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderFertilizers(plan) {
+  const sow=new Date(plan.sowDate), area=plan.area||1;
+  const fs=plan.fertilizers;
+  if(!fs.length){document.getElementById('fertSection').innerHTML='<p>—</p>';return;}
+  document.getElementById('fertSection').innerHTML = fs.map(f=>{
+    const d=getFertDay(f,plan.dur);
+    const fd=new Date(sow); fd.setDate(fd.getDate()+d);
+    const ds=fd.toLocaleDateString('en-IN',{day:'2-digit',month:'short'});
+    return `<div class="fert-card">
+      <div class="fc-day-box">
+        <div class="fdb-day">${d}</div>
+        <div class="fdb-lab">${g('दिवस','दिन','Day')}</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.65);margin-top:4px">${ds}</div>
+      </div>
+      <div class="fc-right">
+        <div class="fc-stage">${f.stage[lang]||f.stage.en}</div>
+        <div class="fc-name">${f.name[lang]||f.name.en}</div>
+        <div class="fc-details">
+          <div class="fc-det"><b>${g('मात्रा','मात्रा','Quantity')}</b><span class="fc-qty-badge">${f.qty[lang]||f.qty.en}</span></div>
+          <div class="fc-det"><b>${g('NPK','NPK','NPK Grade')}</b>${f.npk||'—'}</div>
+          <div class="fc-det"><b>${g('पद्धत','विधि','Method')}</b>${f.method[lang]||f.method.en}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function getFertDay(f, dur) {
+  const k=f.stage.en;
+  const m={
+    'Basal':0,'Transplant':0,'Planting':0,'Sowing':0,
+    'CRI':Math.round(dur*0.25),'Top Dress':Math.round(dur*0.25),'Active Growth':Math.round(dur*0.25),
+    'Tillering':Math.round(dur*0.18),'Vegetative':Math.round(dur*0.22),
+    'Squaring':Math.round(dur*0.28),'Knee-high':Math.round(dur*0.28),'Branching':Math.round(dur*0.38),
+    'Panicle':Math.round(dur*0.42),'Fruit Setting':Math.round(dur*0.53),'Pod Fill':Math.round(dur*0.75),
+    'Flowering':Math.round(dur*0.50),'Bulb Enlarg':Math.round(dur*0.46),'Boll':Math.round(dur*0.50),
+    'Grand Growth':Math.round(dur*0.16),'Jointing':Math.round(dur*0.58),
+  };
+  return Object.keys(m).find(x=>k.includes(x)) !== undefined ? m[Object.keys(m).find(x=>k.includes(x))] : 0;
+}
+
+function renderWatering(plan) {
+  const sow=new Date(plan.sowDate), dur=plan.dur, wi=CROPS[plan.cropKey]?.waterDays||7;
+  const area=plan.area||1;
+  const waterDays=[];
+  for(let d=wi;d<dur-12;d+=wi) waterDays.push(d);
+  const totalVol=Math.round(area * 1000 * 4047 / 10000 * wi * 0.05);
+  document.getElementById('waterSection').innerHTML=`
+    <div class="water-grid">
+      ${waterDays.slice(0,12).map(d=>{
+        const wd=new Date(sow); wd.setDate(wd.getDate()+d);
+        return`<div class="water-chip">
+          <div class="wc-day">${g('दिवस','दिन','Day')} ${d}</div>
+          <div class="wc-date">${wd.toLocaleDateString('en-IN',{day:'2-digit',month:'short'})}</div>
+          <div class="wc-vol">~${Math.round(area*1000)} L</div>
+        </div>`;
+      }).join('')}
+      ${waterDays.length>12?`<div class="water-chip" style="background:#F9FAFB;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px;font-weight:700">+${waterDays.length-12} ${g('अधिक','और','more')}</div>`:''}
+    </div>
+    <div class="water-info-box">
+      <div class="wib-ico">💧</div>
+      <div>
+        <div class="wib-title">${g('सिंचन मार्गदर्शन','सिंचाई गाइड','Irrigation Guide')}</div>
+        <div class="wib-text">${g(
+          `दर ${wi} दिवसांनी पाणी द्या. ${area} एकर क्षेत्रासाठी प्रत्येक सिंचनात ~${Math.round(area*1000)} लिटर. पहाटे 5–8 सिंचन सर्वोत्तम. पानांवर पाणी पडू देऊ नका — रोग वाढतो.`,
+          `हर ${wi} दिन में पानी दें। ${area} एकड़ के लिए प्रत्येक सिंचाई में ~${Math.round(area*1000)} लीटर। सुबह 5–8 बजे सिंचाई सबसे अच्छी। पत्तियों पर पानी न पड़ने दें।`,
+          `Water every ${wi} days. For ${area} acres: ~${Math.round(area*1000)} litres per irrigation. Best time: 5–8AM. Never wet leaves — causes fungal disease.`
+        )}</div>
+      </div>
+    </div>`;
+}
+
+function renderReminders(plan) {
+  const sow=new Date(plan.sowDate), dur=plan.dur;
+  const rems=[
+    {day:3, cls:'ri-green', ico:'🌱', title:{en:'Check Germination',hi:'अंकुरण जांचें',mr:'उगवण तपासा'}, desc:{en:'Walk every row — check if seeds germinated. Fill gaps with fresh seeds before day 7.',hi:'हर कतार देखें — बीज उगे हैं क्या। दिन 7 से पहले खाली जगह नया बीज डालें।',mr:'प्रत्येक ओळ तपासा — बियाणे उगले का. दिवस 7 पूर्वी खाली जागी नवे बियाणे लावा.'}},
+    {day:Math.round(dur*0.12), cls:'ri-amber', ico:'🌿', title:{en:'First Weeding',hi:'पहली निराई',mr:'पहिली खुरपणी'}, desc:{en:'Critical — weeds steal 25% of fertilizer. Complete full field weeding this week.',hi:'जरूरी — खरपतवार 25% खाद चुराते हैं। इस हफ्ते पूरे खेत की निराई करें।',mr:'आवश्यक — तण 25% खत चोरतात. या आठवड्यात संपूर्ण खेत खुरपणी करा.'}},
+    {day:Math.round(dur*0.22), cls:'ri-green', ico:'🌱', title:{en:'Apply Nitrogen Fertilizer',hi:'नाइट्रोजन खाद डालें',mr:'नायट्रोजन खत द्या'}, desc:{en:'Apply urea as per plan. Irrigate immediately after to prevent nitrogen loss.',hi:'योजना के अनुसार यूरिया डालें। नाइट्रोजन हानि से बचाने के लिए तुरंत सिंचाई करें।',mr:'योजनेनुसार युरिया द्या. नायट्रोजन नुकसान टाळण्यासाठी लगेच पाणी द्या.'}},
+    {day:Math.round(dur*0.50), cls:'ri-red', ico:'⚠️', title:{en:'Flowering — NO Morning Spray',hi:'फूल — सुबह छिड़काव नहीं',mr:'फुलोरा — सकाळी फवारणी नाही'}, desc:{en:'Critical week! Water every 3 days. NEVER spray 6–10AM — honeybees are pollinating. Water stress = 30% yield loss.',hi:'महत्वपूर्ण! हर 3 दिन पानी। 6–10 सुबह छिड़काव बिल्कुल नहीं — मधुमक्खियां काम कर रही हैं।',mr:'महत्त्वाचा! दर 3 दिवस पाणी. 6–10 सकाळी फवारणी अजिबात नाही — मधमाश्या काम करतात.'}},
+    {day:dur-15, cls:'ri-amber', ico:'🚫', title:{en:'STOP Irrigation Now',hi:'सिंचाई बंद करें',mr:'पाणी बंद करा'}, desc:{en:'Stop all irrigation 15 days before harvest. This improves grain quality, reduces shattering, and eases harvesting.',hi:'कटाई से 15 दिन पहले पानी बंद करें। इससे अनाज की गुणवत्ता बेहतर होती है।',mr:'कापणीच्या 15 दिवस आधी पाणी बंद करा. यामुळे धान्याची गुणवत्ता सुधारते.'}},
+    {day:dur-7, cls:'ri-sky', ico:'📦', title:{en:'Arrange Harvest Logistics',hi:'कटाई की व्यवस्था करें',mr:'कापणीची व्यवस्था करा'}, desc:{en:'Book labourers, tractor, thresher, transport & storage NOW. MSP rates — check AgMarknet/eNAM before selling.',hi:'अभी मजदूर, ट्रैक्टर, थ्रेशर, वाहन और भंडारण बुक करें। बेचने से पहले MSP और eNAM कीमत देखें।',mr:'आत्ताच मजूर, ट्रॅक्टर, थ्रेशर, वाहन व साठवण बुक करा. विकण्यापूर्वी MSP आणि eNAM किंमत पहा.'}},
+    {day:dur, cls:'ri-green', ico:'🌾', title:{en:'Harvest Day',hi:'कटाई का दिन',mr:'कापणीचा दिवस'}, desc:{en:'Harvest early morning (5–9AM). Grain moisture should be 14–18%. Dry properly before storage. Do NOT sell urgently — check market rates.',hi:'सुबह 5–9 बजे काटें। नमी 14–18% होनी चाहिए। भंडारण से पहले अच्छे से सुखाएं।',mr:'सकाळी 5–9 काढा. आर्द्रता 14–18% असावी. साठवणीपूर्वी नीट वाळवा. घाईत विकू नका.'}},
+  ];
+  document.getElementById('remSection').innerHTML = rems.map(r=>{
+    const rd=new Date(sow); rd.setDate(rd.getDate()+r.day);
+    const ds=rd.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+    return`<div class="rem-item ${r.cls}">
+      <div class="rem-ico">${r.ico}</div>
+      <div>
+        <div class="rem-day-tag">📅 ${g('दिवस','दिन','Day')} ${r.day} &nbsp;·&nbsp; ${ds}</div>
+        <div class="rem-title">${r.title[lang]||r.title.en}</div>
+        <div class="rem-desc">${r.desc[lang]||r.desc.en}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ─── DAY MODAL ───
+function openDay(day, dateStr, enc) {
+  let tasks=[];
+  try{tasks=JSON.parse(decodeURIComponent(enc));}catch(e){}
+  document.getElementById('mTitle').textContent = g('दिवस '+(day+1)+' — '+dateStr, 'दिन '+(day+1)+' — '+dateStr, 'Day '+(day+1)+' — '+dateStr);
+  if(!tasks.length){
+    document.getElementById('mBody').innerHTML=`<div class="rest-note"><i class="fas fa-sun"></i><p>${g('आज शेताची निरीक्षण करा — आराम करा','आज खेत देखें — आराम करें','Observe field — rest day')}</p></div>`;
+  } else {
+    document.getElementById('mBody').innerHTML=tasks.map(t=>`
+      <div class="m-task">
+        <div class="m-task-ico" style="background:${t.bg||'#F0FDF4'}">${t.ico}</div>
+        <div>
+          <div class="m-task-name">${(t.text&&(t.text[lang]||t.text.en))||'—'}</div>
+          <div class="m-task-desc">${(t.desc&&(t.desc[lang]||t.desc.en))||''}</div>
+        </div>
+      </div>`).join('');
+  }
+  document.getElementById('dayModal').classList.add('open');
+}
+function closeModal(){ document.getElementById('dayModal').classList.remove('open'); }
+
+// ─── HISTORY ───
+function saveHistory(plan) {
+  const h=JSON.parse(localStorage.getItem('preparePlanHistory')||'[]');
+  h.unshift({...plan, id:Date.now()});
+  if(h.length>8) h.pop();
+  localStorage.setItem('preparePlanHistory', JSON.stringify(h));
+  loadHistory();
+}
+function loadHistory(){
+  const h=JSON.parse(localStorage.getItem('preparePlanHistory')||'[]');
+  const hc=document.getElementById('histCard');
+  const hl=document.getElementById('histList');
+  if(!h.length){hc.style.display='none';return;}
+  hc.style.display='block';
+  const stageCols={germination:{bg:'#D1FAE5',c:'#047857'},vegetative:{bg:'#DBEAFE',c:'#1D4ED8'},flowering:{bg:'#EDE9FE',c:'#7C3AED'},harvest:{bg:'#FEF3C7',c:'#D97706'}};
+  const sln={germination:{en:'Germination',hi:'अंकुरण',mr:'अंकुरण'},vegetative:{en:'Vegetative',hi:'वानस्पतिक',mr:'वनस्पती'},flowering:{en:'Flowering',hi:'फूल',mr:'फुलोरा'},harvest:{en:'Harvest',hi:'कटाई',mr:'कापणी'}};
+  hl.innerHTML=h.map((p,i)=>{
+    const cd=CROPS[p.cropKey]||{};
+    const sk=stageOf(p.passed||0,p.dur||90);
+    const sc=stageCols[sk]||{bg:'#F3F4F6',c:'#6B7280'};
+    return`<div class="hist-card" onclick="reloadPlan(${i})">
+      <div class="hist-emoji">${cd.emoji||'🌾'}</div>
+      <div>
+        <div class="hist-info-name">${cd[lang]||p.cropKey}</div>
+        <div class="hist-info-meta">📅 ${fmtDate(p.sowDate)} → ${fmtDate(p.harvestDate)} · ${p.dur} ${g('दिवस','दिन','days')}</div>
+      </div>
+      <div class="hist-badge" style="background:${sc.bg};color:${sc.c}">${(sln[sk]||{})[lang]||sk}</div>
+      <div style="color:var(--sprout);font-size:13px;font-weight:700;margin-left:4px">↑</div>
+    </div>`;
+  }).join('');
+}
+function reloadPlan(i){
+  const h=JSON.parse(localStorage.getItem('preparePlanHistory')||'[]');
+  const p=h[i]; if(!p) return;
+  activePlan=p; cropKey=p.cropKey; cropDur=p.dur; season=p.season;
+  document.querySelectorAll('.cc').forEach(c=>c.classList.toggle('sel',c.dataset.k===cropKey));
+  document.getElementById('sowDate').value=p.sowDate;
+  document.getElementById('areaAcres').value=p.area||1;
+  renderPlan(p);
+  showPlan();
+}
+
+function newPlan(){
+  activePlan=null;
+  document.getElementById('planWrap').style.display='none';
+  document.getElementById('formCard').style.display='block';
+  document.getElementById('genScreen').style.display='none';
+  document.getElementById('formCard').scrollIntoView({behavior:'smooth'});
+}
+
+// ─── UTILS ───
+function fmtDate(ds){if(!ds)return'—';return new Date(ds).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});}
+function delay(ms){return new Promise(r=>setTimeout(r,ms));}
+</script>
+</body>
+</html>

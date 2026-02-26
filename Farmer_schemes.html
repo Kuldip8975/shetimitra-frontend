@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>किसान योजना | Farmer Scheme Finder</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700;900&family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --green:   #1a6b2e;
+    --green2:  #2d8f45;
+    --gold:    #e8a020;
+    --gold2:   #f5c842;
+    --soil:    #8b4513;
+    --cream:   #fdf6e3;
+    --white:   #ffffff;
+    --text:    #1a1a1a;
+    --muted:   #666;
+    --red:     #c0392b;
+    --blue:    #1565c0;
+    --shadow:  0 4px 24px rgba(0,0,0,0.13);
+    --radius:  16px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Baloo 2', 'Noto Sans Devanagari', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── PAGES ── */
+  .page { display: none; min-height: 100vh; }
+  .page.active { display: block; animation: fadeIn 0.4s ease; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:none; } }
+
+  /* ── HEADER ── */
+  .header {
+    background: linear-gradient(135deg, var(--green) 0%, var(--green2) 60%, #3aaf5c 100%);
+    color: #fff;
+    padding: 0;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.18);
+  }
+  .header-inner {
+    max-width: 800px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 20px;
+  }
+  .logo { display: flex; align-items: center; gap: 10px; }
+  .logo-icon { font-size: 2rem; }
+  .logo-text { font-size: 1.18rem; font-weight: 800; line-height: 1.2; }
+  .logo-sub { font-size: 0.75rem; opacity: 0.85; font-weight: 400; }
+
+  .lang-btns { display: flex; gap: 6px; }
+  .lang-btn {
+    background: rgba(255,255,255,0.18); border: 1.5px solid rgba(255,255,255,0.4);
+    color: #fff; padding: 5px 13px; border-radius: 20px;
+    cursor: pointer; font-size: 0.82rem; font-family: inherit; font-weight: 600;
+    transition: all 0.2s;
+  }
+  .lang-btn.active, .lang-btn:hover {
+    background: var(--gold); border-color: var(--gold); color: #1a1a1a;
+  }
+
+  /* ── HERO (page 1) ── */
+  .hero {
+    background: linear-gradient(160deg, #e8f5e9 0%, #fff8e1 100%);
+    padding: 36px 20px 28px;
+    text-align: center;
+    border-bottom: 3px solid var(--gold);
+  }
+  .hero-emoji { font-size: 3.4rem; margin-bottom: 8px; display: block; }
+  .hero h1 { font-size: 1.7rem; font-weight: 900; color: var(--green); line-height: 1.2; }
+  .hero p { color: var(--muted); margin-top: 8px; font-size: 1rem; }
+
+  /* ── FORM CARD ── */
+  .form-card {
+    max-width: 560px; margin: 28px auto 0;
+    background: #fff; border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 28px 24px;
+  }
+  .form-title {
+    font-size: 1.08rem; font-weight: 700; color: var(--green);
+    margin-bottom: 20px; display: flex; align-items: center; gap: 8px;
+  }
+  .form-group { margin-bottom: 18px; }
+  .form-label { font-size: 0.9rem; font-weight: 600; margin-bottom: 6px; display: block; color: #333; }
+  .form-label span { font-size: 0.78rem; color: var(--muted); font-weight: 400; }
+  .form-input, .form-select {
+    width: 100%; padding: 12px 14px; border: 2px solid #e0e0e0;
+    border-radius: 10px; font-size: 1rem; font-family: inherit;
+    transition: border 0.2s; background: #fafafa;
+  }
+  .form-input:focus, .form-select:focus {
+    outline: none; border-color: var(--green2); background: #fff;
+  }
+
+  /* occupation tiles */
+  .occ-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .occ-tile {
+    border: 2px solid #e0e0e0; border-radius: 10px; padding: 12px 10px;
+    cursor: pointer; text-align: center; transition: all 0.2s;
+    background: #fafafa;
+  }
+  .occ-tile:hover { border-color: var(--green2); background: #f0faf2; }
+  .occ-tile.selected { border-color: var(--green); background: #e8f5e9; }
+  .occ-tile .occ-icon { font-size: 1.6rem; }
+  .occ-tile .occ-label { font-size: 0.8rem; font-weight: 600; margin-top: 4px; }
+
+  .btn-primary {
+    width: 100%; padding: 15px; background: var(--green);
+    color: #fff; border: none; border-radius: 12px;
+    font-size: 1.08rem; font-weight: 800; font-family: inherit;
+    cursor: pointer; transition: all 0.2s; margin-top: 8px;
+    letter-spacing: 0.3px;
+  }
+  .btn-primary:hover { background: var(--green2); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(26,107,46,0.25); }
+  .btn-primary:active { transform: none; }
+
+  /* ── PAGE 2 — RESULTS ── */
+  .results-wrap { max-width: 800px; margin: 0 auto; padding: 24px 16px 60px; }
+
+  .farmer-banner {
+    background: linear-gradient(135deg, var(--green), var(--green2));
+    color: #fff; border-radius: var(--radius); padding: 16px 20px;
+    display: flex; align-items: center; gap: 12px; margin-bottom: 22px;
+    box-shadow: var(--shadow);
+  }
+  .farmer-banner .fi { font-size: 2rem; }
+  .farmer-banner strong { font-size: 1.05rem; }
+  .farmer-banner span { font-size: 0.85rem; opacity: 0.88; }
+
+  .count-bar {
+    display: flex; gap: 12px; margin-bottom: 22px;
+  }
+  .count-pill {
+    flex: 1; border-radius: 12px; padding: 14px 16px; text-align: center;
+    font-weight: 700;
+  }
+  .count-pill.elig { background: #e8f5e9; color: var(--green); border: 2px solid #b9e0c3; }
+  .count-pill.inelig { background: #fce4e4; color: var(--red); border: 2px solid #f5bcbc; }
+  .count-pill .big { font-size: 2rem; display: block; font-weight: 900; }
+
+  .section-title {
+    font-size: 1.05rem; font-weight: 800; margin: 22px 0 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-title.green { color: var(--green); }
+  .section-title.red   { color: var(--red); }
+
+  /* ── SCHEME CARD ── */
+  .scheme-card {
+    background: #fff; border-radius: var(--radius);
+    box-shadow: var(--shadow); margin-bottom: 16px;
+    overflow: hidden; border: 2px solid transparent;
+    transition: border 0.2s;
+  }
+  .scheme-card:hover { border-color: var(--green2); }
+
+  .scheme-head {
+    padding: 16px 18px; display: flex; align-items: center;
+    gap: 12px; cursor: pointer; user-select: none;
+  }
+  .scheme-icon { font-size: 2rem; }
+  .scheme-name { font-size: 1rem; font-weight: 700; flex: 1; }
+  .scheme-benefit {
+    background: var(--gold2); color: #333; font-size: 0.76rem;
+    font-weight: 700; padding: 4px 10px; border-radius: 20px;
+    white-space: nowrap;
+  }
+  .scheme-toggle { font-size: 1.2rem; color: var(--muted); transition: transform 0.3s; }
+  .scheme-card.open .scheme-toggle { transform: rotate(180deg); }
+
+  .scheme-body {
+    display: none; padding: 0 18px 18px; border-top: 1.5px solid #f0f0f0;
+  }
+  .scheme-card.open .scheme-body { display: block; }
+
+  .scheme-desc {
+    background: #f9f9f9; border-left: 4px solid var(--green);
+    border-radius: 0 8px 8px 0; padding: 12px 14px; margin: 14px 0;
+    font-size: 0.93rem; line-height: 1.6; color: #333;
+  }
+
+  .docs-title, .steps-title {
+    font-size: 0.88rem; font-weight: 700; margin: 14px 0 8px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .docs-title { color: var(--soil); }
+  .steps-title { color: var(--blue); }
+
+  .doc-chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: #fff3e0; border: 1.5px solid #ffe0a0;
+    border-radius: 20px; padding: 5px 12px; font-size: 0.8rem;
+    font-weight: 600; margin: 3px 4px 3px 0;
+  }
+
+  .steps-list { list-style: none; }
+  .steps-list li {
+    display: flex; gap: 12px; margin-bottom: 10px;
+    align-items: flex-start;
+  }
+  .step-num {
+    min-width: 28px; height: 28px; border-radius: 50%;
+    background: var(--blue); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.78rem; font-weight: 800; flex-shrink: 0; margin-top: 1px;
+  }
+  .step-text { font-size: 0.88rem; line-height: 1.6; color: #333; }
+
+  .scheme-footer {
+    display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap;
+  }
+  .helpline-btn {
+    display: flex; align-items: center; gap: 7px;
+    background: #e8f5e9; border: 1.5px solid #b9e0c3;
+    border-radius: 10px; padding: 9px 14px; text-decoration: none;
+    color: var(--green); font-weight: 700; font-size: 0.85rem;
+    font-family: inherit; cursor: pointer; transition: all 0.2s;
+  }
+  .helpline-btn:hover { background: var(--green); color: #fff; }
+  .website-btn {
+    display: flex; align-items: center; gap: 7px;
+    background: #e3f2fd; border: 1.5px solid #90caf9;
+    border-radius: 10px; padding: 9px 14px; text-decoration: none;
+    color: var(--blue); font-weight: 700; font-size: 0.85rem; transition: all 0.2s;
+  }
+  .website-btn:hover { background: var(--blue); color: #fff; }
+
+  /* apply btn */
+  .apply-btn {
+    width: 100%; margin-top: 14px; padding: 13px;
+    background: linear-gradient(135deg, var(--green), var(--green2));
+    color: #fff; border: none; border-radius: 10px;
+    font-size: 0.95rem; font-weight: 800; font-family: inherit;
+    cursor: pointer; transition: all 0.2s; letter-spacing: 0.2px;
+  }
+  .apply-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+  /* ineligible small cards */
+  .inelig-card {
+    display: flex; align-items: center; gap: 10px;
+    background: #fce4e4; border-radius: 10px; padding: 12px 14px;
+    margin-bottom: 8px; opacity: 0.85;
+  }
+  .inelig-icon { font-size: 1.5rem; }
+  .inelig-name { font-size: 0.88rem; font-weight: 600; color: var(--red); }
+  .inelig-reason { font-size: 0.75rem; color: #888; }
+
+  /* warning banner */
+  .warning-banner {
+    background: #fff8e1; border: 2px solid var(--gold);
+    border-radius: 12px; padding: 14px 16px;
+    display: flex; gap: 10px; align-items: flex-start;
+    margin-top: 22px;
+  }
+  .warning-banner .wi { font-size: 1.4rem; flex-shrink: 0; }
+  .warning-banner p { font-size: 0.88rem; font-weight: 600; color: #7a5000; line-height: 1.5; }
+
+  /* back btn */
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: #fff; border: 2px solid var(--green);
+    color: var(--green); border-radius: 10px; padding: 9px 18px;
+    font-weight: 700; font-family: inherit; font-size: 0.9rem;
+    cursor: pointer; margin-bottom: 20px; transition: all 0.2s;
+  }
+  .back-btn:hover { background: var(--green); color: #fff; }
+
+  /* ── PAGE 3 — DETAIL ── */
+  .detail-wrap { max-width: 700px; margin: 0 auto; padding: 24px 16px 60px; }
+  .detail-hero {
+    background: linear-gradient(135deg, var(--green), #3aaf5c);
+    border-radius: var(--radius); padding: 24px 20px; color: #fff;
+    text-align: center; margin-bottom: 22px;
+  }
+  .detail-hero .di { font-size: 3rem; }
+  .detail-hero h2 { font-size: 1.3rem; font-weight: 900; margin-top: 8px; }
+  .detail-hero .benefit-badge {
+    display: inline-block; background: var(--gold2); color: #333;
+    font-weight: 800; font-size: 0.95rem; border-radius: 20px;
+    padding: 5px 18px; margin-top: 10px;
+  }
+
+  .info-section { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 16px; overflow: hidden; }
+  .info-section-header {
+    background: #f5f5f5; padding: 12px 18px;
+    font-size: 0.9rem; font-weight: 800; color: #444;
+    display: flex; align-items: center; gap: 8px;
+    border-bottom: 1.5px solid #eee;
+  }
+  .info-section-body { padding: 16px 18px; }
+
+  .step-card {
+    display: flex; gap: 14px; align-items: flex-start;
+    background: #f0f8f3; border-radius: 10px; padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+  .step-card .sn {
+    min-width: 32px; height: 32px; border-radius: 50%;
+    background: var(--green); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 0.9rem; flex-shrink: 0;
+  }
+  .step-card .st { font-size: 0.92rem; line-height: 1.65; color: #333; }
+
+  .contact-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .contact-big {
+    flex: 1; min-width: 130px; border-radius: 12px; padding: 14px;
+    text-align: center; font-weight: 800; font-size: 1.1rem;
+    text-decoration: none; cursor: pointer; transition: all 0.2s;
+    display: flex; flex-direction: column; gap: 4px; align-items: center;
+  }
+  .contact-big.call { background: #e8f5e9; color: var(--green); border: 2px solid #b9e0c3; }
+  .contact-big.web { background: #e3f2fd; color: var(--blue); border: 2px solid #90caf9; }
+  .contact-big:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.1); }
+  .contact-big small { font-size: 0.75rem; font-weight: 600; opacity: 0.75; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--green); color: rgba(255,255,255,0.8);
+    text-align: center; padding: 16px; font-size: 0.8rem;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media(max-width: 480px) {
+    .occ-grid { grid-template-columns: 1fr 1fr; }
+    .count-bar { flex-direction: column; }
+    .hero h1 { font-size: 1.35rem; }
+    .scheme-name { font-size: 0.88rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════ HEADER ═══════════════════ -->
+<header class="header">
+  <div class="header-inner">
+    <div class="logo">
+      <span class="logo-icon">🌱</span>
+      <div>
+        <div class="logo-text" data-key="appTitle">Kisan Yojana</div>
+        <div class="logo-sub" data-key="appSub">Govt Scheme Finder</div>
+      </div>
+    </div>
+    <div class="lang-btns">
+      <button class="lang-btn active" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" onclick="setLang('mr')">मराठी</button>
+      <button class="lang-btn" onclick="setLang('hi')">हिंदी</button>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════ PAGE 1 — HOME ════════════════ -->
+<div class="page active" id="page1">
+  <div class="hero">
+    <span class="hero-emoji">👨‍🌾</span>
+    <h1 data-key="heroTitle">Find Your Government Benefits</h1>
+    <p data-key="heroSub">Enter your details — we show which schemes you qualify for</p>
+  </div>
+
+  <div class="form-card">
+    <div class="form-title">📋 <span data-key="formTitle">Your Farm Details</span></div>
+
+    <div class="form-group">
+      <label class="form-label" data-key="landLabel">Land Size <span data-key="landHint">(in acres)</span></label>
+      <input class="form-input" type="number" id="landInput" placeholder="e.g. 2.5" min="0.1" step="0.1"/>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" data-key="stateLabel">State</label>
+      <select class="form-select" id="stateInput">
+        <option value="all" data-key="stateAll">-- All India --</option>
+        <option value="MH">Maharashtra</option>
+        <option value="UP">Uttar Pradesh</option>
+        <option value="PB">Punjab</option>
+        <option value="HR">Haryana</option>
+        <option value="KA">Karnataka</option>
+        <option value="AP">Andhra Pradesh</option>
+        <option value="MP">Madhya Pradesh</option>
+        <option value="RJ">Rajasthan</option>
+        <option value="GJ">Gujarat</option>
+        <option value="TN">Tamil Nadu</option>
+        <option value="BR">Bihar</option>
+        <option value="OD">Odisha</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" data-key="occLabel">Your Occupation</label>
+      <div class="occ-grid" id="occGrid">
+        <div class="occ-tile selected" data-occ="farmer" onclick="selectOcc(this)">
+          <div class="occ-icon">👨‍🌾</div>
+          <div class="occ-label" data-key="occFarmer">Farmer</div>
+        </div>
+        <div class="occ-tile" data-occ="labour" onclick="selectOcc(this)">
+          <div class="occ-icon">👷</div>
+          <div class="occ-label" data-key="occLabour">Farm Labour</div>
+        </div>
+        <div class="occ-tile" data-occ="government_employee" onclick="selectOcc(this)">
+          <div class="occ-icon">🏢</div>
+          <div class="occ-label" data-key="occGovt">Govt Employee</div>
+        </div>
+        <div class="occ-tile" data-occ="income_tax_payer" onclick="selectOcc(this)">
+          <div class="occ-icon">💼</div>
+          <div class="occ-label" data-key="occTax">Tax Payer</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="findSchemes()" data-key="findBtn">🔍 Find My Schemes</button>
+    <div id="formError" style="color:var(--red);font-size:0.85rem;margin-top:10px;display:none;" data-key="formErr">Please enter your land size.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ PAGE 2 — RESULTS ════════════ -->
+<div class="page" id="page2">
+  <div class="results-wrap">
+    <button class="back-btn" onclick="goPage(1)">← <span data-key="backBtn">Back</span></button>
+
+    <div class="farmer-banner">
+      <span class="fi">🧑‍🌾</span>
+      <div>
+        <strong id="farmerSummary"></strong><br/>
+        <span id="farmerCategory"></span>
+      </div>
+    </div>
+
+    <div class="count-bar">
+      <div class="count-pill elig">
+        <span class="big" id="eligCount">0</span>
+        <span data-key="eligLabel">Eligible Schemes</span>
+      </div>
+      <div class="count-pill inelig">
+        <span class="big" id="ineligCount">0</span>
+        <span data-key="ineligLabel">Not Eligible</span>
+      </div>
+    </div>
+
+    <div class="section-title green">✅ <span data-key="eligTitle">Schemes You Can Apply For</span></div>
+    <div id="eligList"></div>
+
+    <div class="section-title red" id="ineligSection">❌ <span data-key="ineligTitle">Not Eligible For</span></div>
+    <div id="ineligList"></div>
+
+    <div class="warning-banner">
+      <span class="wi">⚠️</span>
+      <p data-key="warningMsg">Always apply yourself at CSC / Bank. Never pay a middleman. All schemes are FREE to apply.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ PAGE 3 — DETAIL ════════════= -->
+<div class="page" id="page3">
+  <div class="detail-wrap">
+    <button class="back-btn" onclick="goPage(2)">← <span data-key="backToResults">Back to Results</span></button>
+    <div id="detailContent"></div>
+  </div>
+</div>
+
+<footer>
+  🌾 <span data-key="footerText">Kisan Yojana — Helping farmers access their rights | Not affiliated with Government</span>
+</footer>
+
+<script>
+// ═══════════════════════════ DATA ══════════════════════════════
+const SCHEMES = [
+  {
+    id: "pm_kisan",
+    icon: "💰",
+    name: { en: "PM-KISAN — ₹6000/year Cash", mr: "पीएम-किसान — ₹6000/वर्ष रोख", hi: "पीएम-किसान — ₹6000/साल नकद" },
+    desc: {
+      en: "Government gives ₹6000 per year directly to farmer's bank account in 3 instalments of ₹2000 each.",
+      mr: "सरकार दरवर्षी ₹6000 थेट शेतकऱ्याच्या बँक खात्यात 3 हप्त्यांत देते (₹2000 प्रत्येकी).",
+      hi: "सरकार हर साल ₹6000 सीधे किसान के बैंक खाते में 3 किश्तों में देती है (₹2000 प्रत्येक)।"
+    },
+    benefit: { en: "₹6,000 per year", mr: "₹6,000 प्रतिवर्ष", hi: "₹6,000 प्रति वर्ष" },
+    eligMin: 0.1, eligMax: 999,
+    excluded: ["government_employee", "income_tax_payer"],
+    docs: {
+      en: ["📋 Aadhaar Card", "🏦 Bank Passbook", "📄 Land Document (7/12 or Khatauni)", "📱 Mobile linked to Aadhaar"],
+      mr: ["📋 आधार कार्ड", "🏦 बँक पासबुक", "📄 जमीन दस्तऐवज (७/१२)", "📱 आधारशी जोडलेला मोबाइल"],
+      hi: ["📋 आधार कार्ड", "🏦 बैंक पासबुक", "📄 जमीन दस्तावेज़ (खतौनी)", "📱 आधार से जुड़ा मोबाइल"]
+    },
+    steps: {
+      en: ["Go to nearest CSC (Common Service Centre) or Gram Panchayat office.", "Carry your Aadhaar card, bank passbook, and 7/12 land document.", "Tell operator to register you on pmkisan.gov.in — it's FREE.", "Get your registration number and save it safely.", "After 2–3 weeks, check status at pmkisan.gov.in → 'Beneficiary Status'.", "₹2000 will come to your bank automatically every 4 months."],
+      mr: ["जवळच्या CSC किंवा ग्रामपंचायत कार्यालयात जा.", "आधार कार्ड, बँक पासबुक आणि ७/१२ घेऊन जा.", "ऑपरेटरला pmkisan.gov.in वर नोंदणी करण्यास सांगा — मोफत आहे.", "नोंदणी क्रमांक घ्या आणि जपून ठेवा.", "2-3 आठवड्यांनी pmkisan.gov.in → 'Beneficiary Status' वर तपासा.", "दर 4 महिन्यांनी ₹2000 आपोआप बँकेत येतील."],
+      hi: ["नजदीकी CSC या ग्राम पंचायत कार्यालय जाएं।", "आधार, बैंक पासबुक और खतौनी/7/12 साथ ले जाएं।", "ऑपरेटर से pmkisan.gov.in पर पंजीकरण करवाएं — बिल्कुल मुफ्त।", "पंजीकरण नंबर संभालकर रखें।", "2-3 हफ्ते बाद pmkisan.gov.in → 'Beneficiary Status' देखें।", "हर 4 महीने में ₹2000 अपने आप बैंक में आएंगे।"]
+    },
+    helpline: "155261",
+    website: "https://pmkisan.gov.in"
+  },
+  {
+    id: "pmfby",
+    icon: "🌾",
+    name: { en: "PMFBY — Crop Insurance", mr: "पीएमएफबीवाय — पीक विमा", hi: "पीएमएफबीवाय — फसल बीमा" },
+    desc: {
+      en: "If your crop is damaged by flood, drought, or pest — government pays compensation. Premium is only 1.5–2%.",
+      mr: "पूर, दुष्काळ, कीड यामुळे पीक नुकसान झाल्यास सरकार भरपाई देते. प्रीमियम फक्त 1.5-2%.",
+      hi: "बाढ़, सूखा या कीट से फसल नष्ट होने पर सरकार मुआवज़ा देती है। प्रीमियम सिर्फ 1.5-2%।"
+    },
+    benefit: { en: "Full crop loss compensation", mr: "संपूर्ण पीक नुकसान भरपाई", hi: "पूर्ण फसल हानि मुआवज़ा" },
+    eligMin: 0.1, eligMax: 999, excluded: [],
+    docs: {
+      en: ["📋 Aadhaar Card", "🏦 Bank Passbook", "📄 Land Document (7/12)", "🌱 Crop sowing certificate", "📱 Bank account number"],
+      mr: ["📋 आधार कार्ड", "🏦 बँक पासबुक", "📄 ७/१२ उतारा", "🌱 पीक पेरणी प्रमाणपत्र", "📱 बँक खाते क्रमांक"],
+      hi: ["📋 आधार कार्ड", "🏦 बैंक पासबुक", "📄 खतौनी/7/12", "🌱 फसल बुवाई प्रमाण पत्र", "📱 बैंक खाता नंबर"]
+    },
+    steps: {
+      en: ["Visit bank or CSC before sowing season starts.", "Fill PMFBY form — operator will help you.", "Pay small premium: 1.5% for Kharif crops, 2% for Rabi.", "Keep your policy number safe.", "If crop is damaged — call 14447 within 72 hours!", "Survey team visits your farm. Compensation comes to bank in 2–4 weeks."],
+      mr: ["पेरणीपूर्वी बँक किंवा CSC ला जा.", "PMFBY अर्ज भरा — ऑपरेटर मदत करेल.", "प्रीमियम भरा: खरीप 1.5%, रब्बी 2%.", "पॉलिसी नंबर जपून ठेवा.", "पीक नुकसान झाल्यास 72 तासांत 14447 वर फोन करा!", "पाहणी पथक येईल. 2-4 आठवड्यांत बँकेत भरपाई."],
+      hi: ["बुवाई से पहले बैंक या CSC जाएं।", "PMFBY फॉर्म भरें — ऑपरेटर मदद करेगा।", "प्रीमियम भरें: खरीफ 1.5%, रबी 2%।", "पॉलिसी नंबर सुरक्षित रखें।", "फसल नुकसान पर 72 घंटे में 14447 पर कॉल करें!", "सर्वे टीम आएगी। 2-4 हफ्ते में बैंक में मुआवज़ा।"]
+    },
+    helpline: "14447",
+    website: "https://pmfby.gov.in"
+  },
+  {
+    id: "soil_card",
+    icon: "🧪",
+    name: { en: "Soil Health Card — Free Soil Test", mr: "माती आरोग्य कार्ड — मोफत माती तपासणी", hi: "मृदा स्वास्थ्य कार्ड — मुफ्त जांच" },
+    desc: {
+      en: "Government tests your soil FREE and gives a card telling which fertilizer to use. Saves 10–20% fertilizer cost.",
+      mr: "सरकार मोफत माती तपासणी करते. कोणते खत किती वापरावे ते सांगणारे कार्ड देते. खर्च 10-20% वाचतो.",
+      hi: "सरकार मुफ्त मिट्टी जांच करती है और खाद की सलाह वाला कार्ड देती है। खर्च 10-20% बचता है।"
+    },
+    benefit: { en: "Free soil test + fertilizer advice card", mr: "मोफत माती चाचणी + खत सल्ला कार्ड", hi: "मुफ्त परीक्षण + खाद सलाह कार्ड" },
+    eligMin: 0.1, eligMax: 999, excluded: [],
+    docs: {
+      en: ["📋 Aadhaar Card", "📄 Land Document", "🪣 500g soil sample from your farm"],
+      mr: ["📋 आधार कार्ड", "📄 जमीन दस्तऐवज", "🪣 शेतातील 500 ग्राम माती नमुना"],
+      hi: ["📋 आधार कार्ड", "📄 जमीन दस्तावेज़", "🪣 खेत की 500 ग्राम मिट्टी का नमूना"]
+    },
+    steps: {
+      en: ["Collect 500g soil from 4–5 spots in your farm and mix together.", "Visit nearest Krishi Sevak, Taluka Agriculture Office, or CSC.", "Give soil sample with your Aadhaar and land document.", "Registration is completely FREE — don't pay anyone.", "Soil Health Card arrives in 3–4 weeks (also at soilhealth.dac.gov.in).", "Follow fertilizer advice on the card — saves money and improves yield."],
+      mr: ["शेतातील 4-5 ठिकाणांची 500 ग्राम माती गोळा करून एकत्र करा.", "जवळच्या कृषी सेवक, तालुका कृषी कार्यालय किंवा CSC ला जा.", "आधार आणि जमीन कागदासह माती नमुना द्या.", "नोंदणी पूर्णपणे मोफत — कुणालाही पैसे देऊ नका.", "3-4 आठवड्यांत कार्ड मिळेल (soilhealth.dac.gov.in वरही).", "कार्डवरील खत सल्ला पाळा — खर्च वाचतो, उत्पन्न वाढते."],
+      hi: ["खेत की 4-5 जगहों से 500 ग्राम मिट्टी लेकर मिला लें।", "नजदीकी कृषि सेवक, तालुका कृषि कार्यालय या CSC जाएं।", "आधार और जमीन कागज़ के साथ मिट्टी का नमूना दें।", "पंजीकरण बिल्कुल मुफ्त — किसी को पैसे न दें।", "3-4 हफ्ते में कार्ड मिलेगा (soilhealth.dac.gov.in पर भी)।", "कार्ड की खाद सलाह मानें — खर्च बचेगा, उपज बढ़ेगी।"]
+    },
+    helpline: "1800-180-1551",
+    website: "https://soilhealth.dac.gov.in"
+  },
+  {
+    id: "kcc",
+    icon: "💳",
+    name: { en: "Kisan Credit Card — 4% Loan", mr: "किसान क्रेडिट कार्ड — 4% कर्ज", hi: "किसान क्रेडिट कार्ड — 4% ऋण" },
+    desc: {
+      en: "Get up to ₹3 lakh loan at only 4% interest per year for seeds, fertilizers, and farming needs. If repaid on time — effectively 1%.",
+      mr: "बियाणे, खत, शेती गरजांसाठी फक्त 4% व्याजाने ₹3 लाखापर्यंत कर्ज. वेळेवर परतफेड केल्यास 1%.",
+      hi: "बीज, खाद, खेती जरूरतों के लिए सिर्फ 4% ब्याज पर ₹3 लाख तक ऋण। समय पर चुकाने पर 1%।"
+    },
+    benefit: { en: "Up to ₹3 lakh at 4% interest", mr: "4% व्याजाने ₹3 लाखापर्यंत", hi: "4% ब्याज पर ₹3 लाख तक" },
+    eligMin: 0.1, eligMax: 999, excluded: ["loan_defaulter"],
+    docs: {
+      en: ["📋 Aadhaar Card", "🪪 PAN Card (or Form 60)", "📄 Land Ownership Document", "📸 2 Passport Photos", "🏦 Nationalised Bank Account"],
+      mr: ["📋 आधार कार्ड", "🪪 पॅन कार्ड (किंवा फॉर्म 60)", "📄 जमीन मालकी दस्तऐवज", "📸 2 पासपोर्ट फोटो", "🏦 राष्ट्रीयीकृत बँक खाते"],
+      hi: ["📋 आधार कार्ड", "🪪 पैन कार्ड (या फॉर्म 60)", "📄 जमीन स्वामित्व दस्तावेज़", "📸 2 पासपोर्ट फोटो", "🏦 राष्ट्रीयकृत बैंक खाता"]
+    },
+    steps: {
+      en: ["Go to nearest SBI, Bank of Maharashtra, or any nationalised bank.", "Ask for 'Kisan Credit Card application form'.", "Fill the form with help from bank officer — it's simple.", "Submit: Aadhaar, PAN/Form60, land document, 2 photos.", "Bank verifies in 7–15 days. No middleman needed.", "You get a KCC card — use like ATM for farming expenses.", "Repay within 1 year for 3% interest rebate (effectively 1% interest)."],
+      mr: ["जवळच्या SBI, बँक ऑफ महाराष्ट्र किंवा राष्ट्रीयीकृत बँकेत जा.", "'किसान क्रेडिट कार्ड अर्ज फॉर्म' मागा.", "बँक अधिकाऱ्याच्या मदतीने फॉर्म भरा.", "सादर करा: आधार, पॅन/फॉर्म60, जमीन कागद, 2 फोटो.", "बँक 7-15 दिवसांत पडताळणी करेल. दलाल नको.", "KCC कार्ड मिळेल — शेती खर्चासाठी ATM सारखे वापरा.", "1 वर्षात परतफेड करा — 3% सूट मिळते (प्रभावीपणे 1%)."],
+      hi: ["नजदीकी SBI, बैंक ऑफ महाराष्ट्र या राष्ट्रीयकृत बैंक जाएं।", "'किसान क्रेडिट कार्ड आवेदन फॉर्म' मांगें।", "बैंक अधिकारी की मदद से फॉर्म भरें।", "जमा करें: आधार, पैन/फॉर्म60, जमीन कागज़, 2 फोटो।", "बैंक 7-15 दिन में सत्यापन करेगा। बिचौलिया नहीं।", "KCC कार्ड मिलेगा — खेती खर्च के लिए ATM की तरह उपयोग करें।", "1 साल में चुकाने पर 3% छूट (प्रभावी 1% ब्याज)।"]
+    },
+    helpline: "1800-11-0001",
+    website: "https://nabard.org"
+  },
+  {
+    id: "drought_relief",
+    icon: "🌧️",
+    name: { en: "Drought / Flood Relief (NDRF)", mr: "दुष्काळ / पूर मदत (NDRF)", hi: "सूखा / बाढ़ राहत (NDRF)" },
+    desc: {
+      en: "If your area is declared drought or flood affected — government gives ₹6800–₹13500 per acre compensation for crop loss.",
+      mr: "दुष्काळग्रस्त / पूरग्रस्त परिसर घोषित झाल्यास पीक नुकसानीसाठी ₹6800–₹13500 प्रति एकर मदत.",
+      hi: "सूखा या बाढ़ प्रभावित क्षेत्र घोषित होने पर फसल नुकसान के लिए ₹6800–₹13500 प्रति एकड़ मुआवज़ा।"
+    },
+    benefit: { en: "₹6,800–₹13,500 per acre", mr: "₹6,800–₹13,500 प्रति एकर", hi: "₹6,800–₹13,500 प्रति एकड़" },
+    eligMin: 0.1, eligMax: 999, excluded: [],
+    docs: {
+      en: ["📋 Aadhaar Card", "🏦 Bank Passbook", "📄 7/12 Land Extract", "📸 Photos of damaged crop (very important!)", "📝 Patwari/Talathi Certificate"],
+      mr: ["📋 आधार कार्ड", "🏦 बँक पासबुक", "📄 ७/१२ उतारा", "📸 नुकसानग्रस्त पिकाचे फोटो (अत्यंत महत्त्वाचे!)", "📝 तलाठी प्रमाणपत्र"],
+      hi: ["📋 आधार कार्ड", "🏦 बैंक पासबुक", "📄 खतौनी/7/12", "📸 क्षतिग्रस्त फसल के फोटो (बहुत जरूरी!)", "📝 पटवारी प्रमाण पत्र"]
+    },
+    steps: {
+      en: ["Take clear photos of damaged crop immediately after disaster.", "Inform your Sarpanch and Patwari/Talathi within 48 hours.", "Register complaint at Tehsil office or state portal.", "Government survey team will visit your farm.", "After survey, money comes to bank in 4–8 weeks.", "If delayed — go to District Collector office with complaint number."],
+      mr: ["आपत्तीनंतर लगेच नुकसानग्रस्त पिकाचे स्पष्ट फोटो काढा.", "48 तासांत सरपंच आणि तलाठी यांना कळवा.", "तहसील कार्यालयात किंवा राज्य पोर्टलवर तक्रार नोंदवा.", "सरकारी पाहणी पथक शेतास भेट देईल.", "पाहणीनंतर 4-8 आठवड्यांत बँकेत पैसे.", "उशीर झाल्यास जिल्हाधिकारी कार्यालयात संपर्क करा."],
+      hi: ["आपदा के तुरंत बाद क्षतिग्रस्त फसल के फोटो लें।", "48 घंटे में सरपंच और पटवारी को सूचित करें।", "तहसील कार्यालय या राज्य पोर्टल पर शिकायत दर्ज करें।", "सरकारी सर्वे टीम खेत में आएगी।", "सर्वे के बाद 4-8 हफ्ते में बैंक में पैसे।", "देरी हो तो जिला कलेक्टर कार्यालय जाएं।"]
+    },
+    helpline: "1070",
+    website: "https://ndma.gov.in"
+  },
+  {
+    id: "pm_awaas",
+    icon: "🏠",
+    name: { en: "PM Awaas Yojana — Free House", mr: "पीएम आवास योजना — मोफत घर", hi: "पीएम आवास योजना — मुफ्त घर" },
+    desc: {
+      en: "Rural farmers with no house or kutcha house get ₹1.20 lakh to build a pucca house. Complete package with toilet.",
+      mr: "कच्चे किंवा घर नसलेल्या ग्रामीण शेतकऱ्यांना पक्के घर बांधण्यासाठी ₹1.20 लाख. शौचालयासह.",
+      hi: "कच्चे मकान या बेघर ग्रामीण किसानों को पक्का घर बनाने के लिए ₹1.20 लाख। शौचालय सहित।"
+    },
+    benefit: { en: "₹1.20 lakh house grant", mr: "₹1.20 लाख घर अनुदान", hi: "₹1.20 लाख घर अनुदान" },
+    eligMin: 0.1, eligMax: 999, excluded: ["government_employee", "income_tax_payer"],
+    docs: {
+      en: ["📋 Aadhaar Card", "🏦 Bank Passbook", "📸 Photo of current house (or proof of no house)", "📝 BPL/SECC certificate"],
+      mr: ["📋 आधार कार्ड", "🏦 बँक पासबुक", "📸 सध्याच्या घराचा फोटो", "📝 BPL/SECC प्रमाणपत्र"],
+      hi: ["📋 आधार कार्ड", "🏦 बैंक पासबुक", "📸 वर्तमान घर का फोटो", "📝 BPL/SECC प्रमाण पत्र"]
+    },
+    steps: {
+      en: ["Check your name in SECC 2011 list at Gram Panchayat.", "If eligible, Gram Panchayat will inform you directly.", "Submit documents to Gram Panchayat office.", "Get approved — money comes in 3 instalments.", "Build house as per government plan. Inspector will verify.", "Final instalment after house completion."],
+      mr: ["ग्रामपंचायतीत SECC 2011 यादीत नाव तपासा.", "पात्र असल्यास ग्रामपंचायत थेट कळवेल.", "ग्रामपंचायत कार्यालयात कागदपत्रे सादर करा.", "मंजुरी मिळेल — 3 हप्त्यांत पैसे येतात.", "सरकारी आराखड्यानुसार घर बांधा. तपासणी होईल.", "घर पूर्ण झाल्यावर अंतिम हप्ता."],
+      hi: ["ग्राम पंचायत में SECC 2011 सूची में नाम देखें।", "पात्र होने पर ग्राम पंचायत सीधे सूचित करेगी।", "ग्राम पंचायत कार्यालय में दस्तावेज़ जमा करें।", "मंजूरी मिलने पर 3 किश्तों में पैसे आएंगे।", "सरकारी योजना अनुसार घर बनाएं। निरीक्षण होगा।", "घर पूरा होने पर अंतिम किश्त।"]
+    },
+    helpline: "1800-11-6446",
+    website: "https://pmayg.nic.in"
+  }
+];
+
+// ═══════════════════════════ TRANSLATIONS ══════════════════════
+const T = {
+  appTitle:     { en: "Kisan Yojana", mr: "किसान योजना", hi: "किसान योजना" },
+  appSub:       { en: "Govt Scheme Finder", mr: "सरकारी योजना शोधक", hi: "सरकारी योजना खोजक" },
+  heroTitle:    { en: "Find Your Government Benefits", mr: "तुमच्या सरकारी सुविधा शोधा", hi: "अपने सरकारी लाभ खोजें" },
+  heroSub:      { en: "Enter your details — we show which schemes you qualify for", mr: "तुमची माहिती टाका — कोणत्या योजना मिळतात ते दाखवतो", hi: "अपनी जानकारी दें — कौन सी योजनाएं मिलती हैं दिखाएंगे" },
+  formTitle:    { en: "Your Farm Details", mr: "तुमच्या शेताची माहिती", hi: "आपके खेत की जानकारी" },
+  landLabel:    { en: "Land Size", mr: "जमीन किती आहे", hi: "जमीन कितनी है" },
+  landHint:     { en: "(in acres)", mr: "(एकरात)", hi: "(एकड़ में)" },
+  stateLabel:   { en: "State", mr: "राज्य", hi: "राज्य" },
+  stateAll:     { en: "-- All India --", mr: "-- संपूर्ण भारत --", hi: "-- पूरा भारत --" },
+  occLabel:     { en: "Your Occupation", mr: "तुमचा व्यवसाय", hi: "आपका व्यवसाय" },
+  occFarmer:    { en: "Farmer", mr: "शेतकरी", hi: "किसान" },
+  occLabour:    { en: "Farm Labour", mr: "शेत मजूर", hi: "खेत मजदूर" },
+  occGovt:      { en: "Govt Employee", mr: "सरकारी कर्मचारी", hi: "सरकारी कर्मचारी" },
+  occTax:       { en: "Tax Payer", mr: "करदाता", hi: "कर दाता" },
+  findBtn:      { en: "🔍 Find My Schemes", mr: "🔍 माझ्या योजना शोधा", hi: "🔍 मेरी योजनाएं खोजें" },
+  formErr:      { en: "Please enter your land size.", mr: "कृपया जमिनीचा आकार टाका.", hi: "कृपया जमीन का आकार दर्ज करें।" },
+  backBtn:      { en: "Back", mr: "मागे", hi: "वापस" },
+  backToResults:{ en: "Back to Results", mr: "निकालाकडे परत", hi: "परिणाम पर वापस" },
+  eligLabel:    { en: "Eligible Schemes", mr: "पात्र योजना", hi: "पात्र योजनाएं" },
+  ineligLabel:  { en: "Not Eligible", mr: "अपात्र", hi: "अपात्र" },
+  eligTitle:    { en: "Schemes You Can Apply For", mr: "तुम्ही अर्ज करू शकता", hi: "जिन योजनाओं के लिए आवेदन कर सकते हैं" },
+  ineligTitle:  { en: "Not Eligible For", mr: "या योजनांसाठी अपात्र", hi: "इन योजनाओं के लिए अपात्र" },
+  warningMsg:   { en: "Always apply yourself at CSC / Bank. Never pay a middleman. All schemes are FREE to apply.", mr: "नेहमी CSC/बँकेत स्वतः अर्ज करा. दलालाला कधीही पैसे देऊ नका. सर्व योजना अर्ज मोफत.", hi: "हमेशा CSC/बैंक में खुद आवेदन करें। बिचौलिये को कभी पैसे न दें। सभी योजनाएं आवेदन में मुफ्त।" },
+  docsLabel:    { en: "Documents Needed", mr: "आवश्यक कागदपत्रे", hi: "जरूरी दस्तावेज़" },
+  stepsLabel:   { en: "How to Apply — Step by Step", mr: "अर्ज कसा करावा — पायरीपायरी", hi: "आवेदन कैसे करें — चरण दर चरण" },
+  callHelpline: { en: "📞 Call Helpline", mr: "📞 हेल्पलाइन", hi: "📞 हेल्पलाइन" },
+  visitWebsite: { en: "🌐 Website", mr: "🌐 वेबसाइट", hi: "🌐 वेबसाइट" },
+  applyNow:     { en: "✅ View Full Apply Guide →", mr: "✅ संपूर्ण अर्ज मार्गदर्शन पाहा →", hi: "✅ पूरी आवेदन गाइड देखें →" },
+  ineligReason: { en: "Not eligible based on your occupation", mr: "तुमच्या व्यवसायानुसार अपात्र", hi: "आपके व्यवसाय के आधार पर अपात्र" },
+  footerText:   { en: "Kisan Yojana — Helping farmers access their rights | Not affiliated with Government", mr: "किसान योजना — शेतकऱ्यांना हक्क मिळवण्यास मदत | सरकारशी संलग्न नाही", hi: "किसान योजना — किसानों को उनके अधिकार दिलाने में मदद | सरकार से संबद्ध नहीं" },
+  catSmall:     { en: "Small Farmer (< 2.5 acres)", mr: "लहान शेतकरी (< 2.5 एकर)", hi: "लघु किसान (< 2.5 एकड़)" },
+  catMedium:    { en: "Medium Farmer (2.5–10 acres)", mr: "मध्यम शेतकरी (2.5–10 एकर)", hi: "मध्यम किसान (2.5–10 एकड़)" },
+  catLarge:     { en: "Large Farmer (> 10 acres)", mr: "मोठा शेतकरी (> 10 एकर)", hi: "बड़े किसान (> 10 एकड़)" },
+};
+
+// ═══════════════════════════ STATE ═════════════════════════════
+let lang = 'en';
+let selectedOcc = 'farmer';
+let results = { eligible: [], ineligible: [] };
+let currentScheme = null;
+
+// ═══════════════════════════ LANG ══════════════════════════════
+function setLang(l) {
+  lang = l;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.lang-btn[onclick="setLang('${l}')"]`).classList.add('active');
+  applyTranslations();
+  if (document.getElementById('page2').classList.contains('active')) renderResults();
+  if (document.getElementById('page3').classList.contains('active') && currentScheme) renderDetail(currentScheme);
+}
+
+function t(key) { return (T[key] && T[key][lang]) || T[key]?.en || key; }
+
+function applyTranslations() {
+  document.querySelectorAll('[data-key]').forEach(el => {
+    const k = el.getAttribute('data-key');
+    if (T[k]) el.textContent = T[k][lang] || T[k].en;
+  });
+}
+
+// ═══════════════════════════ FORM ══════════════════════════════
+function selectOcc(el) {
+  document.querySelectorAll('.occ-tile').forEach(t => t.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedOcc = el.getAttribute('data-occ');
+}
+
+function findSchemes() {
+  const land = parseFloat(document.getElementById('landInput').value);
+  const errEl = document.getElementById('formError');
+  if (!land || land <= 0) { errEl.style.display = 'block'; return; }
+  errEl.style.display = 'none';
+
+  const eligible = [], ineligible = [];
+  SCHEMES.forEach(s => {
+    const landOk = land >= s.eligMin && land <= s.eligMax;
+    const occOk  = !s.excluded.includes(selectedOcc);
+    if (landOk && occOk) eligible.push(s);
+    else ineligible.push(s);
+  });
+
+  results = { eligible, ineligible, land, occ: selectedOcc };
+  renderResults();
+  goPage(2);
+}
+
+// ═══════════════════════════ RESULTS ═══════════════════════════
+function renderResults() {
+  const { eligible, ineligible, land, occ } = results;
+
+  // Farmer banner
+  const catKey = land < 2.5 ? 'catSmall' : land <= 10 ? 'catMedium' : 'catLarge';
+  document.getElementById('farmerSummary').textContent = `${land} ${lang==='en'?'acres':lang==='mr'?'एकर':'एकड़'} • ${occ.replace('_',' ')}`;
+  document.getElementById('farmerCategory').textContent = t(catKey);
+
+  document.getElementById('eligCount').textContent   = eligible.length;
+  document.getElementById('ineligCount').textContent = ineligible.length;
+
+  // Eligible
+  const eList = document.getElementById('eligList');
+  eList.innerHTML = eligible.map(s => schemeCardHTML(s)).join('');
+
+  // Ineligible
+  const iList = document.getElementById('ineligList');
+  const iSec  = document.getElementById('ineligSection');
+  if (ineligible.length === 0) { iList.innerHTML = ''; iSec.style.display = 'none'; }
+  else {
+    iSec.style.display = 'flex';
+    iList.innerHTML = ineligible.map(s => `
+      <div class="inelig-card">
+        <span class="inelig-icon">${s.icon}</span>
+        <div>
+          <div class="inelig-name">${s.name[lang]}</div>
+          <div class="inelig-reason">${t('ineligReason')}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+}
+
+function schemeCardHTML(s) {
+  const steps = s.steps[lang];
+  const docs  = s.docs[lang];
+  return `
+    <div class="scheme-card" id="card_${s.id}">
+      <div class="scheme-head" onclick="toggleCard('${s.id}')">
+        <span class="scheme-icon">${s.icon}</span>
+        <span class="scheme-name">${s.name[lang]}</span>
+        <span class="scheme-benefit">${s.benefit[lang]}</span>
+        <span class="scheme-toggle">▼</span>
+      </div>
+      <div class="scheme-body">
+        <div class="scheme-desc">${s.desc[lang]}</div>
+
+        <div class="docs-title">📋 ${t('docsLabel')}</div>
+        <div>${docs.map(d=>`<span class="doc-chip">${d}</span>`).join('')}</div>
+
+        <div class="steps-title">👣 ${t('stepsLabel')}</div>
+        <ul class="steps-list">
+          ${steps.map((st,i)=>`<li><span class="step-num">${i+1}</span><span class="step-text">${st}</span></li>`).join('')}
+        </ul>
+
+        <div class="scheme-footer">
+          <a class="helpline-btn" href="tel:${s.helpline}">${t('callHelpline')}: ${s.helpline}</a>
+          <a class="website-btn" href="${s.website}" target="_blank">${t('visitWebsite')}</a>
+        </div>
+        <button class="apply-btn" onclick="openDetail('${s.id}')">${t('applyNow')}</button>
+      </div>
+    </div>
+  `;
+}
+
+function toggleCard(id) {
+  const card = document.getElementById('card_'+id);
+  card.classList.toggle('open');
+}
+
+// ═══════════════════════════ DETAIL ════════════════════════════
+function openDetail(id) {
+  currentScheme = SCHEMES.find(s => s.id === id);
+  renderDetail(currentScheme);
+  goPage(3);
+  window.scrollTo(0,0);
+}
+
+function renderDetail(s) {
+  const steps = s.steps[lang];
+  const docs  = s.docs[lang];
+  document.getElementById('detailContent').innerHTML = `
+    <div class="detail-hero">
+      <div class="di">${s.icon}</div>
+      <h2>${s.name[lang]}</h2>
+      <div class="benefit-badge">${s.benefit[lang]}</div>
+    </div>
+
+    <div class="info-section">
+      <div class="info-section-header">ℹ️ ${lang==='mr'?'योजनेबद्दल':lang==='hi'?'योजना के बारे में':'About This Scheme'}</div>
+      <div class="info-section-body" style="font-size:0.95rem;line-height:1.7;color:#333">${s.desc[lang]}</div>
+    </div>
+
+    <div class="info-section">
+      <div class="info-section-header">📋 ${t('docsLabel')}</div>
+      <div class="info-section-body">${docs.map(d=>`<span class="doc-chip">${d}</span>`).join('')}</div>
+    </div>
+
+    <div class="info-section">
+      <div class="info-section-header">👣 ${t('stepsLabel')}</div>
+      <div class="info-section-body">
+        ${steps.map((st,i)=>`
+          <div class="step-card">
+            <div class="sn">${i+1}</div>
+            <div class="st">${st}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="info-section">
+      <div class="info-section-header">📞 ${lang==='mr'?'संपर्क':lang==='hi'?'संपर्क':'Contact'}</div>
+      <div class="info-section-body">
+        <div class="contact-row">
+          <a class="contact-big call" href="tel:${s.helpline}">
+            📞 ${s.helpline}
+            <small>${t('callHelpline')}</small>
+          </a>
+          <a class="contact-big web" href="${s.website}" target="_blank">
+            🌐 ${lang==='mr'?'वेबसाइट':lang==='hi'?'वेबसाइट':'Website'}
+            <small>${s.website.replace('https://','')}</small>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="warning-banner" style="margin-top:16px">
+      <span class="wi">⚠️</span>
+      <p>${t('warningMsg')}</p>
+    </div>
+  `;
+}
+
+// ═══════════════════════════ NAVIGATION ════════════════════════
+function goPage(n) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page'+n).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ═══════════════════════════ INIT ══════════════════════════════
+applyTranslations();
+</script>
+</body>
+</html>

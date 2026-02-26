@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <title>किसान वॉलेट | AgriSet.AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+
+        body {
+            font-family: 'Poppins','Noto Sans Devanagari',sans-serif;
+            background: #F0FDF4;
+            min-height: 100vh;
+            color: #1F2937;
+        }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            background:#fff;
+            box-shadow:0 1px 4px rgba(0,0,0,0.08);
+            padding:12px 28px;
+            display:flex; align-items:center;
+            justify-content:space-between; flex-wrap:wrap; gap:12px;
+            position:sticky; top:0; z-index:100;
+        }
+        .logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
+        .logo-icon {
+            width:42px; height:42px;
+            background:linear-gradient(135deg,#10B981,#047857);
+            border-radius:12px;
+            display:flex; align-items:center; justify-content:center;
+        }
+        .logo-icon i { color:#fff; font-size:20px; }
+        .logo-name {
+            font-family:'Poppins',sans-serif; font-size:22px; font-weight:800;
+            background:linear-gradient(135deg,#10B981,#047857);
+            -webkit-background-clip:text; background-clip:text;
+            -webkit-text-fill-color:transparent;
+        }
+        .logo-tag { font-size:10px; color:#6B7280; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; margin-top:-3px; }
+        .nav-right { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+        .lang-group { display:flex; gap:5px; }
+        .lang-btn {
+            padding:7px 14px; border:2px solid #E5E7EB; background:#fff;
+            border-radius:8px; font-size:13px; font-weight:700; cursor:pointer;
+            color:#6B7280; font-family:'Poppins','Noto Sans Devanagari',sans-serif; transition:all 0.2s;
+        }
+        .lang-btn:hover { border-color:#10B981; color:#10B981; }
+        .lang-btn.active { background:linear-gradient(135deg,#10B981,#047857); border-color:#10B981; color:#fff; }
+        .back-btn {
+            display:flex; align-items:center; gap:8px;
+            background:#fff; color:#10B981; border:2px solid #10B981;
+            padding:9px 20px; border-radius:10px; font-size:14px; font-weight:700;
+            cursor:pointer; text-decoration:none;
+            font-family:'Poppins',sans-serif; transition:all 0.25s;
+        }
+        .back-btn:hover { background:#10B981; color:#fff; transform:translateX(-3px); }
+
+        /* ── BANNER ── */
+        .page-banner {
+            background:linear-gradient(135deg,#064E3B,#047857);
+            color:white; padding:28px 32px;
+            display:flex; align-items:center; gap:20px;
+            position:relative; overflow:hidden;
+        }
+        .page-banner::before {
+            content:'';
+            position:absolute; inset:0;
+            background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        .page-banner::after {
+            content:'💰'; position:absolute; right:28px; top:-10px;
+            font-size:130px; opacity:0.07; pointer-events:none; line-height:1;
+        }
+        .banner-ico {
+            width:68px; height:68px; border-radius:18px; flex-shrink:0;
+            background:rgba(255,255,255,0.12); border:2px solid rgba(255,255,255,0.22);
+            display:flex; align-items:center; justify-content:center; font-size:32px;
+        }
+        .banner-title {
+            font-family:'Poppins',sans-serif;
+            font-size:clamp(1.4rem,3vw,2rem); font-weight:800; margin-bottom:5px;
+        }
+        .banner-title .hl { color:#6EE7B7; }
+        .banner-sub { font-size:14px; opacity:0.78; line-height:1.5; }
+
+        /* ── MAIN ── */
+        .main { max-width:860px; margin:0 auto; padding:26px 18px 60px; }
+
+        /* ── CARD ── */
+        .card {
+            background:#fff; border-radius:20px;
+            box-shadow:0 4px 20px rgba(0,0,0,0.07);
+            border:1.5px solid rgba(16,185,129,0.14);
+            overflow:hidden; margin-bottom:22px;
+            animation:cardIn 0.4s ease both;
+        }
+        .card-strip { height:4px; background:linear-gradient(135deg,#10B981,#047857); }
+        .card-body  { padding:22px 24px; }
+        .card-heading {
+            font-family:'Poppins',sans-serif;
+            font-size:18px; font-weight:800; color:#1F2937;
+            display:flex; align-items:center; gap:10px; margin-bottom:20px;
+        }
+        .card-heading i { color:#10B981; }
+
+        /* ── SUMMARY ── */
+        .summary-grid {
+            display:grid; grid-template-columns:repeat(3,1fr);
+            gap:14px; margin-bottom:22px;
+        }
+        .sum-card {
+            background:#fff; border-radius:18px;
+            box-shadow:0 4px 16px rgba(0,0,0,0.07);
+            padding:20px 16px; text-align:center;
+            border:1.5px solid rgba(16,185,129,0.10);
+            transition:transform 0.2s, box-shadow 0.2s;
+            position:relative; overflow:hidden;
+            animation:cardIn 0.4s ease both;
+        }
+        .sum-card:hover { transform:translateY(-3px); box-shadow:0 8px 22px rgba(16,185,129,0.13); }
+        .sum-card::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; }
+        .sum-card.s-income::before  { background:linear-gradient(135deg,#10B981,#047857); }
+        .sum-card.s-expense::before { background:linear-gradient(135deg,#EF4444,#B91C1C); }
+        .sum-card.s-balance::before { background:linear-gradient(135deg,#3B82F6,#1D4ED8); }
+
+        .sum-emoji  { font-size:38px; margin-bottom:8px; display:block; }
+        .sum-label  { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#9CA3AF; margin-bottom:6px; }
+        .sum-amount { font-family:'Poppins',sans-serif; font-weight:800; font-size:clamp(17px,3.2vw,24px); line-height:1.15; margin-bottom:8px; }
+        .sum-amount.c-green { color:#047857; }
+        .sum-amount.c-red   { color:#DC2626; }
+        .sum-amount.c-blue  { color:#1D4ED8; }
+        .sum-pill {
+            display:inline-block; padding:3px 10px; border-radius:20px;
+            font-size:11px; font-weight:700;
+        }
+        .sum-pill.up  { background:#DCFCE7; color:#065F46; }
+        .sum-pill.dn  { background:#FEE2E2; color:#B91C1C; }
+        .sum-pill.neu { background:#DBEAFE; color:#1E3A8A; }
+
+        /* ── TYPE TOGGLE ── */
+        .type-toggle { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px; }
+        .type-btn {
+            padding:20px 10px; border-radius:16px;
+            border:2.5px solid #E5E7EB; background:#fff;
+            display:flex; flex-direction:column; align-items:center; gap:7px;
+            cursor:pointer; transition:all 0.22s;
+            font-family:'Poppins','Noto Sans Devanagari',sans-serif;
+        }
+        .type-btn .t-emoji { font-size:40px; }
+        .type-btn .t-label { font-size:17px; font-weight:800; color:#374151; }
+        .type-btn .t-hint  { font-size:12px; color:#9CA3AF; font-weight:500; text-align:center; line-height:1.3; }
+        .type-btn:hover { transform:translateY(-2px); box-shadow:0 4px 14px rgba(0,0,0,0.1); }
+        .type-btn.act-inc  { border-color:#10B981; background:#ECFDF5; box-shadow:0 4px 18px rgba(16,185,129,0.18); }
+        .type-btn.act-exp  { border-color:#EF4444; background:#FEF2F2; box-shadow:0 4px 18px rgba(239,68,68,0.16); }
+        .type-btn.act-inc .t-label { color:#065F46; }
+        .type-btn.act-exp .t-label { color:#B91C1C; }
+
+        /* ── STEP LABEL ── */
+        .step-lbl {
+            font-size:11.5px; font-weight:700; text-transform:uppercase;
+            letter-spacing:0.09em; color:#9CA3AF; margin-bottom:10px;
+            display:flex; align-items:center; gap:6px;
+        }
+        .step-lbl .step-num {
+            width:20px; height:20px; border-radius:50%;
+            background:linear-gradient(135deg,#10B981,#047857);
+            color:#fff; font-size:10px; font-weight:800;
+            display:inline-flex; align-items:center; justify-content:center;
+        }
+
+        /* ── CATEGORY GRID ── */
+        .cat-grid {
+            display:grid; grid-template-columns:repeat(auto-fill,minmax(105px,1fr));
+            gap:10px; margin-bottom:22px;
+        }
+        .cat-chip {
+            padding:13px 8px; border-radius:13px;
+            border:2px solid #E5E7EB; background:#fff;
+            display:flex; flex-direction:column; align-items:center; gap:5px;
+            cursor:pointer; transition:all 0.18s; text-align:center;
+        }
+        .cat-chip:hover { border-color:#10B981; background:#F0FDF4; transform:scale(1.05); }
+        .cat-chip.sel-inc { border-color:#10B981; background:#ECFDF5; box-shadow:0 3px 10px rgba(16,185,129,0.18); }
+        .cat-chip.sel-exp { border-color:#EF4444; background:#FEF2F2; box-shadow:0 3px 10px rgba(239,68,68,0.16); }
+        .cat-chip .ci { font-size:28px; }
+        .cat-chip .cn { font-size:11.5px; font-weight:600; color:#374151; line-height:1.25; }
+
+        /* ── AMOUNT ── */
+        .amt-wrap { position:relative; margin-bottom:16px; }
+        .amt-prefix {
+            position:absolute; left:18px; top:50%; transform:translateY(-50%);
+            font-family:'Poppins',sans-serif; font-size:26px; font-weight:800;
+            color:#10B981; pointer-events:none; z-index:1;
+        }
+        .amt-input {
+            width:100%; padding:20px 20px 20px 54px;
+            border:2.5px solid #E5E7EB; border-radius:14px;
+            font-family:'Poppins',sans-serif; font-size:32px; font-weight:800;
+            color:#1F2937; background:#F9FAFB; transition:all 0.2s;
+        }
+        .amt-input:focus { outline:none; border-color:#10B981; box-shadow:0 0 0 4px rgba(16,185,129,0.12); background:#fff; }
+        .amt-input.red-mode  { border-color:#FCA5A5; }
+        .amt-input.red-mode:focus { border-color:#EF4444; box-shadow:0 0 0 4px rgba(239,68,68,0.1); }
+        .amt-prefix.red { color:#EF4444; }
+
+        /* ── NOTE ── */
+        .note-inp {
+            width:100%; padding:14px 16px;
+            border:2px solid #E5E7EB; border-radius:12px;
+            font-family:'Poppins','Noto Sans Devanagari',sans-serif;
+            font-size:15px; font-weight:500; color:#1F2937;
+            background:#F9FAFB; transition:all 0.2s; margin-bottom:20px;
+        }
+        .note-inp:focus { outline:none; border-color:#10B981; box-shadow:0 0 0 3px rgba(16,185,129,0.1); background:#fff; }
+        .form-lbl {
+            display:block; font-size:11.5px; font-weight:700; text-transform:uppercase;
+            letter-spacing:0.08em; color:#6B7280; margin-bottom:7px;
+        }
+
+        /* ── ADD BUTTON ── */
+        .add-btn {
+            width:100%; padding:18px;
+            background:linear-gradient(135deg,#10B981,#047857);
+            color:#fff; border:none; border-radius:14px;
+            font-family:'Poppins',sans-serif; font-size:18px; font-weight:800;
+            cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px;
+            box-shadow:0 6px 20px rgba(16,185,129,0.35); transition:all 0.25s;
+        }
+        .add-btn:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 10px 28px rgba(16,185,129,0.45); }
+        .add-btn:active:not(:disabled) { transform:scale(0.98); }
+        .add-btn:disabled { opacity:0.6; cursor:not-allowed; }
+        .add-btn.exp-mode { background:linear-gradient(135deg,#EF4444,#B91C1C); box-shadow:0 6px 20px rgba(239,68,68,0.3); }
+
+        /* ── FILTER TABS ── */
+        .hist-filter { display:flex; gap:8px; margin-bottom:18px; flex-wrap:wrap; }
+        .hf-btn {
+            padding:7px 16px; border:2px solid #E5E7EB; border-radius:50px;
+            background:#fff; font-size:13px; font-weight:700; color:#6B7280;
+            cursor:pointer; transition:all 0.18s;
+            font-family:'Poppins','Noto Sans Devanagari',sans-serif;
+        }
+        .hf-btn:hover { border-color:#10B981; color:#047857; }
+        .hf-btn.active { background:linear-gradient(135deg,#10B981,#047857); color:#fff; border-color:#10B981; }
+
+        /* ── ENTRY ITEM ── */
+        .entry-item {
+            background:#fff; border-radius:14px;
+            border:1.5px solid #F0FDF4; padding:16px 16px;
+            display:flex; align-items:center; gap:13px;
+            margin-bottom:10px; transition:all 0.2s;
+            position:relative; overflow:hidden;
+            animation:cardIn 0.3s ease both;
+        }
+        .entry-item:hover { box-shadow:0 4px 14px rgba(0,0,0,0.08); transform:translateX(4px); border-color:#DCFCE7; }
+        .entry-item::before {
+            content:''; position:absolute; left:0; top:0; bottom:0;
+            width:4px; border-radius:2px 0 0 2px;
+        }
+        .entry-item.ei-inc::before { background:#10B981; }
+        .entry-item.ei-exp::before { background:#EF4444; }
+
+        .ei-icon {
+            width:52px; height:52px; border-radius:14px; flex-shrink:0;
+            display:flex; align-items:center; justify-content:center; font-size:26px;
+        }
+        .ei-icon.inc { background:#ECFDF5; }
+        .ei-icon.exp { background:#FEF2F2; }
+
+        .ei-body { flex:1; min-width:0; }
+        .ei-desc { font-size:15px; font-weight:700; color:#1F2937; margin-bottom:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .ei-meta { font-size:12px; color:#9CA3AF; display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+        .ei-badge {
+            padding:2px 8px; border-radius:10px; font-size:10.5px; font-weight:700; text-transform:uppercase;
+        }
+        .ei-badge.inc { background:#DCFCE7; color:#065F46; }
+        .ei-badge.exp { background:#FEE2E2; color:#B91C1C; }
+
+        .ei-right { display:flex; align-items:center; gap:9px; flex-shrink:0; }
+        .ei-amount { font-family:'Poppins',sans-serif; font-size:18px; font-weight:800; }
+        .ei-amount.inc { color:#059669; }
+        .ei-amount.exp { color:#DC2626; }
+
+        .del-btn {
+            width:36px; height:36px; border-radius:10px; border:none;
+            background:#FEF2F2; color:#EF4444; cursor:pointer;
+            display:flex; align-items:center; justify-content:center;
+            font-size:13px; transition:all 0.2s; flex-shrink:0;
+        }
+        .del-btn:hover { background:#EF4444; color:#fff; transform:scale(1.1); }
+
+        /* ── EMPTY ── */
+        .empty-box { text-align:center; padding:50px 24px; }
+        .empty-box .big-e { font-size:60px; margin-bottom:14px; opacity:0.35; }
+        .empty-box h3 { font-size:18px; font-weight:700; color:#374151; margin-bottom:6px; }
+        .empty-box p  { font-size:14px; color:#9CA3AF; }
+
+        /* Spinner */
+        .spin { display:inline-block; width:18px; height:18px; border:3px solid rgba(255,255,255,0.3); border-top-color:#fff; border-radius:50%; animation:sp 0.8s linear infinite; }
+        @keyframes sp     { to{ transform:rotate(360deg); } }
+        @keyframes cardIn { from{ opacity:0; transform:translateY(14px); } to{ opacity:1; transform:none; } }
+
+        /* lang */
+        .lc { display:none; }
+        .lc.mr { display:inline; }
+
+        @media (max-width:600px) {
+            .navbar { padding:10px 14px; }
+            .page-banner { padding:20px 14px; gap:12px; }
+            .banner-ico { width:50px; height:50px; font-size:22px; }
+            .banner-title { font-size:1.3rem; }
+            .main { padding:14px 10px 50px; }
+            .summary-grid { grid-template-columns:1fr; gap:10px; }
+            .sum-card { display:flex; align-items:center; gap:14px; text-align:left; padding:14px 16px; }
+            .sum-emoji { font-size:30px; margin-bottom:0; flex-shrink:0; }
+            .cat-grid { grid-template-columns:repeat(3,1fr); gap:8px; }
+            .card-body { padding:18px 14px; }
+            .entry-item { flex-wrap:wrap; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar">
+    <a href="dashboard.html" class="logo">
+        <div class="logo-icon"><i class="fas fa-leaf"></i></div>
+        <div>
+            <div class="logo-name">AgriSet<span style="background:none;-webkit-text-fill-color:#047857;">.AI</span></div>
+            <div class="logo-tag">Smart Farming Toolkit</div>
+        </div>
+    </a>
+    <div class="nav-right">
+        <div class="lang-group">
+            <button class="lang-btn" id="btn-en" onclick="setLang('en')">English</button>
+            <button class="lang-btn" id="btn-hi" onclick="setLang('hi')">हिंदी</button>
+            <button class="lang-btn active" id="btn-mr" onclick="setLang('mr')">मराठी</button>
+        </div>
+        <a href="dashboard.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            <span class="lc en">Dashboard</span>
+            <span class="lc hi">डैशबोर्ड</span>
+            <span class="lc mr">डॅशबोर्ड</span>
+        </a>
+    </div>
+</nav>
+
+<!-- ── BANNER ── -->
+<div class="page-banner">
+    <div class="banner-ico">💰</div>
+    <div>
+        <div class="banner-title">
+            <span class="lc en">Kisan <span class="hl">Wallet</span></span>
+            <span class="lc hi">किसान <span class="hl">वॉलेट</span></span>
+            <span class="lc mr">किसान <span class="hl">वॉलेट</span></span>
+        </div>
+        <div class="banner-sub">
+            <span class="lc en">📒 Track your farm income & expenses — simple and fast</span>
+            <span class="lc hi">📒 अपनी खेती की आय और खर्च सरलता से ट्रैक करें</span>
+            <span class="lc mr">📒 शेतीचे उत्पन्न आणि खर्च सहजपणे नोंद करा</span>
+        </div>
+    </div>
+</div>
+
+<!-- ── MAIN ── -->
+<div class="main">
+
+    <!-- SUMMARY -->
+    <div class="summary-grid" id="summaryGrid">
+        <div class="sum-card s-income">
+            <span class="sum-emoji">🌱</span>
+            <div>
+                <div class="sum-label" id="sl-inc">एकूण उत्पन्न</div>
+                <div class="sum-amount c-green" id="sa-inc">₹ —</div>
+                <span class="sum-pill up" id="sp-inc">↑ सकारात्मक</span>
+            </div>
+        </div>
+        <div class="sum-card s-expense">
+            <span class="sum-emoji">💸</span>
+            <div>
+                <div class="sum-label" id="sl-exp">एकूण खर्च</div>
+                <div class="sum-amount c-red" id="sa-exp">₹ —</div>
+                <span class="sum-pill dn" id="sp-exp">↓ खर्च</span>
+            </div>
+        </div>
+        <div class="sum-card s-balance">
+            <span class="sum-emoji" id="bal-emoji">🏦</span>
+            <div>
+                <div class="sum-label" id="sl-bal">शिल्लक</div>
+                <div class="sum-amount c-blue" id="sa-bal">₹ —</div>
+                <span class="sum-pill neu" id="sp-bal">शिल्लक</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADD ENTRY FORM -->
+    <div class="card" style="animation-delay:0.05s;">
+        <div class="card-strip"></div>
+        <div class="card-body">
+            <div class="card-heading">
+                <i class="fas fa-plus-circle"></i>
+                <span class="lc en">Add New Entry</span>
+                <span class="lc hi">नई नोंद जोड़ें</span>
+                <span class="lc mr">नवीन नोंद जोडा</span>
+            </div>
+
+            <!-- STEP 1 — TYPE -->
+            <div class="step-lbl">
+                <span class="step-num">1</span>
+                <span class="lc en">What type of entry?</span>
+                <span class="lc hi">किस प्रकार की नोंद?</span>
+                <span class="lc mr">कोणत्या प्रकारची नोंद?</span>
+            </div>
+            <div class="type-toggle">
+                <div class="type-btn act-inc" id="typeInc" onclick="selectType('income')">
+                    <span class="t-emoji">🌾</span>
+                    <span class="t-label lc en">Income</span>
+                    <span class="t-label lc hi">आय</span>
+                    <span class="t-label lc mr">उत्पन्न</span>
+                    <span class="t-hint lc en">Money you received</span>
+                    <span class="t-hint lc hi">मिला हुआ पैसा</span>
+                    <span class="t-hint lc mr">मिळालेले पैसे</span>
+                </div>
+                <div class="type-btn" id="typeExp" onclick="selectType('expense')">
+                    <span class="t-emoji">💸</span>
+                    <span class="t-label lc en">Expense</span>
+                    <span class="t-label lc hi">खर्च</span>
+                    <span class="t-label lc mr">खर्च</span>
+                    <span class="t-hint lc en">Money you spent</span>
+                    <span class="t-hint lc hi">खर्च हुआ पैसा</span>
+                    <span class="t-hint lc mr">खर्च केलेले पैसे</span>
+                </div>
+            </div>
+
+            <!-- STEP 2 — CATEGORY -->
+            <div class="step-lbl">
+                <span class="step-num">2</span>
+                <span class="lc en">Choose Category</span>
+                <span class="lc hi">श्रेणी चुनें</span>
+                <span class="lc mr">श्रेणी निवडा</span>
+            </div>
+            <div class="cat-grid" id="catGrid"></div>
+
+            <!-- STEP 3 — AMOUNT -->
+            <div class="step-lbl">
+                <span class="step-num">3</span>
+                <span class="lc en">Enter Amount (₹)</span>
+                <span class="lc hi">राशि दर्ज करें (₹)</span>
+                <span class="lc mr">रक्कम टाका (₹)</span>
+            </div>
+            <div class="amt-wrap">
+                <span class="amt-prefix" id="amtPfx">₹</span>
+                <input type="number" id="amtInp" class="amt-input" placeholder="0" min="1" inputmode="numeric">
+            </div>
+
+            <!-- NOTE -->
+            <label class="form-lbl">
+                <span class="lc en">Note / Description (Optional)</span>
+                <span class="lc hi">नोट / विवरण (वैकल्पिक)</span>
+                <span class="lc mr">नोट / वर्णन (ऐच्छिक)</span>
+            </label>
+            <input type="text" id="noteInp" class="note-inp"
+                placeholder="उदा: कांदा विक्री, युरिया खत...">
+
+            <button class="add-btn" id="addBtn" onclick="addEntry()">
+                <i class="fas fa-plus"></i>
+                <span class="lc en">Add Entry</span>
+                <span class="lc hi">नोंद जोड़ें</span>
+                <span class="lc mr">नोंद जोडा</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- HISTORY -->
+    <div class="card" style="animation-delay:0.1s;">
+        <div class="card-strip"></div>
+        <div class="card-body">
+            <div class="card-heading">
+                <i class="fas fa-history"></i>
+                <span class="lc en">Transaction History</span>
+                <span class="lc hi">लेनदेन इतिहास</span>
+                <span class="lc mr">व्यवहार इतिहास</span>
+            </div>
+            <div class="hist-filter">
+                <button class="hf-btn active" onclick="setFilter('all',this)">
+                    <span class="lc en">All</span><span class="lc hi">सभी</span><span class="lc mr">सर्व</span>
+                </button>
+                <button class="hf-btn" onclick="setFilter('income',this)">
+                    🌾 <span class="lc en">Income</span><span class="lc hi">आय</span><span class="lc mr">उत्पन्न</span>
+                </button>
+                <button class="hf-btn" onclick="setFilter('expense',this)">
+                    💸 <span class="lc en">Expense</span><span class="lc hi">खर्च</span><span class="lc mr">खर्च</span>
+                </button>
+            </div>
+            <div id="historyList"></div>
+        </div>
+    </div>
+
+</div><!-- /main -->
+
+<script>
+// ── CONFIG ────────────────────────────────────────────────────────────────────
+const BASE = "https://shetimitra-backend-production.up.railway.app/";
+const user = JSON.parse(localStorage.getItem("user") || 'null');
+if (!user) { alert('Please login first'); window.location.href = 'login.html'; }
+
+let lang         = localStorage.getItem('language') || 'mr';
+let selType      = 'income';
+let selCat       = '';
+let histFilter   = 'all';
+let allHistory   = [];
+
+// ── CATEGORIES ────────────────────────────────────────────────────────────────
+const CATS = {
+    income: [
+        { id:'crop_sale',     emoji:'🌾', en:'Crop Sale',       hi:'फसल बिक्री',    mr:'पीक विक्री' },
+        { id:'vegetable',     emoji:'🥦', en:'Vegetables',      hi:'सब्जी',          mr:'भाजीपाला' },
+        { id:'milk',          emoji:'🥛', en:'Milk/Dairy',      hi:'दूध/डेयरी',     mr:'दूध/डेअरी' },
+        { id:'fruit',         emoji:'🍎', en:'Fruits',          hi:'फल',             mr:'फळे' },
+        { id:'govt_scheme',   emoji:'🏛️', en:'Govt Scheme',     hi:'सरकारी योजना',  mr:'सरकारी योजना' },
+        { id:'loan_received', emoji:'🏦', en:'Loan Received',   hi:'कर्ज मिला',     mr:'कर्ज मिळाले' },
+        { id:'equip_rent',    emoji:'🚜', en:'Equip Rent',      hi:'उपकरण किराया',  mr:'उपकरण भाडे' },
+        { id:'other_inc',     emoji:'💰', en:'Other',           hi:'अन्य',           mr:'इतर' },
+    ],
+    expense: [
+        { id:'fertilizer',    emoji:'🌱', en:'Fertilizer',      hi:'खाद',            mr:'खत' },
+        { id:'seed',          emoji:'🌰', en:'Seeds',           hi:'बीज',            mr:'बियाणे' },
+        { id:'pesticide',     emoji:'🧴', en:'Pesticide',       hi:'कीटनाशक',        mr:'कीटकनाशक' },
+        { id:'labour',        emoji:'👷', en:'Labour',          hi:'मजदूरी',         mr:'मजुरी' },
+        { id:'fuel',          emoji:'⛽', en:'Fuel/Diesel',     hi:'डीजल/ईंधन',     mr:'डिझेल/इंधन' },
+        { id:'equipment',     emoji:'🔧', en:'Equipment',       hi:'उपकरण',          mr:'उपकरण' },
+        { id:'irrigation',    emoji:'💧', en:'Irrigation',      hi:'सिंचाई',         mr:'सिंचन' },
+        { id:'transport',     emoji:'🚛', en:'Transport',       hi:'परिवहन',         mr:'वाहतूक' },
+        { id:'electricity',   emoji:'⚡', en:'Electricity',     hi:'बिजली बिल',     mr:'वीज बिल' },
+        { id:'loan_repay',    emoji:'💳', en:'Loan Repay',      hi:'कर्ज चुकाना',   mr:'कर्ज फेड' },
+        { id:'other_exp',     emoji:'📦', en:'Other',           hi:'अन्य',           mr:'इतर' },
+    ]
+};
+
+// ── LANGUAGE ──────────────────────────────────────────────────────────────────
+function setLang(l) {
+    lang = l;
+    localStorage.setItem('language', l);
+    ['en','hi','mr'].forEach(x => {
+        document.getElementById('btn-'+x).classList.toggle('active', x===l);
+    });
+    document.querySelectorAll('.lc').forEach(el => el.style.display='none');
+    document.querySelectorAll('.lc.'+l).forEach(el => el.style.display='inline');
+    renderCats();
+    renderHistory();
+    syncSummaryText();
+}
+function g(en,hi,mr){ return lang==='mr'?mr:lang==='hi'?hi:en; }
+
+// ── TYPE ──────────────────────────────────────────────────────────────────────
+function selectType(t) {
+    selType = t; selCat = '';
+    document.getElementById('typeInc').className = 'type-btn'+(t==='income'?' act-inc':'');
+    document.getElementById('typeExp').className = 'type-btn'+(t==='expense'?' act-exp':'');
+    const ai = document.getElementById('amtInp');
+    ai.className = 'amt-input'+(t==='expense'?' red-mode':'');
+    const pf = document.getElementById('amtPfx');
+    pf.className = 'amt-prefix'+(t==='expense'?' red':'');
+    const btn = document.getElementById('addBtn');
+    btn.className = 'add-btn'+(t==='expense'?' exp-mode':'');
+    renderCats();
+}
+
+// ── CATS ──────────────────────────────────────────────────────────────────────
+function renderCats() {
+    const grid = document.getElementById('catGrid');
+    grid.innerHTML = CATS[selType].map(c => {
+        const name = c[lang]||c.en;
+        const scls = selCat===c.id ? (selType==='income'?'sel-inc':'sel-exp') : '';
+        return `<div class="cat-chip ${scls}" onclick="pickCat('${c.id}')">
+            <span class="ci">${c.emoji}</span>
+            <span class="cn">${name}</span>
+        </div>`;
+    }).join('');
+}
+function pickCat(id){ selCat=id; renderCats(); }
+
+// ── SUMMARY ───────────────────────────────────────────────────────────────────
+function syncSummaryText() {
+    document.getElementById('sl-inc').textContent = g('Total Income','कुल आय','एकूण उत्पन्न');
+    document.getElementById('sl-exp').textContent = g('Total Expense','कुल खर्च','एकूण खर्च');
+    document.getElementById('sl-bal').textContent = g('Balance','शेष राशि','शिल्लक');
+    document.getElementById('sp-inc').textContent = '↑ '+g('Positive','सकारात्मक','सकारात्मक');
+    document.getElementById('sp-exp').textContent = '↓ '+g('Spent','खर्च','खर्च');
+}
+
+function renderSummary(income, expense, balance) {
+    document.getElementById('sa-inc').textContent = '₹ '+income.toLocaleString('en-IN');
+    document.getElementById('sa-exp').textContent = '₹ '+expense.toLocaleString('en-IN');
+    const balEl = document.getElementById('sa-bal');
+    balEl.textContent = (balance<0?'−':'')+'₹ '+Math.abs(balance).toLocaleString('en-IN');
+    balEl.className   = 'sum-amount '+(balance>=0?'c-blue':'c-red');
+    document.getElementById('bal-emoji').textContent = balance>=0?'🏦':'⚠️';
+    const sp = document.getElementById('sp-bal');
+    if (balance > 0) {
+        sp.className='sum-pill up'; sp.textContent='✅ '+g('Profit','लाभ','नफा');
+    } else if (balance < 0) {
+        sp.className='sum-pill dn'; sp.textContent='❌ '+g('Loss','हानि','तोटा');
+    } else {
+        sp.className='sum-pill neu'; sp.textContent=g('Break Even','बराबर','समान');
+    }
+    syncSummaryText();
+}
+
+// ── FORMAT DATE ───────────────────────────────────────────────────────────────
+function fmtDate(str) {
+    try {
+        const d = new Date(str);
+        const locale = lang==='mr'?'mr-IN':lang==='hi'?'hi-IN':'en-IN';
+        return d.toLocaleDateString(locale,{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    } catch { return str; }
+}
+
+// ── FILTER ────────────────────────────────────────────────────────────────────
+function setFilter(f,el) {
+    histFilter=f;
+    document.querySelectorAll('.hf-btn').forEach(b=>b.classList.remove('active'));
+    el.classList.add('active');
+    renderHistory();
+}
+
+// ── HISTORY RENDER ────────────────────────────────────────────────────────────
+function renderHistory() {
+    const list = document.getElementById('historyList');
+    const data = histFilter==='all' ? allHistory : allHistory.filter(e=>e.type===histFilter);
+    if (!data.length) {
+        list.innerHTML=`<div class="empty-box">
+            <div class="big-e">📒</div>
+            <h3>${g('No transactions yet','कोई लेनदेन नहीं','अद्याप कोणते व्यवहार नाहीत')}</h3>
+            <p>${g('Use the form above to add income or expenses.','ऊपर दिए गए फॉर्म का उपयोग करें।','वरील फॉर्म वापरून नोंद जोडा.')}</p>
+        </div>`; return;
+    }
+    list.innerHTML = data.map((e,i)=>{
+        const isInc = e.type==='income';
+        const cls   = isInc?'inc':'exp';
+        const sign  = isInc?'+':'−';
+        const catList = CATS[e.type]||[];
+        const cat   = catList.find(c=>c.id===e.category)||null;
+        const emoji = cat?cat.emoji:(isInc?'🌾':'💸');
+        const catName = cat?(cat[lang]||cat.en):'';
+        return `<div class="entry-item ei-${cls}" style="animation-delay:${i*0.04}s;">
+            <div class="ei-icon ${cls}">${emoji}</div>
+            <div class="ei-body">
+                <div class="ei-desc">${e.description||g('No description','कोई विवरण नहीं','वर्णन नाही')}</div>
+                <div class="ei-meta">
+                    <span class="ei-badge ${cls}">${isInc?g('Income','आय','उत्पन्न'):g('Expense','खर्च','खर्च')}</span>
+                    ${catName?`<span>· ${catName}</span>`:''}
+                    <span>· ${fmtDate(e.created_at)}</span>
+                </div>
+            </div>
+            <div class="ei-right">
+                <div class="ei-amount ${cls}">${sign}₹${e.amount.toLocaleString('en-IN')}</div>
+                <button class="del-btn" onclick="deleteEntry(${e.id})"><i class="fas fa-trash-alt"></i></button>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+// ── LOAD ──────────────────────────────────────────────────────────────────────
+function loadWallet() {
+    fetch(`${BASE}/wallet/${user.id}`)
+        .then(r=>r.json())
+        .then(data=>{
+            renderSummary(data.income||0, data.expense||0, data.balance||0);
+            allHistory = data.history||[];
+            renderHistory();
+        })
+        .catch(()=>{
+            // Demo fallback
+            const demo = [
+                { id:1, type:'income',  category:'crop_sale',  description:'कांदा विक्री',      amount:18500, created_at:new Date(Date.now()-86400000*0).toISOString() },
+                { id:2, type:'expense', category:'fertilizer', description:'युरिया व डीएपी खत', amount:4200,  created_at:new Date(Date.now()-86400000*1).toISOString() },
+                { id:3, type:'income',  category:'milk',       description:'दूध विक्री',         amount:5600,  created_at:new Date(Date.now()-86400000*2).toISOString() },
+                { id:4, type:'expense', category:'labour',     description:'शेतमजुरी',            amount:3000,  created_at:new Date(Date.now()-86400000*3).toISOString() },
+                { id:5, type:'expense', category:'fuel',       description:'ट्रॅक्टर डिझेल',    amount:2100,  created_at:new Date(Date.now()-86400000*4).toISOString() },
+                { id:6, type:'income',  category:'vegetable',  description:'टोमॅटो विक्री',      amount:8200,  created_at:new Date(Date.now()-86400000*5).toISOString() },
+                { id:7, type:'expense', category:'seed',       description:'सोयाबीन बियाणे',    amount:3500,  created_at:new Date(Date.now()-86400000*6).toISOString() },
+            ];
+            const inc = demo.filter(e=>e.type==='income').reduce((s,e)=>s+e.amount,0);
+            const exp = demo.filter(e=>e.type==='expense').reduce((s,e)=>s+e.amount,0);
+            renderSummary(inc, exp, inc-exp);
+            allHistory = demo;
+            renderHistory();
+        });
+}
+
+// ── ADD ───────────────────────────────────────────────────────────────────────
+function addEntry() {
+    const amt  = parseFloat(document.getElementById('amtInp').value);
+    const note = document.getElementById('noteInp').value.trim();
+    if (!amt||amt<=0) { alert(g('Please enter a valid amount!','कृपया वैध राशि दर्ज करें!','कृपया वैध रक्कम टाका!')); return; }
+
+    const cat  = CATS[selType].find(c=>c.id===selCat);
+    const desc = note||(cat?(cat[lang]||cat.en):g('No description','कोई विवरण नहीं','वर्णन नाही'));
+    const btn  = document.getElementById('addBtn');
+    const orig = btn.className;
+    btn.innerHTML = `<span class="spin"></span> ${g('Adding...','जोड़ रहा है...','जोडत आहे...')}`;
+    btn.disabled  = true;
+
+    fetch(`${BASE}/add-wallet`,{
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({ user_id:user.id, type:selType, category:selCat, amount:amt, description:desc })
+    })
+    .then(r=>r.json()).then(()=>{
+        document.getElementById('amtInp').value='';
+        document.getElementById('noteInp').value='';
+        selCat=''; renderCats(); loadWallet();
+        showSuccess(btn,orig);
+    })
+    .catch(()=>{
+        // Local demo add
+        const newE = { id:Date.now(), type:selType, category:selCat, description:desc, amount:amt, created_at:new Date().toISOString() };
+        allHistory.unshift(newE);
+        const inc=allHistory.filter(e=>e.type==='income').reduce((s,e)=>s+e.amount,0);
+        const exp=allHistory.filter(e=>e.type==='expense').reduce((s,e)=>s+e.amount,0);
+        renderSummary(inc,exp,inc-exp); renderHistory();
+        document.getElementById('amtInp').value='';
+        document.getElementById('noteInp').value='';
+        selCat=''; renderCats();
+        showSuccess(btn,orig);
+    });
+}
+
+function showSuccess(btn, origClass) {
+    btn.innerHTML=`<i class="fas fa-check"></i> ${g('Added!','जोड़ा!','जोडले!')}`;
+    btn.style.background='linear-gradient(135deg,#059669,#047857)';
+    setTimeout(()=>{
+        btn.className=origClass;
+        btn.innerHTML=`<i class="fas fa-plus"></i> <span class="lc ${lang}">${g('Add Entry','नोंद जोड़ें','नोंद जोडा')}</span>`;
+        btn.disabled=false; btn.style.background='';
+        setLang(lang);
+    },1600);
+}
+
+// ── DELETE ────────────────────────────────────────────────────────────────────
+function deleteEntry(id) {
+    if(!confirm(g('Delete this entry?','इस नोंद को हटाएं?','ही नोंद डिलीट करायची?'))) return;
+    fetch(`${BASE}/delete-wallet/${id}/${user.id}`,{method:'DELETE'})
+        .then(()=>loadWallet())
+        .catch(()=>{
+            allHistory=allHistory.filter(e=>e.id!==id);
+            const inc=allHistory.filter(e=>e.type==='income').reduce((s,e)=>s+e.amount,0);
+            const exp=allHistory.filter(e=>e.type==='expense').reduce((s,e)=>s+e.amount,0);
+            renderSummary(inc,exp,inc-exp); renderHistory();
+        });
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+setLang(lang);
+renderCats();
+loadWallet();
+</script>
+</body>
+</html>

@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pest Detection | AgriSet.AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #F0FDF4;
+            min-height: 100vh;
+            color: #1F2937;
+        }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            background: #fff;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            padding: 12px 32px;
+            display: flex; align-items: center;
+            justify-content: space-between; flex-wrap: wrap; gap: 12px;
+            position: sticky; top: 0; z-index: 100;
+        }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-icon {
+            width: 42px; height: 42px;
+            background: linear-gradient(135deg, #10B981, #047857);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .logo-icon i { color: #fff; font-size: 20px; }
+        .logo-name {
+            font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 800;
+            background: linear-gradient(135deg, #10B981, #047857);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .logo-tag { font-size: 10px; color: #6B7280; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-top: -3px; }
+        .nav-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .lang-group { display: flex; gap: 5px; }
+        .lang-btn {
+            padding: 7px 14px; border: 2px solid #E5E7EB;
+            background: #fff; border-radius: 8px;
+            font-size: 13px; font-weight: 700; cursor: pointer;
+            color: #6B7280; font-family: 'Inter', sans-serif; transition: all 0.2s;
+        }
+        .lang-btn:hover { border-color: #10B981; color: #10B981; }
+        .lang-btn.active { background: linear-gradient(135deg,#10B981,#047857); border-color: #10B981; color: #fff; }
+        .back-btn {
+            display: flex; align-items: center; gap: 8px;
+            background: #fff; color: #10B981;
+            border: 2px solid #10B981; padding: 9px 20px;
+            border-radius: 10px; font-size: 14px; font-weight: 700;
+            cursor: pointer; text-decoration: none;
+            font-family: 'Poppins', sans-serif; transition: all 0.25s;
+        }
+        .back-btn:hover { background: #10B981; color: #fff; transform: translateX(-3px); }
+
+        /* ── PAGE BANNER ── */
+        .page-banner {
+            background: linear-gradient(135deg, #7C2D12, #B91C1C);
+            color: white; padding: 28px 32px;
+            display: flex; align-items: center; gap: 20px;
+            position: relative; overflow: hidden;
+        }
+        .page-banner::before {
+            content: '';
+            position: absolute; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        .page-banner::after {
+            content: '🐛'; position: absolute; right: 28px; top: -8px;
+            font-size: 120px; opacity: 0.07; pointer-events: none; line-height: 1;
+        }
+        .banner-ico {
+            width: 68px; height: 68px; border-radius: 18px; flex-shrink: 0;
+            background: rgba(255,255,255,0.12);
+            border: 2px solid rgba(255,255,255,0.22);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 30px;
+        }
+        .banner-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(1.3rem, 3vw, 2rem); font-weight: 800; margin-bottom: 5px;
+        }
+        .banner-title .hl { color: #FCA5A5; }
+        .banner-sub { font-size: 14px; opacity: 0.8; font-weight: 400; line-height: 1.5; }
+
+        /* ── STEPS STRIP ── */
+        .steps-strip {
+            background: #fff;
+            border-bottom: 1.5px solid rgba(16,185,129,0.1);
+            padding: 14px 32px;
+            display: flex; gap: 0; overflow-x: auto;
+        }
+        .step-item {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 13px; font-weight: 700; color: #9CA3AF;
+            white-space: nowrap; padding: 0 18px;
+            border-right: 1px solid #E5E7EB;
+        }
+        .step-item:first-child { padding-left: 0; }
+        .step-item:last-child { border-right: none; }
+        .step-item.active { color: #EF4444; }
+        .step-item.done { color: #10B981; }
+        .step-num {
+            width: 24px; height: 24px; border-radius: 50%;
+            background: #E5E7EB; color: #6B7280;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 800; flex-shrink: 0;
+        }
+        .step-item.active .step-num { background: #EF4444; color: #fff; }
+        .step-item.done .step-num { background: #DCFCE7; color: #047857; }
+
+        /* ── MAIN ── */
+        .main { max-width: 800px; margin: 0 auto; padding: 28px 20px 60px; }
+
+        /* ── CARDS ── */
+        .card {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+            border: 1.5px solid rgba(16,185,129,0.13);
+            overflow: hidden; margin-bottom: 20px;
+            animation: cardIn 0.5s ease both;
+        }
+        @keyframes cardIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:none} }
+        .card-strip { height: 4px; }
+        .card-strip.green { background: linear-gradient(135deg,#10B981,#047857); }
+        .card-strip.red   { background: linear-gradient(135deg,#EF4444,#B91C1C); }
+        .card-body { padding: 28px; }
+
+        .card-heading {
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px; font-weight: 800; color: #1F2937;
+            display: flex; align-items: center; gap: 10px; margin-bottom: 5px;
+        }
+        .card-heading i { font-size: 18px; }
+        .card-note { font-size: 13px; color: #6B7280; font-weight: 500; margin-bottom: 22px; }
+
+        /* Crop selector */
+        .crop-label {
+            font-size: 14px; font-weight: 700; color: #1F2937; margin-bottom: 10px; display: block;
+        }
+        .crop-grid-sel {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 10px; margin-bottom: 22px;
+        }
+        .crop-opt {
+            border: 2px solid #E5E7EB; border-radius: 12px;
+            padding: 12px 8px; text-align: center; cursor: pointer;
+            background: #F9FAFB; transition: all 0.2s;
+        }
+        .crop-opt:hover { border-color: #10B981; background: #F0FDF4; transform: translateY(-2px); }
+        .crop-opt.selected { border-color: #10B981; background: #F0FDF4; }
+        .crop-opt .ci { font-size: 28px; display: block; margin-bottom: 4px; }
+        .crop-opt .cn {
+            font-size: 12px; font-weight: 700; color: #1F2937;
+            display: block; line-height: 1.3;
+        }
+        /* hidden select for form value */
+        #cropSelect { display: none; }
+
+        /* Upload zone */
+        .upload-zone {
+            border: 3px dashed rgba(239,68,68,0.3);
+            border-radius: 16px; background: #FFF5F5;
+            padding: 28px 20px; text-align: center;
+            cursor: pointer; transition: all 0.25s;
+            position: relative; margin-bottom: 18px;
+        }
+        .upload-zone:hover { border-color: #EF4444; background: #FEF2F2; }
+        .upload-zone.has-file { border-color: #10B981; background: #F0FDF4; border-style: solid; }
+        .upload-zone input[type="file"] {
+            position: absolute; inset: 0; opacity: 0;
+            cursor: pointer; width: 100%; height: 100%;
+        }
+        .uz-emoji { font-size: 44px; display: block; margin-bottom: 8px; }
+        .uz-title { font-family: 'Poppins', sans-serif; font-size: 15px; font-weight: 800; color: #B91C1C; margin-bottom: 4px; }
+        .uz-hint { font-size: 13px; color: #6B7280; font-weight: 500; }
+        .uz-filename { display: none; margin-top: 8px; font-size: 13px; font-weight: 700; color: #10B981; }
+
+        /* Leaf tips */
+        .tips-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
+        .tip-chip {
+            display: flex; align-items: center; gap: 6px;
+            background: #FFF7ED; border: 1.5px solid rgba(249,115,22,0.25);
+            border-radius: 50px; padding: 6px 12px;
+            font-size: 12.5px; font-weight: 600; color: #92400E;
+        }
+        .tip-chip i { color: #F97316; font-size: 12px; }
+
+        /* Preview */
+        #imgPreview {
+            width: 100%; max-height: 230px; object-fit: cover;
+            border-radius: 14px; display: none;
+            border: 2px solid rgba(16,185,129,0.25);
+            margin-bottom: 18px;
+        }
+
+        /* Error box */
+        .error-box {
+            background: #FEF2F2; border-left: 4px solid #EF4444;
+            border-radius: 10px; padding: 14px 16px;
+            color: #B91C1C; font-size: 14px; font-weight: 600;
+            display: none; margin-bottom: 14px;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:none} }
+        .error-box i { margin-right: 8px; }
+
+        /* Loading */
+        .loading-box {
+            text-align: center; padding: 28px 20px; display: none;
+        }
+        .spin-lg {
+            width: 52px; height: 52px;
+            border: 5px solid rgba(239,68,68,0.2);
+            border-top-color: #EF4444;
+            border-radius: 50%; animation: sp 1s linear infinite;
+            display: inline-block; margin-bottom: 14px;
+        }
+        @keyframes sp { to{transform:rotate(360deg)} }
+        .loading-box p { color: #6B7280; font-size: 15px; font-weight: 600; }
+
+        /* Analyze button */
+        .btn-analyze {
+            width: 100%; padding: 16px;
+            background: linear-gradient(135deg, #EF4444, #B91C1C);
+            color: #fff; border: none; border-radius: 50px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 17px; font-weight: 700;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            box-shadow: 0 6px 20px rgba(239,68,68,0.3);
+            transition: all 0.25s;
+        }
+        .btn-analyze:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(239,68,68,0.4); }
+        .btn-analyze:active:not(:disabled) { transform: translateY(0); }
+        .btn-analyze:disabled { opacity: 0.65; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        /* ── RESULT CARD ── */
+        .result-outer { display: none; animation: cardIn 0.55s ease; }
+
+        /* Status hero */
+        .status-hero {
+            border-radius: 20px; padding: 24px 22px;
+            color: white; margin-bottom: 18px;
+            display: flex; align-items: center; gap: 16px;
+            position: relative; overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+        .status-hero::after {
+            content: '🌿'; position: absolute; right: 14px; bottom: -10px;
+            font-size: 90px; opacity: 0.08; pointer-events: none;
+        }
+        .status-hero.healthy { background: linear-gradient(135deg,#064E3B,#047857); }
+        .status-hero.healthy::after { content: '✅'; }
+        .status-hero.diseased { background: linear-gradient(135deg,#7C2D12,#B91C1C); }
+        .status-hero.diseased::after { content: '⚠️'; }
+        .status-hero.uncertain { background: linear-gradient(135deg,#78350F,#D97706); }
+        .status-hero.uncertain::after { content: '❓'; }
+
+        .sh-emoji { font-size: 50px; flex-shrink: 0; }
+        .sh-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 50px; padding: 5px 16px;
+            font-size: 13px; font-weight: 800; margin-bottom: 6px;
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+        .sh-crop {
+            font-family: 'Poppins', sans-serif;
+            font-size: 20px; font-weight: 800; line-height: 1.2;
+        }
+        .sh-conf {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(255,255,255,0.13);
+            border: 1px solid rgba(255,255,255,0.22);
+            border-radius: 50px; padding: 4px 12px;
+            font-size: 13px; font-weight: 700; margin-top: 6px;
+        }
+        .sh-conf i { color: #FDE68A; }
+
+        /* Result tabs */
+        .result-tabs {
+            display: flex; gap: 6px; margin-bottom: 16px;
+        }
+        .rtab {
+            flex: 1; padding: 10px; text-align: center;
+            border: 2px solid #E5E7EB; border-radius: 10px;
+            font-size: 13px; font-weight: 700; color: #6B7280;
+            cursor: pointer; background: #fff; transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+        .rtab:hover { border-color: #10B981; color: #10B981; }
+        .rtab.active { background: linear-gradient(135deg,#10B981,#047857); border-color: #10B981; color: #fff; }
+
+        /* Result panels */
+        .rpanel { display: none; }
+        .rpanel.active { display: block; animation: fadeIn 0.3s ease; }
+
+        .result-row {
+            background: #F9FAFB; border-radius: 12px;
+            padding: 16px 18px; margin-bottom: 12px;
+            border-left: 4px solid #10B981;
+        }
+        .result-row.red-border { border-left-color: #EF4444; }
+        .result-row.yellow-border { border-left-color: #F59E0B; }
+        .row-label {
+            font-size: 12px; font-weight: 700; color: #6B7280;
+            text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px;
+        }
+        .row-text {
+            font-size: 15px; color: #1F2937; line-height: 1.65; font-weight: 500;
+        }
+
+        /* Confidence bar */
+        .conf-block {
+            background: #F0FDF4; border-radius: 14px;
+            padding: 18px 20px; margin-bottom: 16px;
+            border: 1.5px solid rgba(16,185,129,0.15);
+        }
+        .conf-label {
+            font-size: 13px; font-weight: 700; color: #047857; margin-bottom: 10px;
+        }
+        .conf-bar {
+            height: 14px; background: #E5E7EB; border-radius: 7px;
+            overflow: hidden; margin-bottom: 8px;
+        }
+        .conf-fill {
+            height: 100%; border-radius: 7px;
+            background: linear-gradient(135deg,#10B981,#047857);
+            width: 0; transition: width 1s ease;
+        }
+        .conf-val {
+            font-family: 'Poppins', sans-serif;
+            font-size: 22px; font-weight: 800; color: #1F2937;
+        }
+
+        /* Action buttons */
+        .action-row { display: flex; gap: 12px; margin-top: 4px; }
+        .btn-voice, .btn-save {
+            flex: 1; padding: 14px;
+            border: none; border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px; font-weight: 700;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: all 0.25s;
+        }
+        .btn-voice {
+            background: linear-gradient(135deg,#3B82F6,#1D4ED8);
+            color: white; box-shadow: 0 4px 14px rgba(59,130,246,0.25);
+        }
+        .btn-voice:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(59,130,246,0.35); }
+        .btn-save {
+            background: linear-gradient(135deg,#8B5CF6,#7C3AED);
+            color: white; box-shadow: 0 4px 14px rgba(139,92,246,0.25);
+        }
+        .btn-save:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(139,92,246,0.35); }
+
+        /* Retry */
+        .btn-retry {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: #fff; color: #EF4444;
+            border: 2px solid #EF4444; padding: 11px 26px;
+            border-radius: 50px; font-size: 14px; font-weight: 700;
+            cursor: pointer; font-family: 'Poppins', sans-serif;
+            transition: all 0.25s; margin-top: 18px;
+        }
+        .btn-retry:hover { background: #EF4444; color: #fff; }
+
+        /* Lang content */
+        .lc { display: none; }
+        .lc.en { display: inline; }
+        .lc.blk { display: none; }
+        .lc.blk.en { display: block; }
+
+        /* spinner */
+        .spin { display:inline-block; width:18px; height:18px; border:3px solid rgba(255,255,255,0.35); border-top-color:#fff; border-radius:50%; animation:sp 0.8s linear infinite; }
+
+        @media (max-width: 600px) {
+            .navbar { padding: 12px 16px; }
+            .page-banner { padding: 20px 16px; gap: 14px; }
+            .banner-ico { width: 52px; height: 52px; font-size: 24px; }
+            .steps-strip { padding: 12px 16px; }
+            .card-body { padding: 20px 16px; }
+            .crop-grid-sel { grid-template-columns: repeat(3,1fr); }
+            .action-row { flex-direction: column; }
+            .main { padding: 20px 14px 50px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar">
+    <a href="dashboard.html" class="logo">
+        <div class="logo-icon"><i class="fas fa-leaf"></i></div>
+        <div>
+            <div class="logo-name">AgriSet<span>.AI</span></div>
+            <div class="logo-tag">Smart Farming Toolkit</div>
+        </div>
+    </a>
+    <div class="nav-right">
+        <div class="lang-group">
+            <button class="lang-btn active" id="btn-en">English</button>
+            <button class="lang-btn" id="btn-hi">हिंदी</button>
+            <button class="lang-btn" id="btn-mr">मराठी</button>
+        </div>
+        <a href="dashboard.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            <span class="lc en">Dashboard</span>
+            <span class="lc hi">डैशबोर्ड</span>
+            <span class="lc mr">डॅशबोर्ड</span>
+        </a>
+    </div>
+</nav>
+
+<!-- ── PAGE BANNER ── -->
+<div class="page-banner">
+    <div class="banner-ico">🐛</div>
+    <div>
+        <div class="banner-title">
+            <span class="lc en">AI <span class="hl">Pest</span> Detection</span>
+            <span class="lc hi">AI <span class="hl">कीट</span> पहचान</span>
+            <span class="lc mr">AI <span class="hl">किडे</span> ओळख</span>
+        </div>
+        <div class="banner-sub">
+            <span class="lc en">📸 Upload a leaf photo — AI detects pests, diseases & suggests spray solution instantly</span>
+            <span class="lc hi">📸 पत्ते की फोटो डालें — AI कीट, रोग पहचानेगा और तुरंत दवाई सुझाएगा</span>
+            <span class="lc mr">📸 पानाचा फोटो टाका — AI किडे, रोग ओळखेल आणि लगेच फवारणी सांगेल</span>
+        </div>
+    </div>
+</div>
+
+<!-- ── STEPS STRIP ── -->
+<div class="steps-strip">
+    <div class="step-item active" id="step1">
+        <div class="step-num">1</div>
+        <span class="lc en">Choose Crop</span>
+        <span class="lc hi">फसल चुनें</span>
+        <span class="lc mr">पीक निवडा</span>
+    </div>
+    <div class="step-item" id="step2">
+        <div class="step-num">2</div>
+        <span class="lc en">Upload Leaf Photo</span>
+        <span class="lc hi">पत्ता फोटो अपलोड</span>
+        <span class="lc mr">पान फोटो अपलोड</span>
+    </div>
+    <div class="step-item" id="step3">
+        <div class="step-num">3</div>
+        <span class="lc en">AI Analyzes</span>
+        <span class="lc hi">AI विश्लेषण</span>
+        <span class="lc mr">AI विश्लेषण</span>
+    </div>
+    <div class="step-item" id="step4">
+        <div class="step-num">4</div>
+        <span class="lc en">Get Solution</span>
+        <span class="lc hi">उपाय देखें</span>
+        <span class="lc mr">उपाय पहा</span>
+    </div>
+</div>
+
+<!-- ── MAIN ── -->
+<div class="main">
+
+    <!-- FORM CARD -->
+    <div class="card" id="formCard">
+        <div class="card-strip green"></div>
+        <div class="card-body">
+
+            <div class="card-heading" style="color:#047857">
+                <i class="fas fa-leaf" style="color:#10B981"></i>
+                <span class="lc en">Select Crop & Upload Photo</span>
+                <span class="lc hi">फसल चुनें और फोटो अपलोड करें</span>
+                <span class="lc mr">पीक निवडा आणि फोटो अपलोड करा</span>
+            </div>
+            <div class="card-note">
+                <span class="lc en">Select your crop, then take a close-up photo of an affected leaf</span>
+                <span class="lc hi">अपनी फसल चुनें, फिर प्रभावित पत्ते की क्लोज-अप फोटो लें</span>
+                <span class="lc mr">तुमचे पीक निवडा, मग बाधित पानाचा क्लोज-अप फोटो घ्या</span>
+            </div>
+
+            <!-- Crop visual selector -->
+            <span class="crop-label">
+                🌾 <span class="lc en">Select Your Crop</span>
+                <span class="lc hi">आपकी फसल चुनें</span>
+                <span class="lc mr">तुमचे पीक निवडा</span>
+            </span>
+            <input type="hidden" id="cropSelect">
+            <div class="crop-grid-sel" id="cropGrid">
+                <div class="crop-opt" data-val="maize"     onclick="selectCrop(this)"><span class="ci">🌽</span><span class="cn"><span class="lc en">Maize</span><span class="lc hi">मक्का</span><span class="lc mr">मका</span></span></div>
+                <div class="crop-opt" data-val="cotton"    onclick="selectCrop(this)"><span class="ci">🧶</span><span class="cn"><span class="lc en">Cotton</span><span class="lc hi">कपास</span><span class="lc mr">कापूस</span></span></div>
+                <div class="crop-opt" data-val="chickpea"  onclick="selectCrop(this)"><span class="ci">🥜</span><span class="cn"><span class="lc en">Chickpea</span><span class="lc hi">चना</span><span class="lc mr">हरभरा</span></span></div>
+                <div class="crop-opt" data-val="groundnut" onclick="selectCrop(this)"><span class="ci">🥜</span><span class="cn"><span class="lc en">Groundnut</span><span class="lc hi">मूंगफली</span><span class="lc mr">भुईमूग</span></span></div>
+                <div class="crop-opt" data-val="moong"     onclick="selectCrop(this)"><span class="ci">🌱</span><span class="cn"><span class="lc en">Moong</span><span class="lc hi">मूंग</span><span class="lc mr">मूग</span></span></div>
+                <div class="crop-opt" data-val="tur"       onclick="selectCrop(this)"><span class="ci">🫘</span><span class="cn"><span class="lc en">Pigeon Pea</span><span class="lc hi">अरहर</span><span class="lc mr">तूर</span></span></div>
+            </div>
+
+            <!-- Photo tips -->
+            <div class="tips-row">
+                <div class="tip-chip"><i class="fas fa-sun"></i><span class="lc en">Good light</span><span class="lc hi">अच्छी रोशनी</span><span class="lc mr">चांगला प्रकाश</span></div>
+                <div class="tip-chip"><i class="fas fa-camera"></i><span class="lc en">Close-up of leaf</span><span class="lc hi">पत्ते का क्लोज-अप</span><span class="lc mr">पानाचा क्लोज-अप</span></div>
+                <div class="tip-chip"><i class="fas fa-eye"></i><span class="lc en">Show affected area</span><span class="lc hi">प्रभावित हिस्सा दिखाएं</span><span class="lc mr">बाधित भाग दाखवा</span></div>
+            </div>
+
+            <!-- Upload zone -->
+            <div class="upload-zone" id="uploadZone">
+                <input type="file" id="photoInput" accept="image/*" onchange="onFileSelect(this)">
+                <span class="uz-emoji">📷</span>
+                <div class="uz-title">
+                    <span class="lc en">Tap to upload leaf photo</span>
+                    <span class="lc hi">पत्ते की फोटो अपलोड करें</span>
+                    <span class="lc mr">पानाचा फोटो अपलोड करा</span>
+                </div>
+                <div class="uz-hint">
+                    <span class="lc en">JPG or PNG · Max 5 MB</span>
+                    <span class="lc hi">JPG या PNG · अधिकतम 5 MB</span>
+                    <span class="lc mr">JPG किंवा PNG · जास्तीत जास्त 5 MB</span>
+                </div>
+                <div class="uz-filename" id="fileName"></div>
+            </div>
+
+            <!-- Preview -->
+            <img id="imgPreview" alt="Leaf preview">
+
+            <!-- Error -->
+            <div class="error-box" id="errorBox"></div>
+
+            <!-- Loading -->
+            <div class="loading-box" id="loadingBox">
+                <div class="spin-lg"></div>
+                <p>
+                    <span class="lc en">🔬 AI is scanning your leaf photo...</span>
+                    <span class="lc hi">🔬 AI तुम्हारे पत्ते की फोटो स्कैन कर रहा है...</span>
+                    <span class="lc mr">🔬 AI तुमच्या पानाचा फोटो स्कॅन करत आहे...</span>
+                </p>
+            </div>
+
+            <button class="btn-analyze" id="analyzeBtn" onclick="analyze()">
+                <i class="fas fa-microscope"></i>
+                <span class="lc en">Detect Pest / Disease</span>
+                <span class="lc hi">कीट / रोग पहचानें</span>
+                <span class="lc mr">किडे / रोग ओळखा</span>
+            </button>
+
+        </div>
+    </div>
+
+    <!-- ── RESULT SECTION ── -->
+    <div class="result-outer" id="resultOuter">
+
+        <!-- Status hero -->
+        <div class="status-hero" id="statusHero">
+            <div class="sh-emoji" id="shEmoji">🔍</div>
+            <div>
+                <div class="sh-badge" id="shBadge">—</div>
+                <div class="sh-crop" id="shCrop">—</div>
+                <div class="sh-conf" id="shConf">
+                    <i class="fas fa-chart-bar"></i>
+                    <span id="shConfVal">—</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Result card with tabs -->
+        <div class="card">
+            <div class="card-strip green"></div>
+            <div class="card-body">
+
+                <!-- Tabs -->
+                <div class="result-tabs">
+                    <button class="rtab active" id="tab-mr" onclick="switchTab('mr')">मराठी</button>
+                    <button class="rtab" id="tab-hi" onclick="switchTab('hi')">हिंदी</button>
+                    <button class="rtab" id="tab-en" onclick="switchTab('en')">English</button>
+                </div>
+
+                <!-- Marathi Panel -->
+                <div class="rpanel active" id="panel-mr">
+                    <div class="result-row">
+                        <div class="row-label">🌿 स्थिती</div>
+                        <div class="row-text" id="mr-status">—</div>
+                    </div>
+                    <div class="result-row red-border">
+                        <div class="row-label">💊 उपाय / फवारणी</div>
+                        <div class="row-text" id="mr-spray">—</div>
+                    </div>
+                    <div class="result-row yellow-border">
+                        <div class="row-label">📌 शिफारस</div>
+                        <div class="row-text" id="mr-rec">—</div>
+                    </div>
+                </div>
+
+                <!-- Hindi Panel -->
+                <div class="rpanel" id="panel-hi">
+                    <div class="result-row">
+                        <div class="row-label">🌿 स्थिति</div>
+                        <div class="row-text" id="hi-status">—</div>
+                    </div>
+                    <div class="result-row red-border">
+                        <div class="row-label">💊 उपाय / छिड़काव</div>
+                        <div class="row-text" id="hi-spray">—</div>
+                    </div>
+                    <div class="result-row yellow-border">
+                        <div class="row-label">📌 सिफारिश</div>
+                        <div class="row-text" id="hi-rec">—</div>
+                    </div>
+                </div>
+
+                <!-- English Panel -->
+                <div class="rpanel" id="panel-en">
+                    <div class="result-row">
+                        <div class="row-label">🌿 Status</div>
+                        <div class="row-text" id="en-status">—</div>
+                    </div>
+                    <div class="result-row red-border">
+                        <div class="row-label">💊 Solution / Spray</div>
+                        <div class="row-text" id="en-spray">—</div>
+                    </div>
+                    <div class="result-row yellow-border">
+                        <div class="row-label">📌 Recommendation</div>
+                        <div class="row-text" id="en-rec">—</div>
+                    </div>
+                </div>
+
+                <!-- Confidence -->
+                <div class="conf-block">
+                    <div class="conf-label">
+                        📊 <span class="lc en">AI Confidence Score</span>
+                        <span class="lc hi">AI विश्वास स्कोर</span>
+                        <span class="lc mr">AI आत्मविश्वास स्कोर</span>
+                    </div>
+                    <div class="conf-bar"><div class="conf-fill" id="confFill"></div></div>
+                    <div class="conf-val" id="confVal">—</div>
+                </div>
+
+                <!-- Actions -->
+                <div class="action-row">
+                    <button class="btn-voice" onclick="speakResult()">
+                        <i class="fas fa-volume-up"></i>
+                        <span class="lc en">Listen Voice</span>
+                        <span class="lc hi">आवाज सुनें</span>
+                        <span class="lc mr">आवाज ऐका</span>
+                    </button>
+                    <button class="btn-save" onclick="saveResult()">
+                        <i class="fas fa-save"></i>
+                        <span class="lc en">Save Result</span>
+                        <span class="lc hi">परिणाम सेव करें</span>
+                        <span class="lc mr">निकाल सेव करा</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Retry -->
+        <div style="text-align:center">
+            <button class="btn-retry" onclick="resetForm()">
+                <i class="fas fa-redo"></i>
+                <span class="lc en">Analyze Another Photo</span>
+                <span class="lc hi">दूसरी फोटो विश्लेषण करें</span>
+                <span class="lc mr">दुसरा फोटो विश्लेषण करा</span>
+            </button>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    const API_URL = 'https://shetimitra-backend-production.up.railway.app/';
+    let lang = localStorage.getItem('language') || 'en';
+    let currentResult = null;
+    let selectedCrop = '';
+    let activeTab = 'mr';
+
+    /* ── Language ── */
+    function switchLanguage(l) {
+        lang = l;
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('btn-' + l).classList.add('active');
+        document.querySelectorAll('.lc').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.lc.' + l).forEach(el => {
+            el.style.display = el.classList.contains('blk') ? 'block' : 'inline';
+        });
+        const titles = { en:'Pest Detection | AgriSet.AI', hi:'कीट पहचान | AgriSet.AI', mr:'किडे ओळख | AgriSet.AI' };
+        document.title = titles[l];
+        localStorage.setItem('language', l);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        ['en','hi','mr'].forEach(l =>
+            document.getElementById('btn-' + l).addEventListener('click', () => switchLanguage(l))
+        );
+        switchLanguage(lang);
+        // Default tab matches lang
+        if (['mr','hi','en'].includes(lang)) switchTab(lang);
+    });
+
+    /* ── Crop select ── */
+    function selectCrop(el) {
+        document.querySelectorAll('.crop-opt').forEach(o => o.classList.remove('selected'));
+        el.classList.add('selected');
+        selectedCrop = el.getAttribute('data-val');
+        document.getElementById('cropSelect').value = selectedCrop;
+        setStep(2);
+    }
+
+    /* ── Steps ── */
+    function setStep(active) {
+        ['step1','step2','step3','step4'].forEach((id, i) => {
+            const el = document.getElementById(id);
+            el.classList.remove('active','done');
+            if (i < active) el.classList.add('done');
+            else if (i === active) el.classList.add('active');
+        });
+    }
+
+    /* ── File ── */
+    function onFileSelect(input) {
+        const file = input.files[0];
+        if (!file) return;
+
+        // Validation
+        if (file.size > 5 * 1024 * 1024) {
+            showError(g('फाइल 5MB पेक्षा कमी असावी','फाइल 5MB से कम होनी चाहिए','File must be less than 5MB'));
+            input.value = ''; return;
+        }
+        if (!['image/jpeg','image/jpg','image/png'].includes(file.type)) {
+            showError(g('केवळ JPG/PNG फाइल्स','केवल JPG/PNG फाइलें','Only JPG/PNG files allowed'));
+            input.value = ''; return;
+        }
+
+        const zone = document.getElementById('uploadZone');
+        zone.classList.add('has-file');
+        const fn = document.getElementById('fileName');
+        fn.textContent = '✅ ' + file.name;
+        fn.style.display = 'block';
+
+        const pr = document.getElementById('imgPreview');
+        const reader = new FileReader();
+        reader.onload = e => { pr.src = e.target.result; pr.style.display = 'block'; };
+        reader.readAsDataURL(file);
+
+        if (selectedCrop) setStep(3);
+    }
+
+    function showError(msg) {
+        const eb = document.getElementById('errorBox');
+        eb.innerHTML = '<i class="fas fa-exclamation-triangle"></i> ' + msg;
+        eb.style.display = 'block';
+        setTimeout(() => eb.style.display = 'none', 5000);
+    }
+
+    function g(mr, hi, en) { return lang === 'mr' ? mr : lang === 'hi' ? hi : en; }
+
+    /* ── Analyze ── */
+    async function analyze() {
+        if (!selectedCrop) {
+            showError(g('कृपया पीक निवडा 🌾','कृपया फसल चुनें 🌾','Please select a crop 🌾')); return;
+        }
+        const input = document.getElementById('photoInput');
+        if (!input.files.length) {
+            showError(g('कृपया पानाचा फोटो अपलोड करा 📷','कृपया पत्ते की फोटो अपलोड करें 📷','Please upload a leaf photo 📷')); return;
+        }
+
+        const btn = document.getElementById('analyzeBtn');
+        const orig = btn.innerHTML;
+        btn.innerHTML = '<span class="spin"></span>&nbsp;' + g('विश्लेषण चालू...','विश्लेषण जारी...','Analyzing...');
+        btn.disabled = true;
+        document.getElementById('loadingBox').style.display = 'block';
+        document.getElementById('resultOuter').style.display = 'none';
+        document.getElementById('errorBox').style.display = 'none';
+        setStep(3);
+
+        const fd = new FormData();
+        fd.append('photo', input.files[0]);
+        fd.append('crop', selectedCrop);
+
+        try {
+            const res = await fetch(`${API_URL}/disease-ai`, { method:'POST', body:fd });
+            const data = await res.json();
+            document.getElementById('loadingBox').style.display = 'none';
+            btn.innerHTML = orig; btn.disabled = false;
+
+            if (data.error) { showError(data.error); return; }
+            currentResult = data;
+            showResults(data);
+            setStep(4);
+            document.getElementById('resultOuter').scrollIntoView({ behavior:'smooth', block:'start' });
+
+        } catch(e) {
+            document.getElementById('loadingBox').style.display = 'none';
+            btn.innerHTML = orig; btn.disabled = false;
+            showError(g('सर्व्हर कनेक्शन त्रुटी ⚠️','सर्वर कनेक्शन त्रुटि ⚠️','Server connection error ⚠️'));
+        }
+    }
+
+    /* ── Show Results ── */
+    const cropLabels = {
+        maize:     { en:'Maize', hi:'मक्का', mr:'मका' },
+        cotton:    { en:'Cotton', hi:'कपास', mr:'कापूस' },
+        chickpea:  { en:'Chickpea', hi:'चना', mr:'हरभरा' },
+        groundnut: { en:'Groundnut', hi:'मूंगफली', mr:'भुईमूग' },
+        moong:     { en:'Moong', hi:'मूंग', mr:'मूग' },
+        tur:       { en:'Pigeon Pea', hi:'अरहर', mr:'तूर' }
+    };
+
+    function showResults(data) {
+        const status = data.status;
+        const hero = document.getElementById('statusHero');
+        const badge = document.getElementById('shBadge');
+        const crop  = document.getElementById('shCrop');
+        const conf  = document.getElementById('shConfVal');
+
+        // Hero class & emoji
+        hero.className = 'status-hero ' + (status === 'healthy' ? 'healthy' : status === 'diseased' ? 'diseased' : 'uncertain');
+        const emojis = { healthy:'✅', diseased:'🚨', uncertain:'❓' };
+        document.getElementById('shEmoji').textContent = emojis[status] || '🔍';
+
+        // Badge text
+        const badgeText = {
+            healthy:   { en:'✅ Healthy', hi:'✅ स्वस्थ', mr:'✅ निरोगी' },
+            diseased:  { en:'🚨 Disease Detected', hi:'🚨 रोग पकड़ा', mr:'🚨 रोग ओळखला' },
+            uncertain: { en:'❓ Uncertain', hi:'❓ अनिश्चित', mr:'❓ अनिश्चित' }
+        };
+        badge.textContent = (badgeText[status] || badgeText.uncertain)[lang];
+
+        // Crop label
+        const cl = cropLabels[selectedCrop] || {};
+        crop.textContent = (cl[lang] || selectedCrop) + ' ' + g('पीक','फसल','Crop');
+
+        // Confidence
+        const pct = data.confidence || 0;
+        conf.textContent = g('आत्मविश्वास','विश्वास','Confidence') + ': ' + pct + '%';
+        document.getElementById('confFill').style.width = pct + '%';
+        document.getElementById('confVal').textContent = pct + '%';
+
+        // Fill panels
+        const rec = getRecommendation(status);
+        document.getElementById('mr-status').textContent = data.mr?.text || data.mr || 'माहिती उपलब्ध नाही';
+        document.getElementById('mr-spray').textContent  = data.mr?.spray || 'अद्याप उपाय उपलब्ध नाही';
+        document.getElementById('mr-rec').textContent    = rec.mr;
+
+        document.getElementById('hi-status').textContent = data.hi?.text || data.hi || 'जानकारी उपलब्ध नहीं';
+        document.getElementById('hi-spray').textContent  = data.hi?.spray || 'अभी समाधान उपलब्ध नहीं';
+        document.getElementById('hi-rec').textContent    = rec.hi;
+
+        document.getElementById('en-status').textContent = data.en?.text || data.en || 'Information not available';
+        document.getElementById('en-spray').textContent  = data.en?.spray || 'Solution not available yet';
+        document.getElementById('en-rec').textContent    = rec.en;
+
+        // Show result
+        document.getElementById('resultOuter').style.display = 'block';
+
+        // Auto-switch tab to user's language
+        switchTab(lang);
+    }
+
+    function getRecommendation(status) {
+        const recs = {
+            healthy:   { mr:'पिकाची नियमित पाहणी करत राहा, कोणतीही फवारणी गरज नाही', hi:'फसल की नियमित जांच करते रहें, कोई छिड़काव जरूरी नहीं', en:'Keep monitoring regularly, no spraying required' },
+            diseased:  { mr:'वरील उपाय लगेच लागू करा आणि पिकाची नियमित देखभाल करा', hi:'उपरोक्त उपाय तुरंत लागू करें और नियमित देखभाल करें', en:'Apply the solution immediately and maintain regular crop care' },
+            uncertain: { mr:'पुन्हा स्पष्ट फोटो घ्या किंवा शेती तज्ञांचा सल्ला घ्या', hi:'फिर से साफ फोटो लें या कृषि विशेषज्ञ से सलाह लें', en:'Take a clearer photo or consult an agricultural expert' }
+        };
+        return recs[status] || recs.uncertain;
+    }
+
+    /* ── Tabs ── */
+    function switchTab(t) {
+        activeTab = t;
+        ['mr','hi','en'].forEach(id => {
+            document.getElementById('tab-' + id).classList.toggle('active', id === t);
+            document.getElementById('panel-' + id).classList.toggle('active', id === t);
+        });
+    }
+
+    /* ── Voice ── */
+    function speakResult() {
+        if (!currentResult) return;
+        const langMap = { mr:'mr-IN', hi:'hi-IN', en:'en-IN' };
+        let text = '';
+        const s = currentResult.status;
+        if (s === 'healthy') {
+            text = g('तुमचे पिक निरोगी आहे. कोणतीही फवारणी गरज नाही. नियमित पाहणी करत राहा.','आपकी फसल स्वस्थ है। कोई छिड़काव जरूरी नहीं। नियमित जांच करते रहें।','Your crop is healthy. No spraying required. Keep monitoring regularly.');
+        } else if (s === 'diseased') {
+            const spray = lang === 'mr' ? currentResult.mr?.spray : lang === 'hi' ? currentResult.hi?.spray : currentResult.en?.spray;
+            text = g(`तुमच्या पिकावर रोग आहे. उपाय: ${spray || ''}`, `आपकी फसल पर रोग है। उपाय: ${spray || ''}`, `Your crop has disease. Solution: ${spray || ''}`);
+        } else {
+            text = g('फोटो स्पष्ट नाही. कृपया पुन्हा स्पष्ट फोटो घ्या.','फोटो स्पष्ट नहीं है। कृपया फिर से साफ फोटो लें।','Image not clear. Please take a clearer photo.');
+        }
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = langMap[lang] || 'en-IN';
+        u.rate = 0.88; u.pitch = 1;
+        window.speechSynthesis.speak(u);
+    }
+
+    /* ── Save ── */
+    function saveResult() {
+        if (!currentResult) return;
+        const now = new Date();
+        const ts = now.toISOString().split('T')[0] + ' ' + now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+        const saved = JSON.parse(localStorage.getItem('pestDetectionResults') || '[]');
+        saved.push({ ...currentResult, timestamp: ts, crop: selectedCrop, lang });
+        if (saved.length > 50) saved.shift();
+        localStorage.setItem('pestDetectionResults', JSON.stringify(saved));
+        alert(g('✅ निकाल सेव केला! डॅशबोर्डवर इतिहास बघू शकता.','✅ परिणाम सेव किया! डैशबोर्ड पर इतिहास देख सकते हैं.','✅ Result saved! View history on dashboard.'));
+    }
+
+    /* ── Reset ── */
+    function resetForm() {
+        document.getElementById('photoInput').value = '';
+        document.getElementById('imgPreview').style.display = 'none';
+        document.getElementById('fileName').style.display = 'none';
+        document.getElementById('uploadZone').classList.remove('has-file');
+        document.querySelectorAll('.crop-opt').forEach(o => o.classList.remove('selected'));
+        selectedCrop = '';
+        currentResult = null;
+        document.getElementById('resultOuter').style.display = 'none';
+        setStep(0);
+        document.getElementById('formCard').scrollIntoView({ behavior:'smooth' });
+    }
+</script>
+
+</body>
+</html>

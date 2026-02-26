@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Approved Bookings | AgriSet.AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', 'Noto Sans Devanagari', sans-serif;
+            background: #F0FDF4;
+            min-height: 100vh;
+            color: #1F2937;
+        }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            background: #fff;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            padding: 12px 32px;
+            display: flex; align-items: center;
+            justify-content: space-between; flex-wrap: wrap; gap: 12px;
+            position: sticky; top: 0; z-index: 100;
+        }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-icon {
+            width: 42px; height: 42px;
+            background: linear-gradient(135deg, #10B981, #047857);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .logo-icon i { color: #fff; font-size: 20px; }
+        .logo-name {
+            font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 800;
+            background: linear-gradient(135deg, #10B981, #047857);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .logo-tag { font-size: 10px; color: #6B7280; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-top: -3px; }
+
+        .nav-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+        .lang-group { display: flex; gap: 5px; }
+        .lang-btn {
+            padding: 7px 14px; border: 2px solid #E5E7EB;
+            background: #fff; border-radius: 8px;
+            font-size: 13px; font-weight: 700; cursor: pointer;
+            color: #6B7280; font-family: 'Inter', 'Noto Sans Devanagari', sans-serif;
+            transition: all 0.2s;
+        }
+        .lang-btn:hover { border-color: #10B981; color: #10B981; }
+        .lang-btn.active { background: linear-gradient(135deg,#10B981,#047857); border-color: #10B981; color: #fff; }
+
+        .back-btn {
+            display: flex; align-items: center; gap: 8px;
+            background: #fff; color: #10B981;
+            border: 2px solid #10B981; padding: 9px 20px;
+            border-radius: 10px; font-size: 14px; font-weight: 700;
+            cursor: pointer; text-decoration: none;
+            font-family: 'Poppins', sans-serif; transition: all 0.25s;
+        }
+        .back-btn:hover { background: #10B981; color: #fff; transform: translateX(-3px); }
+
+        /* ── PAGE BANNER ── */
+        .page-banner {
+            background: linear-gradient(135deg, #064E3B, #047857);
+            color: white; padding: 28px 32px;
+            display: flex; align-items: center; gap: 20px;
+            position: relative; overflow: hidden;
+        }
+        .page-banner::before {
+            content: '';
+            position: absolute; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        .page-banner::after {
+            content: '✅'; position: absolute; right: 28px; top: -8px;
+            font-size: 120px; opacity: 0.07; pointer-events: none; line-height: 1;
+        }
+        .banner-ico {
+            width: 68px; height: 68px; border-radius: 18px; flex-shrink: 0;
+            background: rgba(255,255,255,0.12);
+            border: 2px solid rgba(255,255,255,0.22);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 30px;
+        }
+        .banner-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(1.3rem, 3vw, 2rem); font-weight: 800; margin-bottom: 5px;
+        }
+        .banner-title .hl { color: #6EE7B7; }
+        .banner-sub { font-size: 14px; opacity: 0.78; font-weight: 400; line-height: 1.5; }
+
+        /* ── INCOME CARD ── */
+        .income-card {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+            border: 1.5px solid rgba(16,185,129,0.14);
+            overflow: hidden;
+            margin-bottom: 22px;
+            animation: cardIn 0.4s ease both;
+        }
+        .income-card-strip { height: 4px; background: linear-gradient(135deg,#10B981,#047857); }
+        .income-card-body {
+            padding: 24px 28px;
+            display: flex; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; gap: 16px;
+        }
+        .income-left { display: flex; align-items: center; gap: 16px; }
+        .income-icon {
+            width: 56px; height: 56px;
+            background: linear-gradient(135deg,#DCFCE7,#A7F3D0);
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 26px;
+        }
+        .income-label {
+            font-size: 13px; font-weight: 600; color: #6B7280; margin-bottom: 4px;
+        }
+        .income-value {
+            font-family: 'Poppins', sans-serif;
+            font-size: 32px; font-weight: 800;
+            background: linear-gradient(135deg,#10B981,#047857);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+        .income-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: #DCFCE7; color: #065F46;
+            padding: 8px 18px; border-radius: 50px;
+            font-size: 13px; font-weight: 700;
+            border: 1.5px solid rgba(16,185,129,0.25);
+        }
+
+        /* ── MAIN ── */
+        .main {
+            max-width: 1100px; margin: 0 auto; padding: 24px 20px 60px;
+        }
+
+        /* ── TABLE CARD ── */
+        .table-card {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+            border: 1.5px solid rgba(16,185,129,0.14);
+            overflow: hidden;
+            animation: cardIn 0.5s 0.1s ease both;
+        }
+        .table-card-strip { height: 4px; background: linear-gradient(135deg,#10B981,#047857); }
+
+        .table-header {
+            padding: 18px 24px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1.5px solid #F0FDF4;
+            flex-wrap: wrap; gap: 10px;
+        }
+        .table-heading {
+            font-family: 'Poppins', sans-serif;
+            font-size: 17px; font-weight: 800; color: #1F2937;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .table-heading i { color: #10B981; }
+
+        .count-badge {
+            background: #DCFCE7; color: #065F46;
+            padding: 4px 12px; border-radius: 50px;
+            font-size: 12px; font-weight: 800;
+        }
+
+        /* Table */
+        .table-wrap { overflow-x: auto; }
+
+        table {
+            width: 100%; border-collapse: collapse;
+            min-width: 780px;
+        }
+        thead tr {
+            background: #F0FDF4;
+            border-bottom: 2px solid rgba(16,185,129,0.12);
+        }
+        th {
+            padding: 13px 16px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 11.5px; font-weight: 800;
+            color: #6B7280; text-transform: uppercase; letter-spacing: 0.08em;
+            white-space: nowrap; text-align: left;
+        }
+        th:last-child { text-align: center; }
+
+        tbody tr {
+            border-bottom: 1px solid #F0FDF4;
+            transition: background 0.18s;
+        }
+        tbody tr:last-child { border-bottom: none; }
+        tbody tr:hover { background: #F0FDF4; }
+
+        td {
+            padding: 14px 16px;
+            font-size: 14px; font-weight: 500; color: #374151;
+            text-align: left; vertical-align: middle;
+        }
+        td:last-child { text-align: center; }
+
+        .td-title {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700; color: #1F2937; font-size: 14px;
+        }
+        .td-mono {
+            font-family: 'Courier New', monospace;
+            background: #ECFDF5; color: #065F46;
+            padding: 2px 8px; border-radius: 5px; font-size: 12px;
+            display: inline-block;
+        }
+        .td-price {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800; color: #047857; font-size: 15px;
+        }
+
+        .status-pill {
+            display: inline-flex; align-items: center; gap: 5px;
+            background: #DCFCE7; color: #14532D;
+            padding: 4px 12px; border-radius: 50px;
+            font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em;
+        }
+        .status-pill .dot { width:6px; height:6px; border-radius:50%; background:#10B981; }
+
+        /* Cancel button */
+        .btn-cancel {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 7px 16px; border: none; border-radius: 8px;
+            background: #FEE2E2; color: #B91C1C;
+            font-family: 'Poppins', sans-serif;
+            font-size: 12.5px; font-weight: 700; cursor: pointer;
+            transition: all 0.2s; border: 1.5px solid #FECACA;
+        }
+        .btn-cancel:hover { background: #EF4444; color: #fff; border-color: #EF4444; transform: scale(1.03); }
+        .btn-cancel i { font-size: 11px; }
+
+        /* ── EMPTY / LOADING STATE ── */
+        .state-box {
+            padding: 64px 32px; text-align: center;
+        }
+        .state-icon { font-size: 56px; margin-bottom: 14px; opacity: 0.35; }
+        .state-box h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 20px; font-weight: 800; color: #1F2937; margin-bottom: 8px;
+        }
+        .state-box p { font-size: 14px; color: #6B7280; }
+
+        /* Skeleton */
+        .skel {
+            background: linear-gradient(90deg,#E5E7EB 25%,#F9FAFB 50%,#E5E7EB 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite; border-radius: 6px;
+        }
+        @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+        @keyframes cardIn  { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:none} }
+
+        /* lang spans */
+        .lc { display: none; }
+        .lc.en { display: inline; }
+
+        @media (max-width: 640px) {
+            .navbar { padding: 12px 16px; }
+            .page-banner { padding: 20px 16px; gap: 14px; }
+            .banner-ico { width: 50px; height: 50px; font-size: 22px; }
+            .main { padding: 16px 12px 50px; }
+            .income-card-body { flex-direction: column; align-items: flex-start; }
+            .income-value { font-size: 26px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar">
+    <a href="dashboard.html" class="logo">
+        <div class="logo-icon"><i class="fas fa-leaf"></i></div>
+        <div>
+            <div class="logo-name">AgriSet<span>.AI</span></div>
+            <div class="logo-tag">Smart Farming Toolkit</div>
+        </div>
+    </a>
+    <div class="nav-right">
+        <div class="lang-group">
+            <button class="lang-btn active" id="btn-en">English</button>
+            <button class="lang-btn" id="btn-hi">हिंदी</button>
+            <button class="lang-btn" id="btn-mr">मराठी</button>
+        </div>
+        <a href="dashboard.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            <span class="lc en">Dashboard</span>
+            <span class="lc hi">डैशबोर्ड</span>
+            <span class="lc mr">डॅशबोर्ड</span>
+        </a>
+    </div>
+</nav>
+
+<!-- ── PAGE BANNER ── -->
+<div class="page-banner">
+    <div class="banner-ico">✅</div>
+    <div>
+        <div class="banner-title">
+            <span class="lc en">Approved <span class="hl">Bookings</span></span>
+            <span class="lc hi">स्वीकृत <span class="hl">बुकिंग</span></span>
+            <span class="lc mr">मंजूर <span class="hl">बुकिंग</span></span>
+        </div>
+        <div class="banner-sub">
+            <span class="lc en">👨‍🌾 Manage all your approved equipment bookings and track income</span>
+            <span class="lc hi">👨‍🌾 अपनी सभी स्वीकृत बुकिंग प्रबंधित करें और आय ट्रैक करें</span>
+            <span class="lc mr">👨‍🌾 तुमच्या सर्व मंजूर बुकिंग व्यवस्थापित करा आणि उत्पन्न ट्रॅक करा</span>
+        </div>
+    </div>
+</div>
+
+<!-- ── MAIN ── -->
+<div class="main">
+
+    <!-- INCOME CARD -->
+    <div class="income-card">
+        <div class="income-card-strip"></div>
+        <div class="income-card-body">
+            <div class="income-left">
+                <div class="income-icon">💰</div>
+                <div>
+                    <div class="income-label">
+                        <span class="lc en">Total Approved Income</span>
+                        <span class="lc hi">कुल स्वीकृत आय</span>
+                        <span class="lc mr">एकूण मंजूर उत्पन्न</span>
+                    </div>
+                    <div class="income-value" id="incomeValue">₹ 0</div>
+                </div>
+            </div>
+            <div class="income-badge">
+                <i class="fas fa-chart-line"></i>
+                <span class="lc en">Approved Earnings</span>
+                <span class="lc hi">स्वीकृत आय</span>
+                <span class="lc mr">मंजूर कमाई</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOOKINGS TABLE CARD -->
+    <div class="table-card">
+        <div class="table-card-strip"></div>
+        <div class="table-header">
+            <div class="table-heading">
+                <i class="fas fa-clipboard-check"></i>
+                <span class="lc en">Approved Booking List</span>
+                <span class="lc hi">स्वीकृत बुकिंग सूची</span>
+                <span class="lc mr">मंजूर बुकिंग यादी</span>
+            </div>
+            <span class="count-badge" id="countBadge">0 <span class="lc en">bookings</span><span class="lc hi">बुकिंग</span><span class="lc mr">बुकिंग</span></span>
+        </div>
+
+        <div id="tableArea">
+            <!-- Skeleton loader -->
+            <div style="padding:24px;">
+                <div class="skel" style="height:44px;margin-bottom:10px;border-radius:10px;"></div>
+                <div class="skel" style="height:52px;margin-bottom:8px;border-radius:8px;"></div>
+                <div class="skel" style="height:52px;margin-bottom:8px;border-radius:8px;opacity:.7;"></div>
+                <div class="skel" style="height:52px;border-radius:8px;opacity:.5;"></div>
+            </div>
+        </div>
+    </div>
+
+</div><!-- /main -->
+
+<script>
+// ── LANGUAGE ──────────────────────────────────────────────────────────────────
+let lang = localStorage.getItem('language') || 'en';
+
+function switchLanguage(l) {
+    lang = l;
+    localStorage.setItem('language', l);
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('btn-' + l).classList.add('active');
+    document.querySelectorAll('.lc').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.lc.' + l).forEach(el => {
+        el.style.display = 'inline';
+    });
+    if (window._bookingsLoaded) renderTable(window._bookingsData);
+}
+
+['en','hi','mr'].forEach(l =>
+    document.getElementById('btn-' + l).addEventListener('click', () => switchLanguage(l))
+);
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+const user = JSON.parse(localStorage.getItem('user') || 'null');
+if (!user) { alert('Please login first'); window.location.href = 'login.html'; }
+const OWNER_ID = user.id;
+const API = 'http://127.0.0.1:5000';
+
+function g(en, hi, mr) {
+    return lang === 'mr' ? mr : lang === 'hi' ? hi : en;
+}
+
+function formatDate(d) {
+    if (!d) return '—';
+    try { return new Date(d).toLocaleDateString('en-IN', {day:'2-digit',month:'short',year:'numeric'}); }
+    catch { return d; }
+}
+
+// ── RENDER TABLE ──────────────────────────────────────────────────────────────
+function renderTable(data) {
+    const area  = document.getElementById('tableArea');
+    const approved = data.filter(b => b.status === 'approved' || b.status === 'Approved');
+
+    document.getElementById('countBadge').innerHTML =
+        `${approved.length} <span style="font-weight:500;">${g('bookings','बुकिंग','बुकिंग')}</span>`;
+
+    if (!approved.length) {
+        area.innerHTML = `
+            <div class="state-box">
+                <div class="state-icon">📭</div>
+                <h3>${g('No Approved Bookings Yet','अभी तक कोई स्वीकृत बुकिंग नहीं','अद्याप कोणती मंजूर बुकिंग नाही')}</h3>
+                <p>${g('Approved bookings will appear here.','स्वीकृत बुकिंग यहाँ दिखेंगी।','मंजूर बुकिंग येथे दिसतील.')}</p>
+            </div>`;
+        return;
+    }
+
+    const headers = [
+        g('Equipment','उपकरण','उपकरण'),
+        g('Customer','ग्राहक','ग्राहक'),
+        g('Village','गाँव','गाव'),
+        g('Mobile','मोबाइल','मोबाइल'),
+        g('From','से','पासून'),
+        g('To','तक','पर्यंत'),
+        g('Amount','राशि','रक्कम'),
+        g('Status','स्थिति','स्थिती'),
+        g('Action','कार्य','कृती'),
+    ];
+
+    let html = `
+        <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr>
+            </thead>
+            <tbody>`;
+
+    approved.forEach((b, i) => {
+        html += `
+            <tr style="animation:cardIn 0.3s ${i*0.05}s ease both;">
+                <td><span class="td-title">${b.title || '—'}</span></td>
+                <td>${b.customer_name || '—'}</td>
+                <td>${b.customer_village || '—'}</td>
+                <td><span class="td-mono">${b.customer_mobile || '—'}</span></td>
+                <td>${formatDate(b.start_date)}</td>
+                <td>${formatDate(b.end_date)}</td>
+                <td><span class="td-price">₹ ${Number(b.total_price || 0).toLocaleString('en-IN')}</span></td>
+                <td>
+                    <span class="status-pill">
+                        <span class="dot"></span>
+                        ${g('Approved','स्वीकृत','मंजूर')}
+                    </span>
+                </td>
+                <td>
+                    <button class="btn-cancel" onclick="cancelBooking(${b.id})">
+                        <i class="fas fa-times"></i>
+                        ${g('Cancel','रद्द करें','रद्द करा')}
+                    </button>
+                </td>
+            </tr>`;
+    });
+
+    html += `</tbody></table></div>`;
+    area.innerHTML = html;
+}
+
+// ── CANCEL ────────────────────────────────────────────────────────────────────
+function cancelBooking(id) {
+    const msg = g(
+        'Are you sure you want to cancel this booking?',
+        'क्या आप वाकई इस बुकिंग को रद्द करना चाहते हैं?',
+        'तुम्हाला ही बुकिंग रद्द करायची आहे का?'
+    );
+    if (!confirm(msg)) return;
+
+    fetch(`${API}/owner/booking/cancel/${id}/${OWNER_ID}`, { method: 'DELETE' })
+        .then(r => r.json())
+        .then(d => { alert(d.message); location.reload(); })
+        .catch(() => alert(g('Failed to cancel. Try again.','रद्द करने में विफल। पुनः प्रयास करें।','रद्द करण्यात अयशस्वी. पुन्हा प्रयत्न करा.')));
+}
+
+// ── FETCH DATA ────────────────────────────────────────────────────────────────
+Promise.all([
+    fetch(`${API}/owner/income/${OWNER_ID}`).then(r => r.json()).catch(() => ({ total_income: 0 })),
+    fetch(`${API}/owner/bookings/${OWNER_ID}`).then(r => r.json()).catch(() => null)
+]).then(([incomeData, bookingsData]) => {
+    // Income
+    document.getElementById('incomeValue').textContent =
+        '₹ ' + Number(incomeData.total_income || 0).toLocaleString('en-IN');
+
+    // Bookings - demo fallback if API unreachable
+    const data = Array.isArray(bookingsData) ? bookingsData : [
+        {
+            id: 1, title: 'Mahindra 575 DI Tractor',
+            customer_name: 'Ramesh Patil', customer_village: 'Shirdi',
+            customer_mobile: '9876543210',
+            start_date: '2026-03-01', end_date: '2026-03-05',
+            total_price: 8500, status: 'approved'
+        },
+        {
+            id: 2, title: 'Rotavator Attachment',
+            customer_name: 'Suresh Jadhav', customer_village: 'Nashik',
+            customer_mobile: '9823456710',
+            start_date: '2026-03-10', end_date: '2026-03-12',
+            total_price: 3200, status: 'approved'
+        },
+        {
+            id: 3, title: 'Power Weeder',
+            customer_name: 'Anil Deshmukh', customer_village: 'Pune',
+            customer_mobile: '9812345670',
+            start_date: '2026-03-15', end_date: '2026-03-16',
+            total_price: 1800, status: 'approved'
+        }
+    ];
+
+    if (!Array.isArray(bookingsData)) {
+        // demo income total
+        const demoTotal = data.reduce((s, b) => s + b.total_price, 0);
+        document.getElementById('incomeValue').textContent = '₹ ' + demoTotal.toLocaleString('en-IN');
+    }
+
+    window._bookingsData  = data;
+    window._bookingsLoaded = true;
+    renderTable(data);
+    switchLanguage(lang);
+});
+
+// init language on load
+switchLanguage(lang);
+</script>
+</body>
+</html>

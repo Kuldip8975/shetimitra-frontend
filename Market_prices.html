@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Market Prices | AgriSet.AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter','Noto Sans Devanagari',sans-serif; background:#F0FDF4; min-height:100vh; color:#1F2937; }
+
+        /* ── NAVBAR ── */
+        .navbar { background:#fff; box-shadow:0 1px 4px rgba(0,0,0,0.08); padding:12px 32px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; position:sticky; top:0; z-index:100; }
+        .logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
+        .logo-icon { width:42px; height:42px; background:linear-gradient(135deg,#10B981,#047857); border-radius:12px; display:flex; align-items:center; justify-content:center; }
+        .logo-icon i { color:#fff; font-size:20px; }
+        .logo-name { font-family:'Poppins',sans-serif; font-size:22px; font-weight:800; background:linear-gradient(135deg,#10B981,#047857); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+        .logo-tag { font-size:10px; color:#6B7280; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; margin-top:-3px; }
+        .nav-right { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+        .lang-group { display:flex; gap:5px; }
+        .lang-btn { padding:7px 14px; border:2px solid #E5E7EB; background:#fff; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; color:#6B7280; font-family:'Inter','Noto Sans Devanagari',sans-serif; transition:all 0.2s; }
+        .lang-btn:hover { border-color:#10B981; color:#10B981; }
+        .lang-btn.active { background:linear-gradient(135deg,#10B981,#047857); border-color:#10B981; color:#fff; }
+        .back-btn { display:flex; align-items:center; gap:8px; background:#fff; color:#10B981; border:2px solid #10B981; padding:9px 20px; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; text-decoration:none; font-family:'Poppins',sans-serif; transition:all 0.25s; }
+        .back-btn:hover { background:#10B981; color:#fff; transform:translateX(-3px); }
+
+        /* ── BANNER ── */
+        .page-banner { background:linear-gradient(135deg,#064E3B,#047857); color:white; padding:28px 32px; display:flex; align-items:center; gap:20px; position:relative; overflow:hidden; }
+        .page-banner::before { content:''; position:absolute; inset:0; background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
+        .page-banner::after { content:'📊'; position:absolute; right:28px; top:-8px; font-size:120px; opacity:0.07; pointer-events:none; line-height:1; }
+        .banner-ico { width:68px; height:68px; border-radius:18px; flex-shrink:0; background:rgba(255,255,255,0.12); border:2px solid rgba(255,255,255,0.22); display:flex; align-items:center; justify-content:center; font-size:30px; }
+        .banner-title { font-family:'Poppins',sans-serif; font-size:clamp(1.3rem,3vw,2rem); font-weight:800; margin-bottom:5px; }
+        .banner-title .hl { color:#6EE7B7; }
+        .banner-sub { font-size:14px; opacity:0.78; font-weight:400; line-height:1.5; }
+
+        /* ── MAIN ── */
+        .main { max-width:1150px; margin:0 auto; padding:26px 20px 60px; }
+
+        /* ── MSP ALERT BANNER ── */
+        .msp-alert-banner {
+            background:linear-gradient(135deg,#7F1D1D,#991B1B);
+            border-radius:16px; padding:18px 22px;
+            display:flex; align-items:center; gap:16px;
+            margin-bottom:18px; box-shadow:0 4px 20px rgba(239,68,68,0.25);
+            animation:cardIn 0.4s ease both; position:relative; overflow:hidden;
+        }
+        .msp-alert-banner::before {
+            content:'⚠️'; position:absolute; right:16px; top:-6px;
+            font-size:90px; opacity:0.08; pointer-events:none;
+        }
+        .msp-alert-icon { font-size:32px; flex-shrink:0; }
+        .msp-alert-text h4 { color:#FCA5A5; font-family:'Poppins',sans-serif; font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px; }
+        .msp-alert-text p { color:#FEE2E2; font-size:14px; line-height:1.5; }
+        .msp-alert-text strong { color:#fff; }
+        .msp-alert-banner.hidden { display:none; }
+
+        /* ── MSP INFO BAR ── */
+        .msp-info-bar {
+            background:linear-gradient(135deg,#ECFDF5,#D1FAE5);
+            border:1.5px solid rgba(16,185,129,0.25); border-radius:14px;
+            padding:14px 18px; margin-bottom:18px;
+            display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+            animation:cardIn 0.4s ease both;
+        }
+        .msp-info-bar i { color:#047857; font-size:18px; flex-shrink:0; }
+        .msp-info-bar p { font-size:13px; color:#065F46; font-weight:500; flex:1; line-height:1.45; }
+        .msp-info-bar strong { font-weight:800; }
+
+        /* ── CARD ── */
+        .card { background:#fff; border-radius:20px; box-shadow:0 4px 20px rgba(0,0,0,0.07); border:1.5px solid rgba(16,185,129,0.14); overflow:hidden; margin-bottom:22px; animation:cardIn 0.4s ease both; }
+        .card-strip { height:4px; background:linear-gradient(135deg,#10B981,#047857); }
+        .card-body { padding:22px 24px; }
+        .card-heading { font-family:'Poppins',sans-serif; font-size:16px; font-weight:800; color:#1F2937; display:flex; align-items:center; gap:8px; margin-bottom:18px; }
+        .card-heading i { color:#10B981; }
+
+        /* ── FILTER ── */
+        .filter-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:14px; align-items:end; }
+        .form-group { display:flex; flex-direction:column; gap:6px; }
+        .form-label { font-size:11.5px; font-weight:700; color:#6B7280; text-transform:uppercase; letter-spacing:0.08em; }
+        .form-select, .form-input { width:100%; padding:10px 14px; border:2px solid #E5E7EB; border-radius:10px; font-family:'Inter','Noto Sans Devanagari',sans-serif; font-size:14px; font-weight:500; color:#1F2937; background:#fff; appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%236B7280' viewBox='0 0 20 20'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center; background-size:18px; transition:border-color 0.2s,box-shadow 0.2s; cursor:pointer; }
+        .form-input { background-image:none; cursor:text; }
+        .form-select:focus,.form-input:focus { outline:none; border-color:#10B981; box-shadow:0 0 0 3px rgba(16,185,129,0.12); }
+        .btn-search { width:100%; padding:11px 20px; background:linear-gradient(135deg,#10B981,#047857); color:#fff; border:none; border-radius:10px; font-family:'Poppins',sans-serif; font-size:14px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 14px rgba(16,185,129,0.3); transition:all 0.25s; }
+        .btn-search:hover:not(:disabled) { transform:translateY(-1px); box-shadow:0 6px 20px rgba(16,185,129,0.4); }
+        .btn-search:disabled { opacity:0.65; cursor:not-allowed; transform:none; }
+
+        /* ── STATUS BAR ── */
+        .status-bar { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:16px; }
+        .status-left { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+        .date-badge { display:inline-flex; align-items:center; gap:7px; background:#DCFCE7; color:#065F46; padding:7px 16px; border-radius:50px; font-size:13px; font-weight:700; border:1.5px solid rgba(16,185,129,0.22); }
+        .live-tag { display:inline-flex; align-items:center; gap:5px; padding:5px 12px; border-radius:20px; font-size:11.5px; font-weight:800; letter-spacing:0.05em; }
+        .live-tag.live { background:#DCFCE7; color:#065F46; border:1.5px solid rgba(16,185,129,0.3); }
+        .live-tag.demo { background:#FEF3C7; color:#92400E; border:1.5px solid rgba(245,158,11,0.3); }
+        .result-count { font-size:13px; font-weight:600; color:#6B7280; }
+        .result-count span { color:#047857; font-weight:800; }
+
+        /* ── MSP SUMMARY STRIP ── */
+        .msp-summary-strip {
+            display:flex; flex-wrap:wrap; gap:10px; margin-bottom:14px;
+        }
+        .msp-sum-chip {
+            display:inline-flex; align-items:center; gap:6px;
+            padding:6px 14px; border-radius:50px; font-size:12.5px; font-weight:700;
+            border:1.5px solid;
+        }
+        .msp-sum-chip.danger  { background:#FEF2F2; color:#B91C1C; border-color:rgba(239,68,68,0.3); }
+        .msp-sum-chip.safe    { background:#ECFDF5; color:#065F46; border-color:rgba(16,185,129,0.3); }
+        .msp-sum-chip.nomsp   { background:#F9FAFB; color:#6B7280; border-color:#E5E7EB; }
+
+        /* ── TABLE ── */
+        .table-header { padding:16px 24px; display:flex; align-items:center; justify-content:space-between; border-bottom:1.5px solid #F0FDF4; flex-wrap:wrap; gap:10px; }
+        .table-heading { font-family:'Poppins',sans-serif; font-size:16px; font-weight:800; color:#1F2937; display:flex; align-items:center; gap:8px; }
+        .table-heading i { color:#10B981; }
+        .btn-export { background:#fff; color:#10B981; border:2px solid #10B981; padding:7px 16px; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; font-family:'Poppins',sans-serif; display:inline-flex; align-items:center; gap:6px; transition:all 0.2s; }
+        .btn-export:hover { background:#10B981; color:#fff; }
+        .table-wrap { overflow-x:auto; }
+        table { width:100%; border-collapse:collapse; min-width:860px; }
+        thead tr { background:#F0FDF4; border-bottom:2px solid rgba(16,185,129,0.12); }
+        th { padding:12px 14px; font-family:'Poppins',sans-serif; font-size:11px; font-weight:800; color:#6B7280; text-transform:uppercase; letter-spacing:0.08em; text-align:left; white-space:nowrap; }
+        th.msp-col { color:#B45309; background:#FFFBEB; }
+        tbody tr { border-bottom:1px solid #F0FDF4; transition:background 0.15s; }
+        tbody tr:last-child { border-bottom:none; }
+        tbody tr:hover { background:#F9FAFB; }
+        tbody tr.row-danger { background:#FFF5F5; }
+        tbody tr.row-danger:hover { background:#FEE2E2; }
+        tbody tr.row-safe { background:#F0FDF4; }
+        td { padding:12px 14px; font-size:14px; font-weight:500; color:#374151; vertical-align:middle; }
+        .td-commodity { font-family:'Poppins',sans-serif; font-weight:700; color:#1F2937; font-size:14px; }
+        .td-market { color:#047857; font-weight:600; font-size:13px; }
+        .td-district { color:#6B7280; font-size:12px; }
+        .td-variety { background:#F0FDF4; color:#065F46; padding:2px 8px; border-radius:5px; font-size:12px; font-weight:600; display:inline-block; }
+        .price-min { color:#DC2626; font-weight:700; }
+        .price-max { color:#059669; font-weight:700; }
+        .price-modal { font-family:'Poppins',sans-serif; font-weight:800; color:#047857; font-size:16px; }
+        .price-unit { font-size:11px; color:#9CA3AF; font-weight:500; display:block; }
+        .arrival-badge { background:#EFF6FF; color:#1D4ED8; padding:3px 10px; border-radius:20px; font-size:12px; font-weight:700; display:inline-block; }
+
+        /* ── MSP COLUMN ── */
+        .msp-cell { display:flex; flex-direction:column; gap:3px; }
+        .msp-price { font-family:'Poppins',sans-serif; font-weight:800; font-size:14px; color:#92400E; }
+        .msp-diff-badge {
+            display:inline-flex; align-items:center; gap:4px;
+            padding:3px 8px; border-radius:20px;
+            font-size:11px; font-weight:800; white-space:nowrap;
+        }
+        .msp-diff-badge.below { background:#FEE2E2; color:#B91C1C; }
+        .msp-diff-badge.above { background:#DCFCE7; color:#065F46; }
+        .msp-diff-badge.equal { background:#DBEAFE; color:#1E40AF; }
+        .msp-na { color:#D1D5DB; font-size:13px; font-style:italic; }
+
+        /* ── WARNING ROW ── */
+        .warn-cell { vertical-align:middle; }
+        .warn-icon { font-size:18px; }
+        .safe-icon { font-size:16px; }
+
+        /* ── EMPTY/SKELETON ── */
+        .state-box { padding:64px 32px; text-align:center; }
+        .state-icon { font-size:56px; margin-bottom:14px; opacity:0.35; }
+        .state-box h3 { font-family:'Poppins',sans-serif; font-size:20px; font-weight:800; color:#1F2937; margin-bottom:8px; }
+        .state-box p { font-size:14px; color:#6B7280; }
+        .skel { background:linear-gradient(90deg,#E5E7EB 25%,#F9FAFB 50%,#E5E7EB 75%); background-size:200% 100%; animation:shimmer 1.4s infinite; border-radius:8px; }
+        @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+        @keyframes cardIn { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:none} }
+        .spin { display:inline-block; width:16px; height:16px; border:2.5px solid rgba(255,255,255,0.35); border-top-color:#fff; border-radius:50%; animation:sp 0.8s linear infinite; }
+        @keyframes sp { to{transform:rotate(360deg)} }
+
+        /* pagination */
+        .pagination { display:flex; align-items:center; justify-content:center; gap:8px; padding:18px; flex-wrap:wrap; }
+        .page-btn { padding:7px 14px; border:2px solid #E5E7EB; border-radius:8px; background:#fff; font-size:13px; font-weight:700; color:#6B7280; cursor:pointer; transition:all 0.18s; }
+        .page-btn:hover { border-color:#10B981; color:#10B981; }
+        .page-btn.active { background:linear-gradient(135deg,#10B981,#047857); color:#fff; border-color:#10B981; }
+        .page-btn:disabled { opacity:0.4; cursor:not-allowed; }
+
+        .lc { display:none; }
+        .lc.en { display:inline; }
+
+        @media (max-width:640px) {
+            .navbar { padding:12px 16px; }
+            .page-banner { padding:20px 16px; gap:14px; }
+            .banner-ico { width:50px; height:50px; font-size:22px; }
+            .main { padding:16px 12px 50px; }
+            .card-body { padding:18px 16px; }
+            .filter-grid { grid-template-columns:1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar">
+    <a href="dashboard.html" class="logo">
+        <div class="logo-icon"><i class="fas fa-leaf"></i></div>
+        <div>
+            <div class="logo-name">AgriSet<span>.AI</span></div>
+            <div class="logo-tag">Smart Farming Toolkit</div>
+        </div>
+    </a>
+    <div class="nav-right">
+        <div class="lang-group">
+            <button class="lang-btn active" id="btn-en">English</button>
+            <button class="lang-btn" id="btn-hi">हिंदी</button>
+            <button class="lang-btn" id="btn-mr">मराठी</button>
+        </div>
+        <a href="dashboard.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            <span class="lc en">Dashboard</span>
+            <span class="lc hi">डैशबोर्ड</span>
+            <span class="lc mr">डॅशबोर्ड</span>
+        </a>
+    </div>
+</nav>
+
+<!-- ── BANNER ── -->
+<div class="page-banner">
+    <div class="banner-ico">📊</div>
+    <div>
+        <div class="banner-title">
+            <span class="lc en">Maharashtra <span class="hl">Market Prices</span></span>
+            <span class="lc hi">महाराष्ट्र <span class="hl">बाजार भाव</span></span>
+            <span class="lc mr">महाराष्ट्र <span class="hl">बाजार भाव</span></span>
+        </div>
+        <div class="banner-sub">
+            <span class="lc en">🌾 Live APMC mandi rates + Government MSP protection alerts — all 36 districts</span>
+            <span class="lc hi">🌾 लाइव APMC मंडी दरें + सरकारी MSP सुरक्षा अलर्ट — 36 जिले</span>
+            <span class="lc mr">🌾 थेट APMC मंडी दर + सरकारी MSP संरक्षण अलर्ट — 36 जिल्हे</span>
+        </div>
+    </div>
+</div>
+
+<!-- ── MAIN ── -->
+<div class="main">
+
+    <!-- MSP EXPLAINER -->
+    <div class="msp-info-bar">
+        <i class="fas fa-shield-halved"></i>
+        <p>
+            <strong class="lc en">What is MSP?</strong>
+            <strong class="lc hi">MSP क्या है?</strong>
+            <strong class="lc mr">MSP म्हणजे काय?</strong>
+            <span class="lc en"> Minimum Support Price is the government's guaranteed price. If mandi rate is BELOW MSP, you may be losing money. Check PACS/NAFED procurement in your district.</span>
+            <span class="lc hi"> न्यूनतम समर्थन मूल्य सरकार की गारंटी कीमत है। अगर मंडी दर MSP से कम है, तो आपको नुकसान हो सकता है। अपने जिले में PACS/NAFED खरीद जांचें।</span>
+            <span class="lc mr"> किमान आधारभूत किंमत ही सरकारची हमीभाव आहे. मंडी दर MSP पेक्षा कमी असल्यास नुकसान होऊ शकते. जिल्ह्यातील PACS/NAFED खरेदी तपासा.</span>
+        </p>
+    </div>
+
+    <!-- FILTER CARD -->
+    <div class="card">
+        <div class="card-strip"></div>
+        <div class="card-body">
+            <div class="card-heading">
+                <i class="fas fa-filter"></i>
+                <span class="lc en">Search Mandi Rates</span>
+                <span class="lc hi">मंडी दर खोजें</span>
+                <span class="lc mr">मंडी दर शोधा</span>
+            </div>
+            <div class="filter-grid">
+                <div class="form-group">
+                    <label class="form-label">
+                        <span class="lc en">District</span><span class="lc hi">जिला</span><span class="lc mr">जिल्हा</span>
+                    </label>
+                    <select class="form-select" id="selDistrict" onchange="onDistrictChange()">
+                        <option value="">— Select District —</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">
+                        <span class="lc en">Market / Taluka</span><span class="lc hi">बाजार / तालुका</span><span class="lc mr">बाजार / तालुका</span>
+                    </label>
+                    <select class="form-select" id="selTaluka">
+                        <option value="">— All Markets —</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">
+                        <span class="lc en">Commodity</span><span class="lc hi">जिन्स</span><span class="lc mr">जिन्स</span>
+                    </label>
+                    <select class="form-select" id="selCommodity">
+                        <option value="">— All Commodities —</option>
+                        <option value="Onion">Onion / कांदा</option>
+                        <option value="Tomato">Tomato / टोमॅटो</option>
+                        <option value="Potato">Potato / बटाटा</option>
+                        <option value="Soyabean">Soyabean / सोयाबीन</option>
+                        <option value="Cotton">Cotton / कापूस</option>
+                        <option value="Wheat">Wheat / गहू</option>
+                        <option value="Rice">Rice / तांदूळ</option>
+                        <option value="Tur Dal">Tur Dal / तूर डाळ</option>
+                        <option value="Gram">Gram / हरभरा</option>
+                        <option value="Jowar">Jowar / ज्वारी</option>
+                        <option value="Bajra">Bajra / बाजरी</option>
+                        <option value="Maize">Maize / मका</option>
+                        <option value="Groundnut">Groundnut / भुईमूग</option>
+                        <option value="Banana">Banana / केळी</option>
+                        <option value="Grapes">Grapes / द्राक्षे</option>
+                        <option value="Pomegranate">Pomegranate / डाळिंब</option>
+                        <option value="Mango">Mango / आंबा</option>
+                        <option value="Cabbage">Cabbage / कोबी</option>
+                        <option value="Cauliflower">Cauliflower / फुलकोबी</option>
+                        <option value="Sugarcane">Sugarcane / ऊस</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">
+                        <span class="lc en">Date</span><span class="lc hi">तारीख</span><span class="lc mr">तारीख</span>
+                    </label>
+                    <input type="date" class="form-input" id="selDate">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" style="visibility:hidden;">—</label>
+                    <button class="btn-search" id="btnSearch" onclick="fetchPrices()">
+                        <i class="fas fa-search"></i>
+                        <span class="lc en">Get Live Prices</span>
+                        <span class="lc hi">लाइव भाव देखें</span>
+                        <span class="lc mr">थेट भाव पहा</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div id="resultsArea">
+        <div class="card">
+            <div class="card-strip"></div>
+            <div class="state-box">
+                <div class="state-icon">🌾</div>
+                <h3>
+                    <span class="lc en">Select a District to View Prices + MSP Alerts</span>
+                    <span class="lc hi">भाव + MSP अलर्ट देखने के लिए जिला चुनें</span>
+                    <span class="lc mr">भाव + MSP अलर्ट पाहण्यासाठी जिल्हा निवडा</span>
+                </h3>
+                <p>
+                    <span class="lc en">Live AGMARKNET data with government MSP comparison — know if you're selling below the guaranteed price.</span>
+                    <span class="lc hi">सरकारी MSP तुलना के साथ लाइव डेटा — जानें कि आप हमी कीमत से नीचे बेच रहे हैं या नहीं।</span>
+                    <span class="lc mr">सरकारी MSP तुलनेसह थेट डेटा — आपण हमीभावापेक्षा कमी किंमतीत विकत आहात का ते जाणून घ्या.</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+// ── CONFIG ────────────────────────────────────────────────────────────────────
+const API_KEY     = '579b464db66ec23bdd000001c6e57940a787402f55fe56b0d4b5e398';
+const RESOURCE_ID = '9ef84268-d588-465a-a308-a864a43d0070';
+const PAGE_SIZE   = 20;
+
+let lang        = localStorage.getItem('language') || 'en';
+let currentPage = 1;
+let allRows     = [];
+
+// ── OFFICIAL GOVT MSP 2024-25 / 2025-26 ₹ per Quintal ────────────────────────
+// Sources: PIB.gov.in, CACP official announcements
+// Kharif 2025-26, Rabi 2025-26
+const MSP_DATA = {
+    // Kharif crops (₹/quintal) — 2025-26
+    "rice":        2369,  // Paddy common 2300 → milled rice equiv
+    "paddy":       2300,
+    "jowar":       3371,
+    "bajra":       2625,
+    "maize":       2225,
+    "tur dal":     8000,  // Tur/Arhar 2025-26
+    "arhar":       8000,
+    "moong":       8682,
+    "urad":        7400,
+    "groundnut":   6783,
+    "soyabean":    4892,  // 2024-25 official
+    "cotton":      7121,  // Cotton medium staple 2024-25
+    // Rabi crops (₹/quintal) — 2025-26
+    "wheat":       2425,
+    "gram":        5650,
+    "masur":       6700,
+    "lentil":      6700,
+    "rapeseed":    5950,
+    "mustard":     5950,
+    "safflower":   5940,
+    "barley":      1980,
+    // Commercial
+    "sugarcane":   340,   // FRP per quintal
+};
+
+// Lookup function — fuzzy match on commodity name
+function getMSP(name) {
+    if (!name) return null;
+    const k = name.toLowerCase().trim();
+    for (const [key, val] of Object.entries(MSP_DATA)) {
+        if (k.includes(key) || key.includes(k)) return val;
+    }
+    return null;
+}
+
+// ── LANGUAGE ──────────────────────────────────────────────────────────────────
+function switchLanguage(l) {
+    lang = l;
+    localStorage.setItem('language', l);
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('btn-' + l).classList.add('active');
+    document.querySelectorAll('.lc').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.lc.' + l).forEach(el => el.style.display = 'inline');
+}
+['en','hi','mr'].forEach(l =>
+    document.getElementById('btn-' + l).addEventListener('click', () => switchLanguage(l))
+);
+function g(en, hi, mr) { return lang === 'mr' ? mr : lang === 'hi' ? hi : en; }
+
+// ── DISTRICTS ─────────────────────────────────────────────────────────────────
+const MH_DATA = {
+    "Ahmednagar":["Ahmednagar","Akole","Jamkhed","Karjat","Kopargaon","Nevasa","Parner","Pathardi","Rahata","Rahuri","Sangamner","Shevgaon","Shrigonda","Shrirampur"],
+    "Akola":["Akola","Akot","Balapur","Barshitakli","Murtizapur","Patur","Telhara"],
+    "Amravati":["Amravati","Achalpur","Anjangaon Surji","Chandur Bazar","Chandur Railway","Chikhaldara","Daryapur","Dhamangaon Railway","Morshi","Nandgaon Khandeshwar","Teosa","Warud"],
+    "Aurangabad":["Aurangabad","Gangapur","Kannad","Khuldabad","Paithan","Phulambri","Silod","Soegaon","Vaijapur"],
+    "Beed":["Beed","Ambejogai","Ashti","Dharur","Georai","Kaij","Manjlegaon","Parli","Patoda","Shirur Kasar","Wadwani"],
+    "Bhandara":["Bhandara","Lakhani","Lakhandur","Mohadi","Pauni","Sakoli","Tumsar"],
+    "Buldhana":["Buldhana","Chikhli","Deulgaon Raja","Jalgaon Jamod","Khamgaon","Lonar","Malkapur","Mehkar","Motala","Nandura","Sangrampur","Shegaon","Sindkhed Raja"],
+    "Chandrapur":["Chandrapur","Ballarpur","Bhadravati","Brahmapuri","Chimur","Gondpipri","Mul","Nagbhid","Rajura","Warora"],
+    "Dhule":["Dhule","Sakri","Shirpur","Sindkheda"],
+    "Gadchiroli":["Gadchiroli","Aheri","Armori","Bhamragad","Chamorshi","Dhanora","Etapalli","Korchi","Kurkheda","Mulchera","Sironcha"],
+    "Gondia":["Gondia","Amgaon","Arjuni Morgaon","Deori","Goregaon","Salekasa","Sadak Arjuni","Tirora"],
+    "Hingoli":["Hingoli","Aundha Nagnath","Basmath","Kalamnuri","Sengaon"],
+    "Jalgaon":["Jalgaon","Amalner","Bhadgaon","Bhusawal","Bodwad","Chalisgaon","Chopda","Dharangaon","Erandol","Jamner","Muktainagar","Pachora","Parola","Raver","Yawal"],
+    "Jalna":["Jalna","Ambad","Badnapur","Bhokardan","Ghansawangi","Jafarabad","Mantha","Partur"],
+    "Kolhapur":["Kolhapur","Ajra","Bavda","Bhudargad","Chandgad","Gadhinglaj","Hatkanangle","Kagal","Karveer","Panhala","Radhanagari","Shahuwadi","Shirol"],
+    "Latur":["Latur","Ahmadpur","Ausa","Chakur","Deoni","Jalkot","Nilanga","Renapur","Shirur Anantpal","Udgir"],
+    "Mumbai City":["Colaba","Bandra","Andheri","Kurla","Borivali","Malad","Govandi"],
+    "Mumbai Suburban":["Andheri","Borivali","Bandra","Kurla","Mulund","Vikhroli"],
+    "Nagpur":["Nagpur","Bhiwapur","Hingna","Kalameshwar","Kamptee","Katol","Kuhi","Mauda","Narkhed","Parseoni","Ramtek","Savner","Umred"],
+    "Nanded":["Nanded","Ardhapur","Bhokar","Biloli","Deglur","Dharmabad","Hadgaon","Himayatnagar","Kandhar","Kinwat","Loha","Mahur","Mudkhed","Mukhed","Naigaon","Umri"],
+    "Nandurbar":["Nandurbar","Akkalkuwa","Akrani","Nawapur","Shahada","Taloda"],
+    "Nashik":["Nashik","Baglan","Chandwad","Deola","Dindori","Igatpuri","Kalwan","Malegaon","Nandgaon","Niphad","Peint","Sinnar","Surgana","Trimbakeshwar","Yeola"],
+    "Osmanabad":["Osmanabad","Bhum","Kalamb","Lohara","Paranda","Tuljapur","Umarga","Washi"],
+    "Palghar":["Palghar","Dahanu","Jawhar","Mokhada","Talasari","Vasai","Vikramgad","Wada"],
+    "Parbhani":["Parbhani","Gangakhed","Jintur","Manwath","Palam","Pathri","Purna","Sailu","Sonpeth"],
+    "Pune":["Pune","Ambegaon","Baramati","Bhor","Daund","Haveli","Indapur","Junnar","Khed","Maval","Mulshi","Purandar","Shirur","Velhe"],
+    "Raigad":["Alibag","Karjat","Khalapur","Mahad","Mangaon","Murud","Panvel","Pen","Poladpur","Roha","Shrivardhan","Tala","Uran"],
+    "Ratnagiri":["Ratnagiri","Chiplun","Dapoli","Guhagar","Khed","Lanja","Mandangad","Rajapur","Sangameshwar"],
+    "Sangli":["Sangli","Atpadi","Jat","Kadegaon","Kavathemahankal","Khanapur","Miraj","Palus","Shirala","Tasgaon","Walwa"],
+    "Satara":["Satara","Jaoli","Karad","Khandala","Khatav","Koregaon","Mahabaleshwar","Man","Patan","Phaltan","Wai"],
+    "Sindhudurg":["Sindhudurg","Deogad","Dodamarg","Kankavli","Kudal","Malvan","Sawantwadi","Vaibhavwadi","Vengurla"],
+    "Solapur":["Solapur","Akkalkot","Barshi","Karmala","Madha","Malshiras","Mangalvedha","Mohol","Pandharpur","Sangola","South Solapur","North Solapur"],
+    "Thane":["Thane","Ambarnath","Bhiwandi","Kalyan","Murbad","Shahapur","Ulhasnagar","Vasai"],
+    "Wardha":["Wardha","Arvi","Ashti","Deoli","Hinganghat","Karanja","Samudrapur","Seloo","Sindi"],
+    "Washim":["Washim","Karanja","Malegaon","Mangrulpir","Manora","Risod"],
+    "Yavatmal":["Yavatmal","Arni","Babhulgaon","Darwha","Digras","Ghatanji","Kalamb","Kelapur","Mahagaon","Maregaon","Ner","Pusad","Ralegaon","Umarkhed","Wani","Zari Jamni"]
+};
+
+const EMOJI = {
+    onion:'🧅',tomato:'🍅',potato:'🥔',soyabean:'🌱',soybean:'🌱',
+    cotton:'🌿',wheat:'🌾',rice:'🍚','tur dal':'🫘',gram:'🫘',
+    jowar:'🌾',bajra:'🌾',maize:'🌽',groundnut:'🥜',banana:'🍌',
+    grapes:'🍇',pomegranate:'🍎',mango:'🥭',cabbage:'🥬',
+    cauliflower:'🥦',sugarcane:'🎋',default:'🌾'
+};
+function getEmoji(name) {
+    const k = (name||'').toLowerCase();
+    for (const [key,val] of Object.entries(EMOJI)) if (k.includes(key)) return val;
+    return EMOJI.default;
+}
+
+// populate districts
+const selDistrict = document.getElementById('selDistrict');
+Object.keys(MH_DATA).sort().forEach(d => {
+    const o = document.createElement('option');
+    o.value = d; o.textContent = d; selDistrict.appendChild(o);
+});
+function onDistrictChange() {
+    const d = selDistrict.value;
+    const sel = document.getElementById('selTaluka');
+    sel.innerHTML = `<option value="">— ${g('All Markets','सभी बाजार','सर्व बाजार')} —</option>`;
+    (MH_DATA[d]||[]).forEach(t => {
+        const o = document.createElement('option');
+        o.value = t; o.textContent = t; sel.appendChild(o);
+    });
+}
+
+document.getElementById('selDate').value = new Date().toISOString().split('T')[0];
+const todayStr = new Date().toISOString().split('T')[0];
+
+// ── DEMO DATA ─────────────────────────────────────────────────────────────────
+const PRICE_RANGES = {
+    "Onion":[800,3500],"Tomato":[400,2800],"Soyabean":[3200,5600],
+    "Cotton":[5000,8000],"Wheat":[1900,2600],"Rice":[2000,3500],
+    "Tur Dal":[6000,9500],"Gram":[4500,6200],"Jowar":[2200,3800],
+    "Potato":[600,2000],"Banana":[1200,2800],"Pomegranate":[3000,6500],
+    "Grapes":[2000,5000],"Maize":[1600,2500],"Bajra":[1800,2800],
+    "Groundnut":[4500,7200],"Sugarcane":[280,380],"Mango":[2000,8000],
+    "Cabbage":[300,1200],"Cauliflower":[400,1800]
+};
+function rand(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
+function makeDemoRows(district, taluka, commodity) {
+    const markets = taluka ? [taluka] : (MH_DATA[district]||[]).slice(0,6);
+    const comms   = commodity ? [commodity] : Object.keys(PRICE_RANGES).slice(0,10);
+    const rows = [];
+    markets.forEach(mkt => {
+        comms.forEach(comm => {
+            const r  = PRICE_RANGES[comm]||[1000,4000];
+            const mn = rand(r[0], r[0]+(r[1]-r[0])*0.4);
+            const mx = rand(mn+200, r[1]);
+            const mod= rand(mn+100, mx-50);
+            rows.push({ commodity:comm, market:mkt, district, variety:'FAQ', min_price:mn, max_price:mx, modal_price:mod, arrivals:rand(5,500)+' MT', date:todayStr, live:false });
+        });
+    });
+    return rows;
+}
+
+// ── FETCH ─────────────────────────────────────────────────────────────────────
+async function fetchPrices() {
+    const district  = document.getElementById('selDistrict').value;
+    const taluka    = document.getElementById('selTaluka').value;
+    const commodity = document.getElementById('selCommodity').value;
+    const dateStr   = document.getElementById('selDate').value;
+    if (!district) { alert(g('Please select a district!','कृपया जिला चुनें!','कृपया जिल्हा निवडा!')); return; }
+
+    const btn = document.getElementById('btnSearch');
+    btn.innerHTML = `<span class="spin"></span>&nbsp;${g('Fetching...','लोड हो रहा है...','लोड होत आहे...')}`;
+    btn.disabled = true;
+    showSkeleton();
+
+    let rows = [], isLive = false;
+    try {
+        let url = `https://api.data.gov.in/resource/${RESOURCE_ID}?api-key=${API_KEY}&format=json&limit=100`;
+        url += `&filters[State.keyword]=Maharashtra`;
+        if (district)  url += `&filters[District.keyword]=${encodeURIComponent(district)}`;
+        if (taluka)    url += `&filters[Market.keyword]=${encodeURIComponent(taluka)}`;
+        if (commodity) url += `&filters[Commodity.keyword]=${encodeURIComponent(commodity)}`;
+        if (dateStr) {
+            const d = new Date(dateStr);
+            const fmt = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+            url += `&filters[Arrival_Date]=${fmt}`;
+        }
+        const res  = await fetch(url);
+        const json = await res.json();
+        if (json.records && json.records.length > 0) {
+            rows = json.records.map(r => ({
+                commodity:   r.Commodity   || r.commodity   || '—',
+                market:      r.Market      || r.market      || '—',
+                district:    r.District    || r.district    || district,
+                variety:     r.Variety     || r.variety     || 'FAQ',
+                min_price:   Number(r.Min_Price   || r.min_price   || 0),
+                max_price:   Number(r.Max_Price   || r.max_price   || 0),
+                modal_price: Number(r.Modal_Price || r.modal_price || 0),
+                arrivals:    r.Arrivals || r.arrivals || '—',
+                date:        r.Arrival_Date || r.arrival_date || dateStr,
+                live: true
+            }));
+            isLive = true;
+        } else {
+            rows = makeDemoRows(district, taluka, commodity);
+        }
+    } catch(e) {
+        rows = makeDemoRows(district, taluka, commodity);
+    }
+    allRows = rows; currentPage = 1;
+    renderResults(rows, district, taluka, commodity, dateStr, isLive);
+    btn.innerHTML = `<i class="fas fa-search"></i> ${g('Get Live Prices','लाइव भाव देखें','थेट भाव पहा')}`;
+    btn.disabled = false;
+}
+
+function showSkeleton() {
+    document.getElementById('resultsArea').innerHTML = `
+        <div class="card"><div class="card-strip"></div><div style="padding:24px;">
+            <div class="skel" style="height:36px;margin-bottom:14px;border-radius:10px;"></div>
+            ${[...Array(5)].map((_,i)=>`<div class="skel" style="height:50px;margin-bottom:8px;border-radius:8px;opacity:${1-i*0.15}"></div>`).join('')}
+        </div></div>`;
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function renderResults(rows, district, taluka, commodity, dateStr, isLive) {
+    const area = document.getElementById('resultsArea');
+    if (!rows.length) {
+        area.innerHTML = `<div class="card"><div class="card-strip"></div><div class="state-box">
+            <div class="state-icon">📭</div>
+            <h3>${g('No Data Found','डेटा नहीं मिला','डेटा सापडला नाही')}</h3>
+            <p>${g('No prices available. Try a different date or commodity.','कोई भाव उपलब्ध नहीं। अलग तारीख या जिन्स चुनें।','कोणते भाव उपलब्ध नाहीत. वेगळी तारीख निवडा.')}</p>
+        </div></div>`; return;
+    }
+
+    // Compute MSP stats
+    let belowMSP = 0, aboveMSP = 0, noMSP = 0;
+    let worstCrop = null, worstDiff = 0;
+    rows.forEach(r => {
+        const msp = getMSP(r.commodity);
+        if (!msp) { noMSP++; return; }
+        const diff = r.modal_price - msp;
+        if (diff < 0) {
+            belowMSP++;
+            if (Math.abs(diff) > worstDiff) { worstDiff = Math.abs(diff); worstCrop = { name: r.commodity, msp, modal: r.modal_price, market: r.market }; }
+        } else { aboveMSP++; }
+    });
+
+    const total = rows.length;
+    const pages = Math.ceil(total / PAGE_SIZE);
+    const slice = rows.slice((currentPage-1)*PAGE_SIZE, currentPage*PAGE_SIZE);
+
+    const fmtD = dateStr
+        ? new Date(dateStr).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'})
+        : new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+
+    const liveTag = isLive
+        ? `<span class="live-tag live">🟢 LIVE — AGMARKNET</span>`
+        : `<span class="live-tag demo">🔶 ${g('Demo Data','डेमो डेटा','डेमो डेटा')}</span>`;
+
+    // Build MSP alert banner HTML
+    let alertBannerHtml = '';
+    if (belowMSP > 0 && worstCrop) {
+        const lossAmt = worstDiff;
+        alertBannerHtml = `
+        <div class="msp-alert-banner">
+            <div class="msp-alert-icon">🚨</div>
+            <div class="msp-alert-text">
+                <h4>${g('⚠️ MSP Protection Alert','⚠️ MSP सुरक्षा अलर्ट','⚠️ MSP संरक्षण अलर्ट')}</h4>
+                <p>
+                    ${g(
+                        `<strong>${belowMSP} crop${belowMSP>1?'s':''}</strong> in ${district} are trading <strong>BELOW government MSP</strong>.
+                        Worst: <strong>${worstCrop.name}</strong> at ₹${worstCrop.modal.toLocaleString('en-IN')}/qtl vs MSP ₹${worstCrop.msp.toLocaleString('en-IN')}/qtl
+                        — you may be losing <strong>₹${lossAmt.toLocaleString('en-IN')} per quintal</strong>. Check PACS / NAFED procurement in your district.`,
+                        `<strong>${belowMSP} जिन्स</strong> ${district} में सरकारी MSP से <strong>नीचे</strong> बिक रहे हैं।
+                        सबसे बुरा: <strong>${worstCrop.name}</strong> ₹${worstCrop.modal.toLocaleString('en-IN')}/क्विंटल vs MSP ₹${worstCrop.msp.toLocaleString('en-IN')}/क्विंटल
+                        — आपको <strong>₹${lossAmt.toLocaleString('en-IN')} प्रति क्विंटल</strong> का नुकसान हो सकता है। PACS/NAFED खरीद जांचें।`,
+                        `<strong>${belowMSP} जिन्स</strong> ${district} मध्ये सरकारी MSP पेक्षा <strong>कमी</strong> किंमतीत विकले जात आहेत.
+                        सर्वात वाईट: <strong>${worstCrop.name}</strong> ₹${worstCrop.modal.toLocaleString('en-IN')}/क्विंटल vs MSP ₹${worstCrop.msp.toLocaleString('en-IN')}/क्विंटल
+                        — आपले <strong>₹${lossAmt.toLocaleString('en-IN')} प्रति क्विंटल</strong> नुकसान होऊ शकते. जिल्ह्यातील PACS/NAFED खरेदी तपासा.`
+                    )}
+                </p>
+            </div>
+        </div>`;
+    }
+
+    // MSP summary chips
+    let mspSummaryHtml = `<div class="msp-summary-strip">`;
+    if (belowMSP > 0) mspSummaryHtml += `<span class="msp-sum-chip danger">🔴 ${belowMSP} ${g('below MSP','MSP से नीचे','MSP पेक्षा कमी')}</span>`;
+    if (aboveMSP > 0) mspSummaryHtml += `<span class="msp-sum-chip safe">🟢 ${aboveMSP} ${g('above MSP','MSP से ऊपर','MSP पेक्षा जास्त')}</span>`;
+    if (noMSP > 0)    mspSummaryHtml += `<span class="msp-sum-chip nomsp">⚪ ${noMSP} ${g('no MSP data','MSP डेटा नहीं','MSP डेटा नाही')}</span>`;
+    mspSummaryHtml += `</div>`;
+
+    // Table headers
+    const ths = [
+        g('Commodity','जिन्स','जिन्स'),
+        g('Market','बाजार','बाजार'),
+        g('Variety','प्रकार','प्रकार'),
+        g('Min ₹','न्यूनतम ₹','किमान ₹'),
+        g('Max ₹','अधिकतम ₹','जास्त ₹'),
+        g('Modal Price','मॉडल भाव','मोडल भाव'),
+        `<span style="color:#92400E;">🏛️ ${g('Govt MSP','सरकारी MSP','सरकारी MSP')}</span>`,
+        g('Status','स्थिति','स्थिती'),
+        g('Arrivals','आवक','आवक'),
+    ];
+
+    let trs = '';
+    slice.forEach((r, i) => {
+        const em  = getEmoji(r.commodity);
+        const msp = getMSP(r.commodity);
+        const rawDate = r.date || dateStr;
+        let dispDate = rawDate;
+        try {
+            const dp = rawDate.includes('/') ? rawDate.split('/').reverse().join('-') : rawDate;
+            dispDate = new Date(dp).toLocaleDateString('en-IN',{day:'2-digit',month:'short'});
+        } catch(e){}
+
+        // MSP cell
+        let mspCellHtml = '';
+        let rowClass = '';
+        let statusHtml = '';
+
+        if (msp) {
+            const diff   = r.modal_price - msp;
+            const pct    = ((diff / msp) * 100).toFixed(1);
+            const isBelow = diff < 0;
+            const isAbove = diff > 0;
+
+            mspCellHtml = `<div class="msp-cell">
+                <span class="msp-price">₹ ${msp.toLocaleString('en-IN')}</span>
+                <span class="msp-diff-badge ${isBelow ? 'below' : isAbove ? 'above' : 'equal'}">
+                    ${isBelow ? '▼' : isAbove ? '▲' : '='} ₹${Math.abs(diff).toLocaleString('en-IN')} (${Math.abs(pct)}%)
+                </span>
+            </div>`;
+
+            if (isBelow) {
+                rowClass = 'row-danger';
+                statusHtml = `<td class="warn-cell" title="${g('Selling below MSP!','MSP से नीचे बिक रहा है!','MSP पेक्षा कमी किंमतीत विकत आहे!')}">
+                    <span class="warn-icon" title="Below MSP">🔴</span>
+                    <span style="font-size:11px;color:#B91C1C;font-weight:700;margin-left:4px;">${g('BELOW MSP','MSP से कम','MSP पेक्षा कमी')}</span>
+                </td>`;
+            } else {
+                rowClass = 'row-safe';
+                statusHtml = `<td class="warn-cell"><span class="safe-icon">🟢</span><span style="font-size:11px;color:#065F46;font-weight:700;margin-left:4px;">${g('Above MSP','MSP से ऊपर','MSP पेक्षा जास्त')}</span></td>`;
+            }
+        } else {
+            mspCellHtml = `<span class="msp-na">${g('No MSP','MSP नहीं','MSP नाही')}</span>`;
+            statusHtml = `<td><span style="font-size:12px;color:#9CA3AF;">—</span></td>`;
+        }
+
+        trs += `
+        <tr class="${rowClass}" style="animation:cardIn 0.3s ${i*0.04}s ease both;opacity:0;">
+            <td><span class="td-commodity">${em} ${r.commodity}</span></td>
+            <td>
+                <div class="td-market"><i class="fas fa-store" style="font-size:11px;"></i> ${r.market}</div>
+                <div class="td-district"><i class="fas fa-map-marker-alt" style="font-size:10px;"></i> ${r.district}</div>
+            </td>
+            <td><span class="td-variety">${r.variety||'FAQ'}</span></td>
+            <td><span class="price-min">₹ ${Number(r.min_price).toLocaleString('en-IN')}</span></td>
+            <td><span class="price-max">₹ ${Number(r.max_price).toLocaleString('en-IN')}</span></td>
+            <td>
+                <span class="price-modal">₹ ${Number(r.modal_price).toLocaleString('en-IN')}</span>
+                <span class="price-unit">${g('per Quintal','प्रति क्विंटल','प्रति क्विंटल')}</span>
+            </td>
+            <td style="background:rgba(251,191,36,0.05);">${mspCellHtml}</td>
+            ${statusHtml}
+            <td><span class="arrival-badge">${r.arrivals||'—'}</span></td>
+        </tr>`;
+    });
+
+    // Pagination
+    let pgHtml = '';
+    if (pages > 1) {
+        pgHtml = `<div class="pagination">`;
+        pgHtml += `<button class="page-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹ ${g('Prev','पिछला','मागे')}</button>`;
+        for (let p = 1; p <= pages; p++) {
+            if (p===1||p===pages||Math.abs(p-currentPage)<=2) pgHtml += `<button class="page-btn ${p===currentPage?'active':''}" onclick="goPage(${p})">${p}</button>`;
+            else if (Math.abs(p-currentPage)===3) pgHtml += `<span style="color:#9CA3AF;padding:0 4px;">…</span>`;
+        }
+        pgHtml += `<button class="page-btn" onclick="goPage(${currentPage+1})" ${currentPage===pages?'disabled':''}>${g('Next','अगला','पुढे')} ›</button>`;
+        pgHtml += `</div>`;
+    }
+
+    area.innerHTML = `
+    <div>
+        ${alertBannerHtml}
+
+        <div class="status-bar">
+            <div class="status-left">
+                <div class="date-badge"><i class="fas fa-calendar-alt"></i> ${fmtD} &nbsp;·&nbsp; <i class="fas fa-map-marker-alt"></i> ${district}${taluka?' › '+taluka:''}</div>
+                ${liveTag}
+            </div>
+            <div class="result-count"><span>${total}</span> ${g('records','रिकॉर्ड','नोंदी')}</div>
+        </div>
+
+        ${mspSummaryHtml}
+
+        <div class="card">
+            <div class="card-strip"></div>
+            <div class="table-header">
+                <div class="table-heading"><i class="fas fa-chart-bar"></i>
+                    <span class="lc en">APMC Mandi Rates + MSP Alert</span>
+                    <span class="lc hi">APMC मंडी दर + MSP अलर्ट</span>
+                    <span class="lc mr">APMC मंडी दर + MSP अलर्ट</span>
+                </div>
+                <button class="btn-export" onclick="exportCSV()">
+                    <i class="fas fa-download"></i>
+                    <span class="lc en">Export CSV</span>
+                    <span class="lc hi">CSV डाउनलोड</span>
+                    <span class="lc mr">CSV डाउनलोड</span>
+                </button>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            ${ths.map((h,i) => `<th${i===6?' class="msp-col"':''}>${h}</th>`).join('')}
+                        </tr>
+                    </thead>
+                    <tbody>${trs}</tbody>
+                </table>
+            </div>
+            ${pgHtml}
+            <div style="padding:12px 20px;border-top:1px solid #F0FDF4;">
+                <div style="font-size:12px;color:#9CA3AF;line-height:1.6;">
+                    🏛️ <strong style="color:#92400E;">${g('MSP Source:','MSP स्रोत:','MSP स्रोत:')}</strong>
+                    ${g('Govt of India official MSP 2024-25/2025-26 (Kharif & Rabi) — CACP/PIB. Crops without government MSP (vegetables, fruits) show "No MSP".','भारत सरकार आधिकारिक MSP 2024-25/2025-26 — CACP/PIB. जिन जिन्सों पर सरकारी MSP नहीं है (सब्जियां, फल) वे "MSP नहीं" दिखाते हैं।','भारत सरकार अधिकृत MSP 2024-25/2025-26 — CACP/PIB. ज्या जिन्सांवर सरकारी MSP नाही (भाजीपाला, फळे) ते "MSP नाही" दाखवतात.')}
+                    &nbsp;|&nbsp; ${g('🔴 Red rows = selling below government guaranteed price.','🔴 लाल पंक्तियाँ = सरकारी हमी कीमत से नीचे बेचना।','🔴 लाल ओळी = सरकारी हमीभावापेक्षा कमी किंमतीत विक्री.')}
+                </div>
+            </div>
+            ${!isLive ? `<div style="padding:10px 20px;border-top:1px solid #F0FDF4;">
+                <div style="background:#FEF3C7;border:1.5px solid rgba(245,158,11,0.3);border-radius:10px;padding:10px 14px;font-size:13px;color:#78350F;font-weight:500;">
+                    <i class="fas fa-circle-info" style="color:#F59E0B;"></i>
+                    ${g(' Demo data shown — live API returned no records for this date. Try yesterday\'s date for real AGMARKNET data.',' डेमो डेटा दिखाया गया है। कल की तारीख आजमाएं।',' डेमो डेटा दाखवत आहे. काल\'ची तारीख वापरा.')}
+                </div>
+            </div>` : ''}
+        </div>
+    </div>`;
+
+    switchLanguage(lang);
+    window._lastRows = rows;
+    window._lastMeta = { district, taluka, dateStr };
+}
+
+function goPage(p) {
+    if (p < 1 || p > Math.ceil(allRows.length / PAGE_SIZE)) return;
+    currentPage = p;
+    const d = document.getElementById('selDistrict').value;
+    const t = document.getElementById('selTaluka').value;
+    const c = document.getElementById('selCommodity').value;
+    const dt= document.getElementById('selDate').value;
+    renderResults(allRows, d, t, c, dt, allRows[0]?.live || false);
+    document.getElementById('resultsArea').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function exportCSV() {
+    const rows = window._lastRows || [];
+    if (!rows.length) return;
+    const hdr = ['Commodity','Market','District','Variety','Min_Price','Max_Price','Modal_Price','Govt_MSP','MSP_Diff','Arrivals','Date'];
+    const csv = [hdr.join(',')]
+        .concat(rows.map(r => {
+            const msp = getMSP(r.commodity) || '';
+            const diff = msp ? (r.modal_price - msp) : '';
+            return [r.commodity,r.market,r.district,r.variety,r.min_price,r.max_price,r.modal_price,msp,diff,r.arrivals,r.date].join(',');
+        }))
+        .join('\n');
+    const m = window._lastMeta || {};
+    const a = document.createElement('a');
+    a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+    a.download = `mandi_msp_${m.district||'MH'}_${m.dateStr||todayStr}.csv`;
+    a.click();
+}
+
+switchLanguage(lang);
+</script>
+</body>
+</html>

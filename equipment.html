@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Equipment Marketplace | AgriSet.AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #F0FDF4; min-height: 100vh; color: #1F2937; }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            padding: 12px 32px; display: flex; align-items: center;
+            justify-content: space-between; flex-wrap: wrap; gap: 12px;
+            position: sticky; top: 0; z-index: 100;
+        }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-icon { width: 42px; height: 42px; background: linear-gradient(135deg,#10B981,#047857); border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+        .logo-icon i { color: #fff; font-size: 20px; }
+        .logo-name { font-family: 'Poppins',sans-serif; font-size: 22px; font-weight: 800; background: linear-gradient(135deg,#10B981,#047857); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .logo-tag { font-size: 10px; color: #6B7280; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-top: -3px; }
+        .nav-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .lang-group { display: flex; gap: 5px; }
+        .lang-btn { padding: 7px 14px; border: 2px solid #E5E7EB; background: #fff; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; color: #6B7280; font-family: 'Inter',sans-serif; transition: all 0.2s; }
+        .lang-btn:hover { border-color: #10B981; color: #10B981; }
+        .lang-btn.active { background: linear-gradient(135deg,#10B981,#047857); border-color: #10B981; color: #fff; }
+        .back-btn { display: flex; align-items: center; gap: 8px; background: #fff; color: #10B981; border: 2px solid #10B981; padding: 9px 20px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; text-decoration: none; font-family: 'Poppins',sans-serif; transition: all 0.25s; }
+        .back-btn:hover { background: #10B981; color: #fff; transform: translateX(-3px); }
+
+        /* ── PAGE BANNER ── */
+        .page-banner {
+            background: linear-gradient(135deg,#78350F,#B45309);
+            color: white; padding: 28px 32px;
+            display: flex; align-items: center; gap: 20px;
+            position: relative; overflow: hidden;
+        }
+        .page-banner::before { content:''; position:absolute; inset:0; background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
+        .page-banner::after { content:'🚜'; position:absolute; right:28px; top:-8px; font-size:120px; opacity:0.07; pointer-events:none; line-height:1; }
+        .banner-ico { width:68px; height:68px; border-radius:18px; flex-shrink:0; background:rgba(255,255,255,0.12); border:2px solid rgba(255,255,255,0.22); display:flex; align-items:center; justify-content:center; font-size:30px; }
+        .banner-title { font-family:'Poppins',sans-serif; font-size:clamp(1.3rem,3vw,2rem); font-weight:800; margin-bottom:5px; }
+        .banner-title .hl { color:#FDE68A; }
+        .banner-sub { font-size:14px; opacity:0.8; font-weight:400; line-height:1.5; }
+
+        /* ── TABS ── */
+        .tab-bar {
+            background: #fff; border-bottom: 2px solid #E5E7EB;
+            display: flex; overflow-x: auto; position: sticky; top: 66px; z-index: 90;
+        }
+        .tab {
+            flex: 1; min-width: 120px; padding: 14px 10px; text-align: center;
+            font-size: 13px; font-weight: 700; color: #6B7280;
+            cursor: pointer; border-bottom: 3px solid transparent;
+            transition: all 0.2s; white-space: nowrap; font-family: 'Inter',sans-serif;
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+        }
+        .tab:hover { color: #10B981; background: #F0FDF4; }
+        .tab.active { color: #10B981; border-bottom-color: #10B981; background: #F0FDF4; }
+
+        /* ── MAIN ── */
+        .main { max-width: 820px; margin: 0 auto; padding: 28px 20px 60px; }
+
+        /* Panels */
+        .panel { display: none; animation: fadeUp 0.4s ease; }
+        .panel.active { display: block; }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+
+        /* ── CARD ── */
+        .card { background:#fff; border-radius:20px; box-shadow:0 4px 20px rgba(0,0,0,0.07); border:1.5px solid rgba(16,185,129,0.13); overflow:hidden; margin-bottom:20px; }
+        .card-strip { height:4px; }
+        .card-strip.orange { background:linear-gradient(135deg,#F59E0B,#D97706); }
+        .card-strip.green  { background:linear-gradient(135deg,#10B981,#047857); }
+        .card-strip.blue   { background:linear-gradient(135deg,#3B82F6,#1D4ED8); }
+        .card-strip.purple { background:linear-gradient(135deg,#8B5CF6,#7C3AED); }
+        .card-body { padding:26px; }
+        .card-heading { font-family:'Poppins',sans-serif; font-size:18px; font-weight:800; color:#1F2937; display:flex; align-items:center; gap:10px; margin-bottom:6px; }
+        .card-note { font-size:13px; color:#6B7280; font-weight:500; margin-bottom:20px; }
+
+        /* ── FIELDS ── */
+        .field { margin-bottom:16px; }
+        .field label { display:block; font-size:13px; font-weight:700; color:#1F2937; margin-bottom:7px; }
+        .field .inp-row { display:flex; align-items:center; border:2px solid #E5E7EB; border-radius:12px; background:#F9FAFB; overflow:hidden; transition:border-color 0.2s; }
+        .field .inp-row:focus-within { border-color:#10B981; background:#fff; }
+        .field .ficon { width:44px; display:flex; align-items:center; justify-content:center; color:#10B981; font-size:15px; flex-shrink:0; }
+        .field input, .field select { flex:1; padding:13px 12px 13px 0; border:none; background:transparent; font-size:15px; color:#1F2937; font-family:'Inter',sans-serif; outline:none; }
+        .field select { cursor:pointer; padding-right:8px; }
+        .field input[type="file"] { padding:10px 12px 10px 0; font-size:14px; }
+        .form-row-2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+
+        /* Type toggle pills */
+        .type-toggle { display:flex; gap:8px; margin-bottom:16px; }
+        .type-pill { flex:1; padding:11px; border:2px solid #E5E7EB; border-radius:12px; text-align:center; cursor:pointer; font-size:14px; font-weight:700; color:#6B7280; background:#F9FAFB; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:6px; }
+        .type-pill:hover { border-color:#10B981; color:#10B981; }
+        .type-pill.sel-rent { border-color:#10B981; background:#F0FDF4; color:#047857; }
+        .type-pill.sel-sell { border-color:#F59E0B; background:#FFFBEB; color:#92400E; }
+
+        /* Submit buttons */
+        .btn-primary { width:100%; padding:15px; background:linear-gradient(135deg,#10B981,#047857); color:#fff; border:none; border-radius:50px; font-family:'Poppins',sans-serif; font-size:16px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; box-shadow:0 6px 20px rgba(16,185,129,0.3); transition:all 0.25s; }
+        .btn-primary:hover { transform:translateY(-2px); box-shadow:0 10px 28px rgba(16,185,129,0.4); }
+        .btn-primary:disabled { opacity:0.65; cursor:not-allowed; transform:none; box-shadow:none; }
+        .btn-orange { background:linear-gradient(135deg,#F59E0B,#D97706); box-shadow:0 6px 20px rgba(245,158,11,0.3); }
+        .btn-orange:hover { box-shadow:0 10px 28px rgba(245,158,11,0.4); }
+        .btn-blue { background:linear-gradient(135deg,#3B82F6,#1D4ED8); box-shadow:0 6px 20px rgba(59,130,246,0.25); }
+        .btn-blue:hover { box-shadow:0 10px 28px rgba(59,130,246,0.35); }
+
+        /* ── SEARCH BAR ── */
+        .search-bar { display:flex; gap:10px; margin-bottom:20px; }
+        .search-bar .inp-row { flex:1; border:2px solid #E5E7EB; border-radius:12px; background:#fff; display:flex; align-items:center; overflow:hidden; }
+        .search-bar .inp-row:focus-within { border-color:#10B981; }
+        .search-bar .ficon { width:44px; display:flex; align-items:center; justify-content:center; color:#10B981; font-size:15px; flex-shrink:0; }
+        .search-bar input { flex:1; padding:13px 12px 13px 0; border:none; background:transparent; font-size:15px; color:#1F2937; font-family:'Inter',sans-serif; outline:none; }
+        .btn-search { padding:13px 22px; background:linear-gradient(135deg,#10B981,#047857); color:#fff; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; font-family:'Poppins',sans-serif; white-space:nowrap; transition:all 0.2s; }
+        .btn-search:hover { transform:translateY(-1px); box-shadow:0 6px 16px rgba(16,185,129,0.35); }
+
+        /* ── EQUIPMENT CARD ── */
+        .eq-card { background:#fff; border-radius:18px; box-shadow:0 4px 16px rgba(0,0,0,0.07); border:1.5px solid rgba(16,185,129,0.12); overflow:hidden; margin-bottom:16px; animation:fadeUp 0.4s ease; }
+        .eq-imgs { display:flex; gap:8px; overflow-x:auto; padding:12px 12px 0; }
+        .eq-imgs img { width:140px; height:110px; object-fit:cover; border-radius:10px; flex-shrink:0; border:1.5px solid #E5E7EB; }
+        .eq-imgs:empty { display:none; }
+        .eq-body { padding:18px; }
+        .eq-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; }
+        .eq-name { font-family:'Poppins',sans-serif; font-size:18px; font-weight:800; color:#1F2937; }
+        .eq-badge { padding:5px 14px; border-radius:50px; font-size:12px; font-weight:700; }
+        .eq-badge.rent { background:#F0FDF4; color:#047857; border:1.5px solid rgba(16,185,129,0.3); }
+        .eq-badge.sell { background:#FFFBEB; color:#92400E; border:1.5px solid rgba(245,158,11,0.3); }
+        .eq-details { display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
+        .eq-row { display:flex; align-items:center; gap:8px; font-size:14px; color:#4B5563; font-weight:500; }
+        .eq-row i { color:#10B981; width:16px; text-align:center; font-size:14px; }
+        .eq-price { font-family:'Poppins',sans-serif; font-size:20px; font-weight:800; color:#047857; margin-bottom:12px; }
+        .eq-price span { font-size:13px; color:#6B7280; font-weight:500; }
+        .btn-book { width:100%; padding:13px; background:linear-gradient(135deg,#F59E0B,#D97706); color:#fff; border:none; border-radius:50px; font-family:'Poppins',sans-serif; font-size:15px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 14px rgba(245,158,11,0.3); transition:all 0.25s; }
+        .btn-book:hover { transform:translateY(-2px); box-shadow:0 8px 20px rgba(245,158,11,0.4); }
+
+        /* Empty state */
+        .empty-state { text-align:center; padding:40px 20px; color:#9CA3AF; }
+        .empty-state i { font-size:52px; display:block; margin-bottom:14px; color:#D1FAE5; }
+        .empty-state p { font-size:15px; font-weight:500; }
+
+        /* ── BOOKING CARD ── */
+        .booking-overlay { display:none; }
+        .booking-overlay.show { display:block; animation:fadeUp 0.4s ease; }
+        .booking-header { background:linear-gradient(135deg,#064E3B,#047857); color:#fff; padding:18px 22px; border-radius:16px 16px 0 0; }
+        .booking-header .bh-title { font-family:'Poppins',sans-serif; font-size:17px; font-weight:800; margin-bottom:2px; }
+        .booking-header .bh-sub { font-size:13px; opacity:0.75; }
+        .booking-body { padding:22px; }
+
+        /* Payment options */
+        .pay-row { display:flex; gap:10px; margin-bottom:16px; }
+        .pay-opt { flex:1; padding:12px; border:2px solid #E5E7EB; border-radius:12px; text-align:center; cursor:pointer; background:#F9FAFB; transition:all 0.2s; font-size:14px; font-weight:700; color:#6B7280; }
+        .pay-opt:hover { border-color:#10B981; color:#10B981; }
+        .pay-opt.active { border-color:#10B981; background:#F0FDF4; color:#047857; }
+
+        /* ── SUCCESS ── */
+        .success-card { background:#fff; border-radius:20px; box-shadow:0 4px 20px rgba(0,0,0,0.08); overflow:hidden; display:none; animation:fadeUp 0.5s ease; }
+        .success-card.show { display:block; }
+        .success-top { background:linear-gradient(135deg,#064E3B,#047857); padding:32px 20px; text-align:center; }
+        .success-icon { font-size:56px; display:block; margin-bottom:10px; }
+        .success-title { font-family:'Poppins',sans-serif; font-size:22px; font-weight:800; color:#fff; margin-bottom:4px; }
+        .success-sub { font-size:14px; color:rgba(255,255,255,0.75); }
+        .success-body { padding:24px; }
+        .detail-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #F3F4F6; font-size:14px; }
+        .detail-row:last-child { border-bottom:none; }
+        .detail-label { color:#6B7280; font-weight:500; }
+        .detail-val { color:#1F2937; font-weight:700; }
+
+        /* Section label */
+        .sec-label { font-family:'Poppins',sans-serif; font-size:12px; font-weight:800; color:#047857; text-transform:uppercase; letter-spacing:1px; margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+        .sec-label::after { content:''; flex:1; height:2px; background:rgba(16,185,129,0.12); border-radius:2px; }
+
+        /* Spinner */
+        .spin { display:inline-block; width:18px; height:18px; border:3px solid rgba(255,255,255,0.35); border-top-color:#fff; border-radius:50%; animation:sp 0.8s linear infinite; }
+        @keyframes sp { to{transform:rotate(360deg)} }
+
+        /* Lang content */
+        .lc { display:none; }
+        .lc.en { display:inline; }
+        .lc.blk { display:none; }
+        .lc.blk.en { display:block; }
+
+        /* Toast */
+        #toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(80px); background:#064E3B; color:#fff; padding:12px 22px; border-radius:50px; font-size:14px; font-weight:700; font-family:Poppins,sans-serif; box-shadow:0 8px 24px rgba(0,0,0,0.2); z-index:9999; transition:transform 0.4s ease,opacity 0.4s ease; opacity:0; white-space:nowrap; max-width:90vw; text-align:center; }
+
+        @media (max-width:600px) {
+            .navbar { padding:12px 16px; }
+            .page-banner { padding:20px 16px; gap:14px; }
+            .card-body { padding:18px 16px; }
+            .form-row-2 { grid-template-columns:1fr; }
+            .main { padding:20px 14px 50px; }
+            .tab { font-size:12px; padding:12px 8px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar">
+    <a href="dashboard.html" class="logo">
+        <div class="logo-icon"><i class="fas fa-leaf"></i></div>
+        <div>
+            <div class="logo-name">AgriSet<span>.AI</span></div>
+            <div class="logo-tag">Smart Farming Toolkit</div>
+        </div>
+    </a>
+    <div class="nav-right">
+        <div class="lang-group">
+            <button class="lang-btn active" id="btn-en" onclick="setLang('en')">English</button>
+            <button class="lang-btn" id="btn-hi" onclick="setLang('hi')">हिंदी</button>
+            <button class="lang-btn" id="btn-mr" onclick="setLang('mr')">मराठी</button>
+        </div>
+        <a href="dashboard.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            <span class="lc en">Dashboard</span>
+            <span class="lc hi">डैशबोर्ड</span>
+            <span class="lc mr">डॅशबोर्ड</span>
+        </a>
+    </div>
+</nav>
+
+<!-- ── PAGE BANNER ── -->
+<div class="page-banner">
+    <div class="banner-ico">🚜</div>
+    <div>
+        <div class="banner-title">
+            <span class="lc en">Equipment <span class="hl">Marketplace</span></span>
+            <span class="lc hi">यंत्र <span class="hl">बाजार</span></span>
+            <span class="lc mr">यंत्र <span class="hl">बाजारपेठ</span></span>
+        </div>
+        <div class="banner-sub">
+            <span class="lc en">🔧 Rent or sell farm equipment · Book online · Pay securely</span>
+            <span class="lc hi">🔧 खेती के यंत्र किराए पर लें या बेचें · ऑनलाइन बुक करें · सुरक्षित भुगतान</span>
+            <span class="lc mr">🔧 शेती यंत्रे भाड्याने द्या किंवा विका · ऑनलाइन बुक करा · सुरक्षित पेमेंट</span>
+        </div>
+    </div>
+</div>
+
+<!-- ── TAB BAR ── -->
+<div class="tab-bar">
+    <div class="tab active" id="tab-search" onclick="switchTab('search')">
+        <i class="fas fa-search"></i>
+        <span class="lc en">Find Equipment</span>
+        <span class="lc hi">यंत्र खोजें</span>
+        <span class="lc mr">यंत्र शोधा</span>
+    </div>
+    <div class="tab" id="tab-add" onclick="switchTab('add')">
+        <i class="fas fa-plus-circle"></i>
+        <span class="lc en">List My Equipment</span>
+        <span class="lc hi">यंत्र जोड़ें</span>
+        <span class="lc mr">यंत्र जोडा</span>
+    </div>
+    <div class="tab" id="tab-booking" onclick="switchTab('booking')">
+        <i class="fas fa-calendar-check"></i>
+        <span class="lc en">My Bookings</span>
+        <span class="lc hi">मेरी बुकिंग</span>
+        <span class="lc mr">माझ्या बुकिंग</span>
+    </div>
+</div>
+
+<!-- ── MAIN ── -->
+<div class="main">
+
+    <!-- ═══ SEARCH PANEL ═══ -->
+    <div class="panel active" id="panel-search">
+
+        <!-- Search bar -->
+        <div class="sec-label">
+            <span class="lc en">🗺️ Search by Village</span>
+            <span class="lc hi">🗺️ गाँव से खोजें</span>
+            <span class="lc mr">🗺️ गावाने शोधा</span>
+        </div>
+        <div class="search-bar">
+            <div class="inp-row">
+                <div class="ficon"><i class="fas fa-map-marker-alt"></i></div>
+                <input type="text" id="searchVillage" placeholder="Village name / गाव / गाँव">
+            </div>
+            <button class="btn-search" onclick="searchEquipment()">
+                <i class="fas fa-search"></i>
+                <span class="lc en">Search</span>
+                <span class="lc hi">खोजें</span>
+                <span class="lc mr">शोधा</span>
+            </button>
+        </div>
+
+        <!-- Results -->
+        <div id="searchResults">
+            <div class="empty-state">
+                <i class="fas fa-tractor"></i>
+                <p>
+                    <span class="lc en">Enter a village name to find nearby equipment</span>
+                    <span class="lc hi">पास के यंत्र खोजने के लिए गाँव का नाम डालें</span>
+                    <span class="lc mr">जवळच्या यंत्रांसाठी गावाचे नाव टाका</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Booking form (slides in here) -->
+        <div class="booking-overlay" id="bookingOverlay">
+            <div class="card" style="border:none;border-radius:20px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.1)">
+                <div class="booking-header">
+                    <div class="bh-title" id="bookingEquipName">—</div>
+                    <div class="bh-sub">
+                        <span class="lc en">Fill booking details below</span>
+                        <span class="lc hi">नीचे बुकिंग विवरण भरें</span>
+                        <span class="lc mr">खाली बुकिंग तपशील भरा</span>
+                    </div>
+                </div>
+                <div class="booking-body">
+                    <div class="sec-label">
+                        <span class="lc en">👤 Your Details</span>
+                        <span class="lc hi">👤 आपकी जानकारी</span>
+                        <span class="lc mr">👤 तुमची माहिती</span>
+                    </div>
+                    <div class="field">
+                        <label><span class="lc en">Full Name</span><span class="lc hi">पूरा नाम</span><span class="lc mr">पूर्ण नाव</span></label>
+                        <div class="inp-row"><div class="ficon"><i class="fas fa-user"></i></div><input type="text" id="custName" placeholder="Name / नाव / नाम"></div>
+                    </div>
+                    <div class="form-row-2">
+                        <div class="field">
+                            <label><span class="lc en">Mobile</span><span class="lc hi">मोबाइल</span><span class="lc mr">मोबाईल</span></label>
+                            <div class="inp-row"><div class="ficon"><i class="fas fa-phone"></i></div><input type="tel" id="custMobile" placeholder="10-digit number"></div>
+                        </div>
+                        <div class="field">
+                            <label><span class="lc en">Village</span><span class="lc hi">गाँव</span><span class="lc mr">गाव</span></label>
+                            <div class="inp-row"><div class="ficon"><i class="fas fa-map-pin"></i></div><input type="text" id="custVillage" placeholder="Village / गाव"></div>
+                        </div>
+                    </div>
+
+                    <div class="sec-label" style="margin-top:4px">
+                        <span class="lc en">📅 Rental Dates</span>
+                        <span class="lc hi">📅 किराया तिथियां</span>
+                        <span class="lc mr">📅 भाडे तारखा</span>
+                    </div>
+                    <div class="form-row-2">
+                        <div class="field">
+                            <label><span class="lc en">Start Date</span><span class="lc hi">शुरुआत तिथि</span><span class="lc mr">सुरुवात तारीख</span></label>
+                            <div class="inp-row"><div class="ficon"><i class="fas fa-calendar"></i></div><input type="date" id="startDate" onchange="calcTotal()"></div>
+                        </div>
+                        <div class="field">
+                            <label><span class="lc en">End Date</span><span class="lc hi">समाप्ति तिथि</span><span class="lc mr">समाप्ती तारीख</span></label>
+                            <div class="inp-row"><div class="ficon"><i class="fas fa-calendar-check"></i></div><input type="date" id="endDate" onchange="calcTotal()"></div>
+                        </div>
+                    </div>
+
+                    <!-- Total estimate -->
+                    <div id="totalBox" style="display:none;background:#F0FDF4;border:1.5px solid rgba(16,185,129,0.25);border-radius:12px;padding:14px 18px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">
+                        <span style="font-size:14px;font-weight:600;color:#047857">
+                            <span class="lc en">💰 Total Estimate</span>
+                            <span class="lc hi">💰 कुल अनुमान</span>
+                            <span class="lc mr">💰 एकूण अंदाज</span>
+                        </span>
+                        <span style="font-family:Poppins,sans-serif;font-size:22px;font-weight:800;color:#1F2937" id="totalAmt">₹0</span>
+                    </div>
+
+                    <div class="sec-label" style="margin-top:4px">
+                        <span class="lc en">💳 Payment Mode</span>
+                        <span class="lc hi">💳 भुगतान का तरीका</span>
+                        <span class="lc mr">💳 पेमेंट पद्धत</span>
+                    </div>
+                    <div class="pay-row">
+                        <div class="pay-opt active" id="pay-cash" onclick="selectPay('cash')">
+                            💵 <span class="lc en">Cash</span><span class="lc hi">नकद</span><span class="lc mr">रोख</span>
+                        </div>
+                        <div class="pay-opt" id="pay-upi" onclick="selectPay('upi')">
+                            📱 UPI
+                        </div>
+                    </div>
+
+                    <button class="btn-primary btn-orange" id="confirmBtn" onclick="confirmBooking()">
+                        <i class="fas fa-check-circle"></i>
+                        <span class="lc en">Confirm Booking</span>
+                        <span class="lc hi">बुकिंग पुष्टि करें</span>
+                        <span class="lc mr">बुकिंग पुष्टी करा</span>
+                    </button>
+
+                    <button onclick="closeBooking()" style="width:100%;margin-top:10px;padding:12px;background:#F9FAFB;color:#6B7280;border:2px solid #E5E7EB;border-radius:50px;font-size:14px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;transition:all 0.2s" onmouseover="this.style.borderColor='#10B981';this.style.color='#10B981'" onmouseout="this.style.borderColor='#E5E7EB';this.style.color='#6B7280'">
+                        ✕ <span class="lc en">Cancel</span><span class="lc hi">रद्द करें</span><span class="lc mr">रद्द करा</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success card -->
+        <div class="success-card" id="successCard">
+            <div class="success-top">
+                <span class="success-icon">✅</span>
+                <div class="success-title">
+                    <span class="lc en">Booking Confirmed!</span>
+                    <span class="lc hi">बुकिंग पुष्टि हुई!</span>
+                    <span class="lc mr">बुकिंग यशस्वी!</span>
+                </div>
+                <div class="success-sub">
+                    <span class="lc en">Your equipment is booked successfully</span>
+                    <span class="lc hi">आपका यंत्र सफलतापूर्वक बुक हो गया</span>
+                    <span class="lc mr">तुमचे यंत्र यशस्वीरित्या बुक झाले</span>
+                </div>
+            </div>
+            <div class="success-body" id="successBody"></div>
+            <div style="padding:0 24px 24px;display:flex;gap:10px;flex-wrap:wrap">
+                <button class="btn-primary btn-blue" onclick="downloadInvoice()" style="flex:1">
+                    <i class="fas fa-download"></i>
+                    <span class="lc en">Download Invoice</span>
+                    <span class="lc hi">इनवॉइस डाउनलोड करें</span>
+                    <span class="lc mr">पावती डाउनलोड करा</span>
+                </button>
+                <button class="btn-primary" onclick="resetBooking()" style="flex:1">
+                    <i class="fas fa-search"></i>
+                    <span class="lc en">Search More</span>
+                    <span class="lc hi">और खोजें</span>
+                    <span class="lc mr">आणखी शोधा</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ ADD EQUIPMENT PANEL ═══ -->
+    <div class="panel" id="panel-add">
+        <div class="card">
+            <div class="card-strip orange"></div>
+            <div class="card-body">
+                <div class="card-heading" style="color:#92400E">
+                    <i class="fas fa-plus-circle" style="color:#F59E0B"></i>
+                    <span class="lc en">List Your Equipment</span>
+                    <span class="lc hi">अपना यंत्र सूचीबद्ध करें</span>
+                    <span class="lc mr">तुमचे यंत्र सूचीबद्ध करा</span>
+                </div>
+                <div class="card-note">
+                    <span class="lc en">Add your tractor, pump or any farm tool to earn rental income</span>
+                    <span class="lc hi">अपना ट्रैक्टर, पंप या कोई भी खेती का उपकरण जोड़ें और किराए से कमाई करें</span>
+                    <span class="lc mr">तुमचा ट्रॅक्टर, पंप किंवा कोणतेही शेती साधन जोडा आणि भाड्यातून कमाई करा</span>
+                </div>
+
+                <!-- Equipment type toggle -->
+                <div class="sec-label">
+                    <span class="lc en">📋 Listing Type</span>
+                    <span class="lc hi">📋 सूची प्रकार</span>
+                    <span class="lc mr">📋 सूची प्रकार</span>
+                </div>
+                <div class="type-toggle">
+                    <div class="type-pill sel-rent" id="pill-rent" onclick="selectType('rent')">
+                        🔑 <span class="lc en">For Rent</span><span class="lc hi">किराए पर</span><span class="lc mr">भाड्याने</span>
+                    </div>
+                    <div class="type-pill" id="pill-sell" onclick="selectType('sell')">
+                        🏷️ <span class="lc en">For Sale</span><span class="lc hi">बिक्री के लिए</span><span class="lc mr">विक्रीसाठी</span>
+                    </div>
+                </div>
+                <input type="hidden" id="listingType" value="rent">
+
+                <div class="field">
+                    <label>🚜 <span class="lc en">Equipment Name</span><span class="lc hi">यंत्र का नाम</span><span class="lc mr">यंत्राचे नाव</span></label>
+                    <div class="inp-row"><div class="ficon"><i class="fas fa-tractor"></i></div><input type="text" id="eqTitle" placeholder="e.g. Mahindra Tractor, Water Pump..."></div>
+                </div>
+
+                <div class="form-row-2">
+                    <div class="field" id="priceRentField">
+                        <label>💰 <span class="lc en">Rent/Day (₹)</span><span class="lc hi">किराया/दिन (₹)</span><span class="lc mr">भाडे/दिवस (₹)</span></label>
+                        <div class="inp-row"><div class="ficon"><i class="fas fa-rupee-sign"></i></div><input type="number" id="priceRent" placeholder="500"></div>
+                    </div>
+                    <div class="field" id="priceSellField" style="display:none">
+                        <label>🏷️ <span class="lc en">Selling Price (₹)</span><span class="lc hi">बिक्री मूल्य (₹)</span><span class="lc mr">विक्री किंमत (₹)</span></label>
+                        <div class="inp-row"><div class="ficon"><i class="fas fa-rupee-sign"></i></div><input type="number" id="priceSell" placeholder="50000"></div>
+                    </div>
+                </div>
+
+                <div class="form-row-2">
+                    <div class="field">
+                        <label>📍 <span class="lc en">Village</span><span class="lc hi">गाँव</span><span class="lc mr">गाव</span></label>
+                        <div class="inp-row"><div class="ficon"><i class="fas fa-map-marker-alt"></i></div><input type="text" id="eqVillage" placeholder="Village name"></div>
+                    </div>
+                    <div class="field">
+                        <label>📞 <span class="lc en">Contact</span><span class="lc hi">संपर्क</span><span class="lc mr">संपर्क</span></label>
+                        <div class="inp-row"><div class="ficon"><i class="fas fa-phone"></i></div><input type="tel" id="eqContact" placeholder="Mobile number"></div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>📸 <span class="lc en">Equipment Photos</span><span class="lc hi">यंत्र की फोटो</span><span class="lc mr">यंत्राचे फोटो</span></label>
+                    <div class="inp-row"><div class="ficon"><i class="fas fa-camera"></i></div><input type="file" id="eqPhotos" multiple accept="image/*"></div>
+                </div>
+
+                <button class="btn-primary btn-orange" id="addBtn" onclick="addEquipment()">
+                    <i class="fas fa-plus-circle"></i>
+                    <span class="lc en">List My Equipment</span>
+                    <span class="lc hi">यंत्र जोड़ें</span>
+                    <span class="lc mr">यंत्र जोडा</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ MY BOOKINGS PANEL ═══ -->
+    <div class="panel" id="panel-booking">
+        <div class="sec-label">
+            <span class="lc en">📋 Your Booking History</span>
+            <span class="lc hi">📋 आपकी बुकिंग इतिहास</span>
+            <span class="lc mr">📋 तुमचा बुकिंग इतिहास</span>
+        </div>
+        <div id="myBookings">
+            <div class="empty-state">
+                <i class="fas fa-calendar-times"></i>
+                <p>
+                    <span class="lc en">No bookings yet. Search for equipment to book!</span>
+                    <span class="lc hi">अभी तक कोई बुकिंग नहीं। यंत्र खोजें और बुक करें!</span>
+                    <span class="lc mr">अद्याप कोणतीही बुकिंग नाही. यंत्र शोधा आणि बुक करा!</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+</div><!-- /main -->
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script>
+    const API = 'https://shetimitra-backend-production.up.railway.app';
+    let user = null;
+    let lang = localStorage.getItem('language') || 'en';
+    let selectedEquipmentId = null;
+    let selectedEquipmentData = null;
+    let lastBookingId = null;
+    let paymentMode = 'cash';
+    let listingType = 'rent';
+
+    /* ── Auth ── */
+    document.addEventListener('DOMContentLoaded', () => {
+        const u = localStorage.getItem('user');
+        if (!u) { alert('Please login first'); location.href = 'login.html'; return; }
+        user = JSON.parse(u);
+
+        setLang(lang);
+        loadMyBookings();
+
+        // Date minimums
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('startDate').min = today;
+        document.getElementById('endDate').min = today;
+        document.getElementById('startDate').addEventListener('change', function() {
+            document.getElementById('endDate').min = this.value;
+            calcTotal();
+        });
+    });
+
+    /* ── Language ── */
+    function setLang(l) {
+        lang = l;
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('btn-' + l).classList.add('active');
+        document.querySelectorAll('.lc').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.lc.' + l).forEach(el => {
+            el.style.display = el.classList.contains('blk') ? 'block' : 'inline';
+        });
+        const titles = { en:'Equipment Marketplace | AgriSet.AI', hi:'यंत्र बाजार | AgriSet.AI', mr:'यंत्र बाजारपेठ | AgriSet.AI' };
+        document.title = titles[l];
+        localStorage.setItem('language', l);
+    }
+
+    function g(mr, hi, en) { return lang === 'mr' ? mr : lang === 'hi' ? hi : en; }
+
+    /* ── Tabs ── */
+    function switchTab(t) {
+        document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.panel').forEach(el => el.classList.remove('active'));
+        document.getElementById('tab-' + t).classList.add('active');
+        document.getElementById('panel-' + t).classList.add('active');
+    }
+
+    /* ── Type toggle (Add form) ── */
+    function selectType(type) {
+        listingType = type;
+        document.getElementById('listingType').value = type;
+        document.getElementById('pill-rent').className = 'type-pill' + (type === 'rent' ? ' sel-rent' : '');
+        document.getElementById('pill-sell').className = 'type-pill' + (type === 'sell' ? ' sel-sell' : '');
+        document.getElementById('priceRentField').style.display = type === 'rent' ? '' : 'none';
+        document.getElementById('priceSellField').style.display = type === 'sell' ? '' : 'none';
+    }
+
+    /* ── Payment mode ── */
+    function selectPay(mode) {
+        paymentMode = mode;
+        document.getElementById('pay-cash').classList.toggle('active', mode === 'cash');
+        document.getElementById('pay-upi').classList.toggle('active', mode === 'upi');
+    }
+
+    /* ── Add Equipment ── */
+    async function addEquipment() {
+        const title = document.getElementById('eqTitle').value.trim();
+        const village = document.getElementById('eqVillage').value.trim();
+        const contact = document.getElementById('eqContact').value.trim();
+        if (!title || !village || !contact) {
+            showToast(g('कृपया सर्व माहिती भरा ⚠️', 'कृपया सभी जानकारी भरें ⚠️', 'Please fill all details ⚠️'), true);
+            return;
+        }
+
+        const btn = document.getElementById('addBtn');
+        btn.innerHTML = '<span class="spin"></span>&nbsp;' + g('जोडत आहे...', 'जोड़ रहे हैं...', 'Adding...');
+        btn.disabled = true;
+
+        const fd = new FormData();
+        fd.append('owner_id', user.id);
+        fd.append('title', title);
+        fd.append('type', listingType);
+        fd.append('price_per_day', document.getElementById('priceRent').value);
+        fd.append('sell_price', document.getElementById('priceSell').value);
+        fd.append('village', village);
+        fd.append('contact', contact);
+        for (const f of document.getElementById('eqPhotos').files) fd.append('photos', f);
+
+        try {
+            const res = await fetch(API + '/add-equipment', { method:'POST', body:fd });
+            const data = await res.json();
+            showToast(g('✅ यंत्र यशस्वीरित्या जोडले!', '✅ यंत्र सफलतापूर्वक जोड़ा गया!', '✅ Equipment listed successfully!'));
+            // Clear form
+            ['eqTitle','eqVillage','eqContact','priceRent','priceSell'].forEach(id => document.getElementById(id).value = '');
+            document.getElementById('eqPhotos').value = '';
+        } catch(e) {
+            showToast(g('सर्व्हर त्रुटी ⚠️', 'सर्वर त्रुटि ⚠️', 'Server error ⚠️'), true);
+        }
+        btn.innerHTML = '<i class="fas fa-plus-circle"></i>&nbsp;' + g('यंत्र जोडा', 'यंत्र जोड़ें', 'List My Equipment');
+        btn.disabled = false;
+    }
+
+    /* ── Search Equipment ── */
+    async function searchEquipment() {
+        const village = document.getElementById('searchVillage').value.trim();
+        if (!village) {
+            showToast(g('कृपया गावाचे नाव टाका 📍', 'कृपया गाँव का नाम डालें 📍', 'Please enter village name 📍'), true);
+            return;
+        }
+        const res = document.getElementById('searchResults');
+        res.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin" style="color:#10B981"></i><p>' + g('शोधत आहे...', 'खोज रहे हैं...', 'Searching...') + '</p></div>';
+
+        try {
+            const r = await fetch(API + '/equipment/nearby/' + encodeURIComponent(village));
+            const data = await r.json();
+            if (!data.length) {
+                res.innerHTML = '<div class="empty-state"><i class="fas fa-tractor"></i><p>' + g('या गावात कोणतेही यंत्र सापडले नाही', 'इस गाँव में कोई यंत्र नहीं मिला', 'No equipment found in this village') + '</p></div>';
+                return;
+            }
+            res.innerHTML = data.map(e => buildEqCard(e)).join('');
+        } catch(err) {
+            res.innerHTML = '<div class="empty-state"><i class="fas fa-wifi" style="color:#EF4444"></i><p>' + g('सर्व्हर कनेक्शन त्रुटी', 'सर्वर कनेक्शन त्रुटि', 'Server connection error') + '</p></div>';
+        }
+    }
+
+    function buildEqCard(e) {
+        const imgs = e.photos?.length
+            ? '<div class="eq-imgs">' + e.photos.map(p => `<img src="${API}/${p}" onerror="this.style.display='none'">`).join('') + '</div>'
+            : '';
+        const isRent = e.type !== 'sell';
+        const priceLine = isRent
+            ? `<div class="eq-price">₹${e.price_per_day}<span> / ${g('दिवस','दिन','day')}</span></div>`
+            : `<div class="eq-price">₹${e.sell_price} <span style="font-size:12px;background:#FFFBEB;color:#92400E;border-radius:50px;padding:2px 10px;font-weight:700">${g('विक्री','बिक्री','For Sale')}</span></div>`;
+        const bookBtn = isRent
+            ? `<button class="btn-book" onclick="openBooking(${e.id},'${e.title.replace(/'/g,"\\'")}',${e.price_per_day})"><i class="fas fa-calendar-alt"></i> ${g('बुक करा','बुक करें','Book Now')}</button>`
+            : `<button class="btn-book" style="background:linear-gradient(135deg,#3B82F6,#1D4ED8)" onclick="callOwner('${e.contact}')"><i class="fas fa-phone"></i> ${g('मालकाशी संपर्क करा','मालिक से संपर्क करें','Contact Owner')}</button>`;
+        return `<div class="eq-card">
+            ${imgs}
+            <div class="eq-body">
+                <div class="eq-top">
+                    <div class="eq-name">${e.title}</div>
+                    <div class="eq-badge ${isRent ? 'rent' : 'sell'}">${isRent ? g('भाड्याने','किराए पर','For Rent') : g('विक्रीसाठी','बिक्री के लिए','For Sale')}</div>
+                </div>
+                <div class="eq-details">
+                    <div class="eq-row"><i class="fas fa-map-marker-alt"></i>${e.village}</div>
+                    <div class="eq-row"><i class="fas fa-phone"></i>${e.contact}</div>
+                </div>
+                ${priceLine}
+                ${bookBtn}
+            </div>
+        </div>`;
+    }
+
+    function callOwner(contact) {
+        window.open('tel:' + contact);
+    }
+
+    /* ── Booking ── */
+    function openBooking(id, name, pricePerDay) {
+        selectedEquipmentId = id;
+        selectedEquipmentData = { name, pricePerDay };
+        document.getElementById('bookingEquipName').textContent = '🚜 ' + name;
+        document.getElementById('successCard').classList.remove('show');
+        const overlay = document.getElementById('bookingOverlay');
+        overlay.classList.add('show');
+        overlay.scrollIntoView({ behavior:'smooth', block:'start' });
+        // Reset
+        ['custName','custMobile','custVillage','startDate','endDate'].forEach(id => document.getElementById(id).value = '');
+        document.getElementById('totalBox').style.display = 'none';
+        selectPay('cash');
+    }
+
+    function closeBooking() {
+        document.getElementById('bookingOverlay').classList.remove('show');
+    }
+
+    function calcTotal() {
+        const s = document.getElementById('startDate').value;
+        const e = document.getElementById('endDate').value;
+        if (s && e && selectedEquipmentData) {
+            const days = Math.max(1, Math.round((new Date(e) - new Date(s)) / 86400000) + 1);
+            const total = days * selectedEquipmentData.pricePerDay;
+            document.getElementById('totalAmt').textContent = '₹' + total;
+            document.getElementById('totalBox').style.display = 'flex';
+        }
+    }
+
+    async function confirmBooking() {
+        const name     = document.getElementById('custName').value.trim();
+        const mobile   = document.getElementById('custMobile').value.trim();
+        const village  = document.getElementById('custVillage').value.trim();
+        const startVal = document.getElementById('startDate').value;
+        const endVal   = document.getElementById('endDate').value;
+
+        if (!name || !mobile || !village || !startVal || !endVal) {
+            showToast(g('कृपया सर्व माहिती भरा ⚠️','कृपया सभी जानकारी भरें ⚠️','Please fill all details ⚠️'), true);
+            return;
+        }
+        if (mobile.length < 10) {
+            showToast(g('मोबाईल नंबर 10 अंकी असावा','मोबाइल नंबर 10 अंकों का होना चाहिए','Mobile must be 10 digits'), true);
+            return;
+        }
+
+        const btn = document.getElementById('confirmBtn');
+        btn.innerHTML = '<span class="spin"></span>&nbsp;' + g('प्रक्रिया...','प्रक्रिया...','Processing...');
+        btn.disabled = true;
+
+        const payload = {
+            equipment_id: selectedEquipmentId,
+            user_id: user.id,
+            customer_name: name,
+            customer_mobile: mobile,
+            customer_village: village,
+            start_date: startVal,
+            end_date: endVal,
+            payment_mode: paymentMode
+        };
+
+        try {
+            const r = await fetch(API + '/equipment/book', {
+                method:'POST', headers:{'Content-Type':'application/json'},
+                body: JSON.stringify(payload)
+            });
+            const res = await r.json();
+            if (!res.booking_id) throw new Error('No booking id');
+
+            lastBookingId = res.booking_id;
+
+            if (paymentMode === 'upi') {
+                startUPI(res.booking_id, res.total_price);
+            } else {
+                bookingSuccess(payload, res);
+            }
+        } catch(e) {
+            showToast(g('बुकिंग त्रुटी आली ⚠️','बुकिंग त्रुटि हुई ⚠️','Booking error ⚠️'), true);
+        }
+
+        btn.innerHTML = '<i class="fas fa-check-circle"></i>&nbsp;' + g('बुकिंग पुष्टी करा','बुकिंग पुष्टि करें','Confirm Booking');
+        btn.disabled = false;
+    }
+
+    function startUPI(bookingId, amount) {
+        fetch(API + '/equipment/pay/upi', {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ booking_id:bookingId, amount })
+        })
+        .then(r => r.json())
+        .then(order => {
+            if (!order.order_id) { showToast(g('पेमेंट त्रुटी','भुगतान त्रुटि','Payment error'), true); return; }
+            const rzp = new Razorpay({
+                key: 'rzp_test_R9qLSasaJ4bKfi',
+                amount: order.amount,
+                currency: 'INR',
+                name: 'AgriSet.AI',
+                description: 'Equipment Booking',
+                order_id: order.order_id,
+                handler: function(res) {
+                    fetch(API + '/equipment/pay/verify', {
+                        method:'POST', headers:{'Content-Type':'application/json'},
+                        body: JSON.stringify({ ...res, booking_id: bookingId })
+                    }).then(r => r.json()).then(() => bookingSuccess({}, { booking_id: bookingId, total_price: order.amount/100 }));
+                },
+                prefill: { name: document.getElementById('custName').value, contact: document.getElementById('custMobile').value },
+                theme: { color: '#10B981' },
+                method: { upi:true }
+            });
+            rzp.open();
+        })
+        .catch(() => showToast(g('पेमेंट त्रुटी','भुगतान त्रुटि','Payment error'), true));
+    }
+
+    function bookingSuccess(payload, res) {
+        document.getElementById('bookingOverlay').classList.remove('show');
+        const days = Math.max(1, Math.round((new Date(document.getElementById('endDate').value) - new Date(document.getElementById('startDate').value)) / 86400000) + 1);
+
+        // Save to local history
+        const hist = JSON.parse(localStorage.getItem('equipmentBookings') || '[]');
+        hist.unshift({
+            bookingId: res.booking_id,
+            equipment: selectedEquipmentData?.name || '—',
+            name: document.getElementById('custName').value,
+            mobile: document.getElementById('custMobile').value,
+            start: document.getElementById('startDate').value,
+            end: document.getElementById('endDate').value,
+            days,
+            total: res.total_price,
+            payment: paymentMode,
+            bookedAt: new Date().toISOString()
+        });
+        localStorage.setItem('equipmentBookings', JSON.stringify(hist));
+        loadMyBookings();
+
+        // Show success card
+        const sc = document.getElementById('successCard');
+        sc.classList.add('show');
+        document.getElementById('successBody').innerHTML = `
+            <div class="detail-row"><span class="detail-label">${g('बुकिंग ID','बुकिंग ID','Booking ID')}</span><span class="detail-val">#${res.booking_id || '—'}</span></div>
+            <div class="detail-row"><span class="detail-label">${g('यंत्र','यंत्र','Equipment')}</span><span class="detail-val">${selectedEquipmentData?.name || '—'}</span></div>
+            <div class="detail-row"><span class="detail-label">${g('दिवस','दिन','Days')}</span><span class="detail-val">${days} ${g('दिवस','दिन','days')}</span></div>
+            <div class="detail-row"><span class="detail-label">${g('एकूण','कुल','Total')}</span><span class="detail-val" style="color:#10B981;font-size:18px">₹${res.total_price || '—'}</span></div>
+            <div class="detail-row"><span class="detail-label">${g('पेमेंट','भुगतान','Payment')}</span><span class="detail-val">${paymentMode.toUpperCase()}</span></div>
+        `;
+        sc.scrollIntoView({ behavior:'smooth' });
+        showToast(g('✅ बुकिंग यशस्वी!', '✅ बुकिंग सफल!', '✅ Booking confirmed!'));
+    }
+
+    function resetBooking() {
+        document.getElementById('successCard').classList.remove('show');
+        document.getElementById('searchVillage').value = '';
+        document.getElementById('searchResults').innerHTML = '<div class="empty-state"><i class="fas fa-tractor"></i><p>' + g('गावाचे नाव टाकून यंत्र शोधा','गाँव का नाम डालकर यंत्र खोजें','Enter a village name to find equipment') + '</p></div>';
+    }
+
+    function downloadInvoice() {
+        if (lastBookingId) window.open(API + '/equipment/invoice/' + lastBookingId, '_blank');
+        else showToast(g('Invoice उपलब्ध नाही','Invoice उपलब्ध नहीं','Invoice not available'), true);
+    }
+
+    /* ── My Bookings ── */
+    function loadMyBookings() {
+        const hist = JSON.parse(localStorage.getItem('equipmentBookings') || '[]');
+        const el = document.getElementById('myBookings');
+        if (!hist.length) {
+            el.innerHTML = '<div class="empty-state"><i class="fas fa-calendar-times"></i><p>' + g('अद्याप कोणतीही बुकिंग नाही','अभी तक कोई बुकिंग नहीं','No bookings yet') + '</p></div>';
+            return;
+        }
+        el.innerHTML = hist.map(b => `
+            <div class="eq-card">
+                <div class="eq-body">
+                    <div class="eq-top">
+                        <div class="eq-name">🚜 ${b.equipment}</div>
+                        <div class="eq-badge rent">${b.payment.toUpperCase()}</div>
+                    </div>
+                    <div class="eq-details">
+                        <div class="eq-row"><i class="fas fa-calendar"></i>${b.start} → ${b.end} (${b.days} ${g('दिवस','दिन','days')})</div>
+                        <div class="eq-row"><i class="fas fa-user"></i>${b.name} · ${b.mobile}</div>
+                        <div class="eq-row"><i class="fas fa-rupee-sign"></i>${g('एकूण','कुल','Total')}: <strong>₹${b.total}</strong></div>
+                    </div>
+                </div>
+            </div>`
+        ).join('');
+    }
+
+    /* ── Toast ── */
+    function showToast(msg, isError) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.style.background = isError ? '#7F1D1D' : '#064E3B';
+        t.style.transform = 'translateX(-50%) translateY(0)';
+        t.style.opacity = '1';
+        clearTimeout(t._timer);
+        t._timer = setTimeout(() => {
+            t.style.transform = 'translateX(-50%) translateY(80px)';
+            t.style.opacity = '0';
+        }, 3500);
+    }
+</script>
+
+</body>
+</html>

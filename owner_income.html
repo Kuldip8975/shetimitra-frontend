@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Owner Income</title>
+<style>
+body{font-family:Arial;background:#eef3ee;padding:20px}
+.card{background:#fff;padding:15px;margin-bottom:12px;border-radius:8px}
+table{width:100%;border-collapse:collapse}
+td,th{border:1px solid #ccc;padding:8px}
+</style>
+</head>
+<body>
+
+<h2>💰 Owner Income Analytics</h2>
+<h3>💰 Total Income: ₹<span id="income">0</span></h3>
+
+
+<div class="card">
+  <h3>Total Income: ₹<span id="total"></span></h3>
+</div>
+
+<div class="card">
+  <table>
+    <tr>
+      <th>Month</th>
+      <th>Income (₹)</th>
+    </tr>
+    <tbody id="rows"></tbody>
+  </table>
+</div>
+
+<script>
+const API="https://shetimitra-backend-production.up.railway.app";
+const OWNER_ID = 1;
+
+fetch(`${API}/owner/income/${OWNER_ID}`)
+.then(r=>r.json())
+.then(d=>{
+  document.getElementById("income").innerText = d.income;
+});
+</script>
+
+</body>
+</html>

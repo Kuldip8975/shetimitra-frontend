@@ -1,0 +1,425 @@
+
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-mr="माझी पिके | शेतिमित्र AI" data-hi="मेरी फसलें | शेतिमित्र AI" data-en="My Crops | ShetiMitraAI">माझी पिके | शेतिमित्र AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background: #f8fff8;
+            padding: 20px;
+        }
+        
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #4caf50;
+        }
+        
+        .back-btn {
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .page-title {
+            color: #2e7d32;
+            font-size: 24px;
+        }
+        
+        /* Language Selector */
+        .language-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        
+        .lang-btn {
+            padding: 8px 15px;
+            border: 2px solid #4caf50;
+            background: white;
+            color: #4caf50;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        
+        .lang-btn.active {
+            background: #4caf50;
+            color: white;
+        }
+        
+        /* Add Crop Form */
+        .add-crop-form {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .form-title {
+            color: #2e7d32;
+            margin-bottom: 15px;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: bold;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .add-btn {
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            width: 100%;
+        }
+        
+        /* Crops List */
+        .crops-list {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .crop-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-left: 5px solid #4caf50;
+        }
+        
+        .crop-name {
+            color: #2e7d32;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .crop-date {
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .update-btn, .delete-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .update-btn {
+            background: #2196F3;
+            color: white;
+        }
+        
+        .delete-btn {
+            background: #f44336;
+            color: white;
+        }
+        
+        /* No Crops Message */
+        .no-crops {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+    <button class="back-btn" onclick="window.location.href='dashboard.html'">
+        ← <span data-mr="मागे" data-hi="वापस" data-en="Back">मागे</span>
+    </button>
+    
+    <h1 class="page-title" data-mr="🌾 माझी पिके" data-hi="🌾 मेरी फसलें" data-en="🌾 My Crops">🌾 माझी पिके</h1>
+    
+    <div></div> <!-- Empty div for alignment -->
+</header>
+
+<!-- Language Selector -->
+<div class="language-selector">
+    <button class="lang-btn active" data-lang="mr">मराठी</button>
+    <button class="lang-btn" data-lang="hi">हिंदी</button>
+    <button class="lang-btn" data-lang="en">English</button>
+</div>
+
+<!-- Add New Crop Form -->
+<div class="add-crop-form">
+    <h2 class="form-title" data-mr="नवीन पीक जोडा" data-hi="नई फसल जोड़ें" data-en="Add New Crop">नवीन पीक जोडा</h2>
+    
+    <div class="input-group">
+        <label data-mr="पीकाचे नाव" data-hi="फसल का नाम" data-en="Crop Name">पीकाचे नाव</label>
+        <input type="text" id="cropName" placeholder="उदा: गहू, भात, कॉटन">
+    </div>
+    
+    <div class="input-group">
+        <label data-mr="पेरणी तारीख" data-hi="बुवाई तिथि" data-en="Sowing Date">पेरणी तारीख</label>
+        <input type="date" id="sowingDate">
+    </div>
+    
+    <button class="add-btn" onclick="addCrop()" data-mr="पीक जोडा" data-hi="फसल जोड़ें" data-en="Add Crop">पीक जोडा</button>
+</div>
+
+<!-- Crops List -->
+<div class="crops-list" id="cropsList">
+    <!-- Crops will appear here -->
+</div>
+
+<script>
+const BASE = "http://127.0.0.1:5000";
+
+// Check login
+document.addEventListener('DOMContentLoaded', function() {
+    const user = localStorage.getItem("user");
+    if(!user){
+        alert("कृपया प्रथम लॉगिन करा");
+        window.location.href = "login.html";
+        return;
+    }
+    
+    // Language setup
+    setupLanguage();
+    
+    // Load crops
+    loadCrops();
+});
+
+// Language Management
+function setupLanguage() {
+    const langButtons = document.querySelectorAll('.lang-btn');
+    let currentLang = localStorage.getItem('shetimitra_lang') || 'mr';
+    
+    // Set active button
+    langButtons.forEach(btn => {
+        btn.classList.remove('active');
+        if(btn.getAttribute('data-lang') === currentLang) {
+            btn.classList.add('active');
+        }
+    });
+    
+    // Update text
+    updateTexts(currentLang);
+    
+    // Add click events
+    langButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const lang = this.getAttribute('data-lang');
+            localStorage.setItem('shetimitra_lang', lang);
+            
+            // Update buttons
+            langButtons.forEach(b => {
+                b.classList.remove('active');
+                if(b.getAttribute('data-lang') === lang) {
+                    b.classList.add('active');
+                }
+            });
+            
+            // Update texts
+            updateTexts(lang);
+        });
+    });
+}
+
+function updateTexts(lang) {
+    document.querySelectorAll('[data-mr]').forEach(element => {
+        if(lang === 'mr') {
+            element.textContent = element.getAttribute('data-mr');
+        } else if(lang === 'hi') {
+            element.textContent = element.getAttribute('data-hi');
+        } else if(lang === 'en') {
+            element.textContent = element.getAttribute('data-en');
+        }
+    });
+}
+
+function getText(mr, hi, en) {
+    const lang = localStorage.getItem('shetimitra_lang') || 'mr';
+    if(lang === 'mr') return mr;
+    if(lang === 'hi') return hi;
+    return en;
+}
+
+// Load crops
+function loadCrops() {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if(!user || !user.id) {
+        document.getElementById('cropsList').innerHTML = '<div class="no-crops">' + getText('लॉगिन करा', 'लॉगिन करें', 'Please login') + '</div>';
+        return;
+    }
+    
+    fetch(`${BASE}/my-crops/${user.id}`)
+    .then(res => res.json())
+    .then(data => {
+        const cropsList = document.getElementById('cropsList');
+        
+        if(data.length === 0) {
+            cropsList.innerHTML = '<div class="no-crops">' + getText('अद्याप पिके नाहीत', 'अभी तक कोई फसल नहीं', 'No crops added yet') + '</div>';
+            return;
+        }
+        
+        let html = '';
+        data.forEach(crop => {
+            html += `
+            <div class="crop-card" id="crop_${crop.id}">
+                <h3 class="crop-name">${crop.crop_name}</h3>
+                <p class="crop-date">${getText('पेरणी तारीख', 'बुवाई तिथि', 'Sowing Date')}: ${crop.sowing_date}</p>
+                <div class="action-buttons">
+                    <button class="update-btn" onclick="updateCrop(${crop.id})">${getText('अपडेट', 'अपडेट', 'Update')}</button>
+                    <button class="delete-btn" onclick="deleteCrop(${crop.id})">${getText('डिलीट', 'डिलीट', 'Delete')}</button>
+                </div>
+            </div>
+            `;
+        });
+        
+        cropsList.innerHTML = html;
+    })
+    .catch(error => {
+        document.getElementById('cropsList').innerHTML = '<div class="no-crops">' + getText('त्रुटी', 'त्रुटि', 'Error loading crops') + '</div>';
+        console.error('Error:', error);
+    });
+}
+
+// Add new crop
+function addCrop() {
+    const cropName = document.getElementById('cropName').value.trim();
+    const sowingDate = document.getElementById('sowingDate').value;
+    const user = JSON.parse(localStorage.getItem("user"));
+    
+    if(!cropName || !sowingDate) {
+        alert(getText('कृपया सर्व माहिती भरा', 'कृपया सभी जानकारी भरें', 'Please fill all information'));
+        return;
+    }
+    
+    if(!user || !user.id) {
+        alert(getText('लॉगिन करा', 'लॉगिन करें', 'Please login'));
+        return;
+    }
+    
+    fetch(`${BASE}/add-crop`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            crop_name: cropName,
+            sowing_date: sowingDate,
+            user_id: user.id
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.message) {
+            alert(getText('पीक जोडले', 'फसल जोड़ी गई', 'Crop added'));
+            document.getElementById('cropName').value = '';
+            document.getElementById('sowingDate').value = '';
+            loadCrops();
+        } else {
+            alert(data.error || getText('त्रुटी', 'त्रुटि', 'Error'));
+        }
+    })
+    .catch(error => {
+        alert(getText('सर्व्हर त्रुटी', 'सर्वर त्रुटि', 'Server error'));
+        console.error('Error:', error);
+    });
+}
+
+// Update crop
+function updateCrop(cropId) {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if(!user || !user.id) return;
+    
+    const newName = prompt(getText('नवीन पीक नाव', 'नया फसल नाम', 'New crop name:'));
+    if(!newName) return;
+    
+    const newDate = prompt(getText('नवीन पेरणी तारीख (YYYY-MM-DD)', 'नई बुवाई तिथि', 'New sowing date (YYYY-MM-DD):'));
+    if(!newDate) return;
+    
+    fetch(`${BASE}/update-crop`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            crop_id: cropId,
+            crop_name: newName,
+            sowing_date: newDate,
+            user_id: user.id
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.message || getText('अपडेट केले', 'अपडेट किया', 'Updated'));
+        loadCrops();
+    })
+    .catch(error => {
+        alert(getText('त्रुटी', 'त्रुटि', 'Error'));
+        console.error('Error:', error);
+    });
+}
+
+// Delete crop
+function deleteCrop(cropId) {
+    if(!confirm(getText('हे पीक डिलीट करायचे?', 'इस फसल को डिलीट करें?', 'Delete this crop?'))) return;
+    
+    const user = JSON.parse(localStorage.getItem("user"));
+    if(!user || !user.id) return;
+    
+    fetch(`${BASE}/delete-crop/${cropId}/${user.id}`, {
+        method: "DELETE"
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.message || getText('डिलीट केले', 'डिलीट किया', 'Deleted'));
+        loadCrops();
+    })
+    .catch(error => {
+        alert(getText('त्रुटी', 'त्रुटि', 'Error'));
+        console.error('Error:', error);
+    });
+}
+</script>
+
+</body>
+</html>
