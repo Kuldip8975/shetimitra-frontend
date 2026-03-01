@@ -395,7 +395,7 @@ function switchLanguage(l) {
 const user = JSON.parse(localStorage.getItem('user') || 'null');
 if (!user) { alert('Please login first'); window.location.href = 'login.html'; }
 const OWNER_ID = user.id;
-const API = 'http://127.0.0.1:5000';
+const API = 'https://shetimitra-backend-production.up.railway.app/owner/income';
 
 function g(en, hi, mr) {
     return lang === 'mr' ? mr : lang === 'hi' ? hi : en;
@@ -539,4 +539,5 @@ Promise.all([
 switchLanguage(lang);
 </script>
 </body>
+
 </html>
