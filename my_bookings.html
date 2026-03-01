@@ -648,7 +648,7 @@ document.getElementById('filterBar').addEventListener('click', e => {
 });
 
 // ── FETCH ─────────────────────────────────────────────────────────────────────
-fetch('http://127.0.0.1:5000/user/bookings/' + user.id)
+fetch('https://shetimitra-backend-production.up.railway.app/user/bookings/' + user.id)
     .then(r => { if (!r.ok) throw new Error('Server error'); return r.json(); })
     .then(data => {
         if (!Array.isArray(data)) throw new Error('Invalid format');
@@ -690,4 +690,5 @@ fetch('http://127.0.0.1:5000/user/bookings/' + user.id)
     });
 </script>
 </body>
+
 </html>
